@@ -1,4 +1,4 @@
-"""MITRE ATT&CK Navigator 레이어 생성 (§N 확장).
+"""MITRE ATT&CK Navigator 레이어 생성 (§P kpi 확장).
 
 동언님 mapping.attack_d3fend.MAP + 탐지 분류(_classify)로 Navigator layer JSON 을
 만든다. 색으로 탐지상태 표기: 사각지대=적, 회피가능=주황, 탐지됨=녹.
