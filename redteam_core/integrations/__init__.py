@@ -1,4 +1,4 @@
-"""integrations — 외부 도구 연동 계층 (고도화 §O, opt-in seam).
+"""integrations — 외부 도구 연동 계층 (고도화 §Q, opt-in seam).
 
 동언님 LLM seam(REDTEAM_LLM_PROVIDER)과 동형: 도구·표적이 env 로 지정되면 실연동,
 아니면 결정론 폴백. Tier-0 무의존 유지(실연동 라이브러리는 지연 임포트).
