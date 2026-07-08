@@ -23,6 +23,10 @@ from .rules import action_to_rule
 OBJECTIVES = {
     "nav_denial": ["gnss_spoof", "jam"],            # 항법 거부: 스푸핑→(불가시)재밍
     "nav_jam_denial": ["jam"],                       # S30: GNSS 재밍 단독(항법 거부, 사각지대)
+    "c2_jam_denial": ["jam"],                        # S31: C2 링크 재밍(통신 거부, 사각지대)
+    "soc_llm_inject": ["ml_prompt_inject"],          # S32: SOC LLM 프롬프트 인젝션(사각지대)
+    "model_extraction": ["ml_extract_secret"],       # S33: 모델 추출·탈취(사각지대)
+    "network_recon": ["active_scan"],                # S34: 능동 정찰(→ S6 탐지)
     "recon_access": ["active_scan"],                # 정찰/자격증명
     "weapon_effect": ["force_arm", "unauthorized_command"],  # 둘 다 범주형 → 견고
 }
