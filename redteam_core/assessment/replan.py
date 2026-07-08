@@ -34,6 +34,11 @@ OBJECTIVES = {
     "covert_exfil": ["exfil_c2_covert"],             # S36: C2 채널 은닉 유출(T1041)
     "staged_exfil": ["exfil_staged"],                # S37: 스테이징 후 분할 유출(T1074/T1030)
     "crypto_key_exfil": ["steal_crypto_key"],        # S38: 암호키 유출(→ 서명 위조로 S18 우회)
+    # ── WiFi 계층(§V, dronesploit) — 소형/전술 UAS 802.11, 전용 탐지룰 미배포 ──
+    "wifi_deauth": ["wifi_deauth"],                  # S39: deauth 링크 거부
+    "wifi_evil_twin": ["wifi_evil_twin"],            # S40: evil twin C2 하이재킹
+    "wifi_jam": ["wifi_jam"],                        # S41: WiFi 재밍
+    "wifi_cred": ["wifi_cred"],                      # S42: 기본 자격증명/SSID
 }
 
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.
