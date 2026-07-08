@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from redteam_core.payloads import (                          # noqa: E402
     generate_prompt_injections, generate_extraction_ladder, generate_adversarial_specs,
+    run_prompt_injection, run_model_extraction, run_adversarial, bypass_rate,
 )
 
 
@@ -36,8 +37,15 @@ def main() -> None:
     for a in generate_adversarial_specs():
         print(f"  [{a.sid}] {a.patch_type:<8} @{a.location:<10} → {a.target_misclass}")
 
+    print("\n── 실행 배선: 생성 페이로드 → 탐지 파이프라인(§A) 우회율 ──")
+    for label, fn in [("S32 프롬프트 인젝션", run_prompt_injection),
+                      ("S33 모델 추출", run_model_extraction),
+                      ("S7 적대 패치", run_adversarial)]:
+        outs = fn()
+        print(f"  {label:<20} 페이로드 {len(outs):>2}개 · 우회율 {bypass_rate(outs)*100:.0f}%")
+
     print("\n대상=자체 SOC(pollack-ai) 방어 AI. 결정론 시드+컨버터(LLM 자유생성 X).")
-    print("모두 blue 미매핑 = 사각지대(S32/S33/S7) → 방어 보강: LLM I/O·모델질의 탐지 신설.")
+    print("전 페이로드 blue 미매핑 = 우회율 100% → 방어 보강: LLM I/O·모델질의 탐지 신설.")
 
 
 if __name__ == "__main__":
