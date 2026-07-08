@@ -8,7 +8,7 @@
 
 ## 0. 한 줄 정의
 
-결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 19개 고도화 층(§A~§S)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§S 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)을 더한다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
+결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 20개 고도화 층(§A~§T)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§T 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)를 더한다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
 
 ---
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 2. 19층 아키텍처 스택
+## 2. 20층 아키텍처 스택
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -66,6 +66,7 @@
 | §Q | `integrations/` | 외부 도구 opt-in seam: AI공격(PyRIT/Garak)·Caldera·SITL·TI(위협행위자)·APT 에뮬레이션(8 APT) | 실 연동(env) |
 | §R | `tempo/` | 공격 템포: low-and-slow(임계 아래 누적·∞MTTD) vs smash(즉효·즉탐지) — 시간지표 갭 | OODA 템포 |
 | §S | `orchestration/` | 사이버전투임무팀(CMT) 직무 협업: MC→TDNA→ION→BDA (USCYBERCOM CMF) | 사이버작전 조직 |
+| §T | `sandbox/` | 악성코드 detonation 샌드박스(opt-in): FS 격리+롤백·egress default-deny(scope_cidr)·악성 지표 판정(benign/suspicious/malicious). docker 백엔드 seam(live 실격리) | 격리 사이버 시험환경 |
 
 ---
 
@@ -155,7 +156,7 @@
 
 ## 7. 검증 상태
 
-- **327 테스트 green** (동언 코어 182 불변 + 고도화 144), 전부 결정론 Tier-0(§K/§L/§Q만 실 소켓/FS·env seam).
+- **338 테스트 green** (동언 코어 182 불변 + 고도화 156), 전부 결정론 Tier-0(§K/§L/§Q/§T만 실 소켓/FS·env seam).
 - 층별 실행 데모 20+종: `benchmarks/*_eval.py` (closed_loop·roe·emso·combat·replan·targeting·maneuver·deception·sustainment·killchain·infra·campaign_chains·s30·s31_34·kpi_report·integrations·threat_intel·apt_emulation …).
 - **§P KPI 요지**: 사각지대율·은밀관통 캠페인·임계보정·MEA·임무영향(MRT-C) 등 JP 3-60/3-12/5-0 평가 지표 커버(시간지표 MTTD만 라이브).
 - **§Q 외부연동**: 전부 opt-in seam(env→real / 미지정→결정론 폴백). APT 에뮬레이션 8종(한국 방산 관련 Lazarus·Kimsuky 포함).
