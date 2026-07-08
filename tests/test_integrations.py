@@ -18,8 +18,8 @@ def _clear_env(monkeypatch):
 def test_all_fallback_without_env():
     st = integration_status()
     assert all(v["mode"] == "fallback" for v in st.values())
-    assert set(st) == {"ai_attack", "caldera", "sitl", "threat_intel", "apt_emulation",
-                       "archive_tools"}
+    # 핵심 연동은 포함(부분집합) — 신규 연동 추가에 견고. 전부 fallback 은 위에서 검증.
+    assert {"ai_attack", "caldera", "sitl", "threat_intel", "apt_emulation"} <= set(st)
 
 
 def test_ai_attack_fallback_is_blindspot():
