@@ -36,6 +36,8 @@ _SCENARIO_STATIC = {
     "S35": None, "S36": None, "S37": None, "S38": None,
     # WiFi 계층(S39~S42, §V) — 802.11 전용 탐지룰 미배포 = 사각지대.
     "S39": None, "S40": None, "S41": None, "S42": None,
+    # 고급(S43~S47, §W) — RC링크·DShot·anti-forensics 전용 탐지룰 미배포 = 사각지대.
+    "S43": None, "S44": None, "S45": None, "S46": None, "S47": None,
 }
 
 # 캠페인 체인(신규 C8~C10 포함). C1~C7 은 대조용 일부만.

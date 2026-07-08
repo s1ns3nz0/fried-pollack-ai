@@ -39,6 +39,12 @@ OBJECTIVES = {
     "wifi_evil_twin": ["wifi_evil_twin"],            # S40: evil twin C2 하이재킹
     "wifi_jam": ["wifi_jam"],                        # S41: WiFi 재밍
     "wifi_cred": ["wifi_cred"],                      # S42: 기본 자격증명/SSID
+    # ── 고급 드론 공격(§W) — RC 링크·DShot·anti-forensics, 전용 탐지룰 미배포 ──
+    "rc_link_hijack": ["rc_link_hijack"],            # S43: RC 바인딩 탈취
+    "rc_override": ["rc_override"],                  # S44: RC override
+    "rc_downgrade": ["rc_downgrade"],                # S45: RC 프로토콜 다운그레이드
+    "dshot_motor": ["dshot_motor"],                  # S46: DShot 모터 조작
+    "antiforensics": ["antiforensics"],              # S47: anti-forensics
 }
 
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.
