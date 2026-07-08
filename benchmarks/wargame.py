@@ -1,99 +1,89 @@
 #!/usr/bin/env python3
-"""워게임 — 표적 IP/도메인 제공 시 공격 시나리오 (dry-run 계획).
+"""워게임 — 표적 IP 제공 시 공격 시나리오 (dry-run 계획).
 
-    python benchmarks/wargame.py [target]
-    WARGAME_TARGET=sim.pollak.store python benchmarks/wargame.py
+    python benchmarks/wargame.py [target_ip]
 
-인가 스코프 검사 → 정찰(공격면 매핑) → 킬체인(표적 주소 페이로드). 실 외부 전송 없음
-(dry-run; 페이로드를 표적 주소로 구성·표시만). 기본 표적=자체 sim(sim.pollak.store).
+스코프 권위는 코드가 아니라 engagement_profile.yaml 의 authorization 블록
+(scope_cidr·target_sysids·out_of_scope·test_window)에서 온다 — 인가받은 팀이 설정.
+동언님 gate(EgressController)가 scope_cidr 로 default-deny 강제. 실 외부 전송 없음(dry-run).
 """
 from __future__ import annotations
 
-import json
-import os
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from redteam_core.payloads import AdaptivePayloadGenerator, SituationContext   # noqa: E402
+from redteam_core.engagement.gate import FailClosed, load_gate                 # noqa: E402
 from redteam_core.transport import build_mavlink_gps_frame                     # noqa: E402
 from redteam_core.assessment import assess_action                             # noqa: E402
 
-# 인가 교전 스코프(자체 sim). 동언님 gate egress allowlist 와 동형.
-IN_SCOPE = {"sim.pollak.store", "20.249.193.191", "20.194.99.116", "127.0.0.1", "localhost"}
+_PROFILE = str(Path(__file__).resolve().parent.parent / "engagement_profile.yaml")
 
-# 표적 공격면 프로파일(정찰 결과 모델). 서비스 → (포트, 시나리오, 액션).
-SURFACE = {
-    "sim.pollak.store": [
-        ("HTTPS/noVNC QGC", 443, "S6 GCS 자격증명", "active_scan"),
-        ("MAVLink(datalink-los)", 14550, "S1/S30 GNSS 스푸핑·재밍", "gnss_spoof"),
-        ("FastAPI 무기 스텁", 8400, "S11 비인가 무장", "force_arm"),
-        ("C2 상용포트", 8080, "T0885 은닉 C2", "c2_common_port"),
-    ],
+# 프로토콜/역할 → 적용 시나리오(액션). recon 사실 + 프로파일 서비스에 매핑.
+_PROTO_SCEN = {
+    "mavlink": [("S1/S30 GNSS 스푸핑·재밍", "gnss_spoof"), ("Execution 무장", "force_arm")],
 }
+_ROLE_SCEN = {"fc": [("S4 펌웨어 변조", None)]}
 
 
-def _scope_gate(target: str) -> bool:
-    return target in IN_SCOPE
-
-
-def _endpoint_payload(target, svc, port, action):
-    """표적 주소로 구성된 페이로드(dry-run 표시)."""
-    if action == "active_scan":
-        body = {"username": "operator-01", "password": "Spring2026!"}
-        return f"POST https://{target}:{port}/login", json.dumps(body, ensure_ascii=False)
+def _payload(action, conn):
     if action == "gnss_spoof":
-        frame = build_mavlink_gps_frame(lat_e7=367150000)
-        return f"udpout:{target}:{port} (GPS_INPUT)", f"{len(frame)}B {frame[:24].hex()}…"
+        f = build_mavlink_gps_frame(lat_e7=367150000)
+        return f"{conn} (GPS_INPUT)", f"{len(f)}B {f[:20].hex()}…"
     if action == "force_arm":
-        return f"POST http://{target}:{port}/arm", json.dumps({"action": "ARM", "armed_by": "operator-01"})
-    if action == "c2_common_port":
-        return f"TCP {target}:{port} beacon", json.dumps({"agent": "beacon-A", "status": "alive"})
-    return f"{target}:{port}", "-"
+        return f"{conn} COMMAND_LONG", "cmd=400(ARM) params=[1,0,…]"
+    return conn, "(firmware 이미지 — 본선)"
 
 
 def main():
-    target = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get("WARGAME_TARGET", "sim.pollak.store"))
-    print("="*68)
-    print(f" 워게임: 표적 = {target}")
-    print("="*68)
+    target = sys.argv[1] if len(sys.argv) > 1 else "10.50.0.20"   # 기본=프로파일 인가 호스트
+    print("=" * 68 + f"\n 워게임: 표적 = {target}\n" + "=" * 68)
 
-    # 1. 교전 스코프/RoE 게이트
-    if not _scope_gate(target):
-        print(f"\n⛔ [RoE/스코프] {target} 는 인가 교전 스코프 밖 → 교전 BLOCKED.")
-        print(f"   인가 스코프: {', '.join(sorted(IN_SCOPE))}")
-        print("   (동언님 gate egress allowlist — 범위 밖 표적 fail-closed)")
+    # 스코프 권위 = 프로파일(코드 아님)
+    try:
+        gate, profile = load_gate(_PROFILE)
+    except FailClosed as e:
+        print(f"⛔ [test_window] {e} — 교전 불가"); return
+    auth = profile.get("authorization", {})
+    print("\n── 스코프 권위: engagement_profile.yaml · authorization (인가 팀 설정) ──")
+    print(f"  scope_cidr={auth.get('scope_cidr')} · target_sysids={auth.get('target_sysids')}")
+    print(f"  out_of_scope={auth.get('out_of_scope')} · test_window={auth.get('test_window')}")
+
+    # 스코프 게이트(동언 EgressController)
+    if not gate.egress_allowed(target):
+        print(f"\n⛔ [RoE/스코프] {target} ∉ scope_cidr → egress default-deny 차단(fail-closed).")
+        print("   → 스코프는 프로파일이 정한다. 표적 추가는 인가 팀이 profile 을 갱신해야 함.")
         return
-    print(f"\n✅ [RoE/스코프] {target} 인가 확인 — 교전 진행(dry-run, 실 전송 없음)")
+    print(f"\n✅ [RoE/스코프] {target} ∈ scope_cidr — 교전 진행(dry-run)")
 
-    # 2. 정찰 — 공격면 매핑
-    surface = SURFACE.get(target, SURFACE["sim.pollak.store"])
-    print(f"\n── 정찰: 공격면 {len(surface)}개 식별 ──")
-    for svc, port, scen, _ in surface:
-        print(f"  :{port:<6} {svc:<24} → {scen}")
+    # 정찰: 프로파일 target_profile 의 호스트/서비스에서 공격면 도출
+    tp = profile.get("target_profile", {})
+    print("\n── 정찰: 프로파일 공격면 ──")
+    surface = []
+    for svc in tp.get("services", []):
+        if not gate.egress_allowed(svc.get("ip", "")):
+            continue
+        conn = f"{svc.get('transport','tcp')}:{svc['ip']}:{svc['port']}"
+        for scen, action in _PROTO_SCEN.get(svc.get("proto", ""), []):
+            surface.append((scen, action, conn))
+        print(f"  {conn:<26} proto={svc.get('proto')} auth={svc.get('auth')}")
+    for h in tp.get("hosts", []):
+        for scen, action in _ROLE_SCEN.get(h.get("role", ""), []):
+            surface.append((scen, action, f"{h['ip']} (sysid {h.get('sysid')})"))
 
-    # 3. 킬체인 — 표적 주소 페이로드 + 탐지
-    print("\n── 킬체인 실행(dry-run): 표적 주소 페이로드 ──")
-    for svc, port, scen, action in surface:
-        ep, payload = _endpoint_payload(target, svc, port, action)
-        det = assess_action(action if action != "c2_common_port" else "active_scan").detected \
-            if action in ("active_scan", "gnss_spoof", "force_arm") else None
-        mark = {True: "🔴 탐지", False: "🟢 회피", None: "⚪ 사각"}[det]
-        print(f"\n  [{scen}] {mark}")
-        print(f"    → {ep}")
-        print(f"    payload: {payload}")
+    # 킬체인: 표적 주소 페이로드 + 탐지
+    print("\n── 킬체인(dry-run): 표적 주소 페이로드 ──")
+    for scen, action, conn in surface:
+        ep, pl = _payload(action, conn)
+        det = assess_action(action).detected if action in ("gnss_spoof", "force_arm") else None
+        mark = {True: "🔴 탐지", False: "🟢 회피", None: "⚪ 사각/미평가"}[det]
+        print(f"\n  [{scen}] {mark}\n    → {ep}\n    payload: {pl}")
 
-    # 4. 방어회피 페이로드(SOC 인젝션) — 표적의 blue 룰 겨냥
-    inj = AdaptivePayloadGenerator().generate(
-        SituationContext(scenario="S32", target_rule="S1_GNSS_Spoofing"))[0]
-    print(f"\n  [방어회피: SOC 인젝션] ⚪ 사각")
-    print(f"    payload: {inj.text}")
-
-    print(f"\n{'='*68}")
-    print(" 요약: 스코프 인가 → 정찰 → 서비스별 시나리오 → 표적 주소 페이로드 구성.")
-    print(" 실 전송은 --live + 인가 하에만. 여기선 dry-run 계획.")
-    print("="*68)
+    print("\n" + "=" * 68)
+    print(" 스코프는 프로파일(인가 팀)이 정하고 gate가 강제 — 코드 하드코딩 아님.")
+    print(" 범위 밖 표적은 egress default-deny 로 fail-closed 차단.")
+    print("=" * 68)
 
 
 if __name__ == "__main__":
