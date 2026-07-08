@@ -82,5 +82,69 @@ def calibration() -> List[dict]:
     return rows
 
 
+# ── 4순위: 시나리오 MITRE 커버리지 ───────────────────────────────────────────
+def mitre_coverage() -> dict:
+    """동언님 mapping.attack_d3fend.MAP 기반 기법 커버리지·프레임워크 분포."""
+    from ..mapping.attack_d3fend import MAP
+    techniques = set()
+    for spec in MAP.values():
+        techniques.update(spec.get("attack_ics", []))
+    ics = sorted(t for t in techniques if t.startswith("T0"))
+    enterprise = sorted(t for t in techniques if t.startswith("T1"))
+    atlas = sorted(t for t in techniques if t.startswith("AML"))
+    blind = [a for a, s in MAP.items() if s.get("blind_spot")]
+    return {
+        "total_techniques": len(techniques),
+        "by_framework": {"ICS": len(ics), "Enterprise": len(enterprise), "ATLAS": len(atlas)},
+        "mapped_actions": len(MAP),
+        "d3fend_blind_actions": blind,
+        "d3fend_blind_ratio": round(len(blind) / len(MAP), 3) if MAP else 0.0,
+    }
+
+
+# ── 5순위: RoE 교리 준수 분포 ─────────────────────────────────────────────────
+def roe_compliance() -> dict:
+    from ..roe import evaluate_roe, load_roe_profile
+    profile = load_roe_profile()
+    ground = {"armed": False, "in_flight": False, "alt_rel": 0.0, "mode": "GUIDED"}
+    target = {"sysid": 42, "pid": True}
+    actions = ["recon_heartbeat", "set_mode", "force_arm", "gnss_spoof", "jam",
+               "param_set_safety", "unauthorized_command", "active_scan"]
+    verdicts: Dict[str, int] = {"PERMITTED": 0, "ESCALATE": 0, "BLOCKED": 0}
+    authorities: Dict[str, int] = {}
+    cde: Dict[str, int] = {}
+    for a in actions:
+        d = evaluate_roe(a, ground, target, profile)
+        verdicts[d.verdict.value] = verdicts.get(d.verdict.value, 0) + 1
+        authorities[d.required_authority] = authorities.get(d.required_authority, 0) + 1
+        cde[d.cde_tier] = cde.get(d.cde_tier, 0) + 1
+    return {"evaluated": len(actions), "verdicts": verdicts,
+            "required_authority": authorities, "cde_tier": cde}
+
+
+# ── 6순위: 재타격 효율 ────────────────────────────────────────────────────────
+def reattack_efficiency() -> dict:
+    from ..assessment import OBJECTIVES, adaptive_engage
+    rows: Dict[str, dict] = {}
+    total_attempts = 0
+    achieved = 0
+    for obj in OBJECTIVES:
+        r = adaptive_engage(obj)
+        attempts = len(r.trace)
+        rows[obj] = {"verdict": r.verdict, "attempts": attempts, "winning_ttp": r.winning_ttp}
+        if r.verdict == "achieved":
+            achieved += 1
+            total_attempts += attempts
+    return {
+        "per_objective": rows,
+        "avg_attempts_to_achieve": round(total_attempts / achieved, 2) if achieved else None,
+        "achieved_objectives": achieved, "total_objectives": len(OBJECTIVES),
+    }
+
+
 def full_report() -> dict:
-    return {"coverage_gap": coverage_gap(), "dwell": dwell(), "calibration": calibration()}
+    return {
+        "coverage_gap": coverage_gap(), "dwell": dwell(), "calibration": calibration(),
+        "mitre_coverage": mitre_coverage(), "roe_compliance": roe_compliance(),
+        "reattack_efficiency": reattack_efficiency(),
+    }

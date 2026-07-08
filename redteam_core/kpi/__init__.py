@@ -4,6 +4,12 @@
 1순위 방어공백(coverage_gap) · 2순위 잔존/탐지단계(dwell) · 3순위 임계보정(calibration).
 (4~6순위: MITRE 커버리지·RoE 준수·재타격 효율 — 후속.)
 """
-from .metrics import calibration, coverage_gap, dwell, full_report
+from .metrics import (
+    calibration, coverage_gap, dwell, full_report,
+    mitre_coverage, reattack_efficiency, roe_compliance,
+)
 
-__all__ = ["calibration", "coverage_gap", "dwell", "full_report"]
+__all__ = [
+    "calibration", "coverage_gap", "dwell", "full_report",
+    "mitre_coverage", "reattack_efficiency", "roe_compliance",
+]

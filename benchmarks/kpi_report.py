@@ -12,11 +12,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from redteam_core.kpi import calibration, coverage_gap, dwell      # noqa: E402
+from redteam_core.kpi import (                                     # noqa: E402
+    calibration, coverage_gap, dwell,
+    mitre_coverage, reattack_efficiency, roe_compliance,
+)
 
 
 def main() -> None:
-    print("=== fried-pollack-ai · 레드팀 KPI 대시보드 (1~3순위) ===\n")
+    print("=== fried-pollack-ai · 레드팀 KPI 대시보드 (1~6순위) ===\n")
 
     cg = coverage_gap()
     print("① 방어 공백 지표 (Blue Coverage Gap)")
@@ -36,8 +39,23 @@ def main() -> None:
         print(f"   {r['rule']:<28}{r['param']:<20}"
               f"{_f(r['measured_boundary']):>9}{_f(r['blue_assumed']):>9}{_f(r['abs_error']):>9}")
 
-    print("\n요약: 사각지대(EW·AI)와 완전 은밀 캠페인(C9)이 방어 최우선 보강. "
-          "임계 보정은 UAV_Threshold_List 갱신으로 반영.")
+    mc = mitre_coverage()
+    print("\n④ 시나리오 MITRE 커버리지")
+    print(f"   총 기법 {mc['total_techniques']}개 · 프레임워크 {mc['by_framework']} · "
+          f"D3FEND 사각 {mc['d3fend_blind_ratio']*100:.0f}%({len(mc['d3fend_blind_actions'])}액션)")
+
+    rc = roe_compliance()
+    print("\n⑤ RoE 교리 준수 분포 (액션 " + str(rc['evaluated']) + "개)")
+    print(f"   판정 {rc['verdicts']}")
+    print(f"   요구권한 {rc['required_authority']}  ·  CDE {rc['cde_tier']}")
+
+    re_ = reattack_efficiency()
+    print("\n⑥ 재타격 효율")
+    print(f"   달성 {re_['achieved_objectives']}/{re_['total_objectives']} 목표 · "
+          f"평균 시도 {re_['avg_attempts_to_achieve']}회/달성")
+
+    print("\n요약: 사각지대(EW·AI)·완전 은밀 캠페인(C9)이 방어 최우선. "
+          "RoE는 EW/무장을 교리대로 차단(JCEOI·ConOps). 임계보정은 watchlist 갱신 반영.")
 
 
 def _f(x) -> str:
