@@ -96,10 +96,10 @@ def test_archive_tool_command_is_invoked(monkeypatch):
         stderr = ""
 
     monkeypatch.setenv("ARCHIVE_TOOL", "evilarc")
-    monkeypatch.setenv("ARCHIVE_TOOL_CMD", "/opt/tools/archive-wrapper")
+    monkeypatch.setenv("ARCHIVE_TOOL_CMD", "/opt/tools/archive-wrapper")   # 절대경로 → 정책 통과
     monkeypatch.setattr(archive_tools.subprocess, "run",
-                        lambda cmd, capture_output, text, timeout: calls.append(cmd) or Result())
+                        lambda cmd, **kw: calls.append(cmd) or Result())
     r = archive_tools.craft("zip_slip", "../../../x")
     assert r["mode"] == "real"
     assert calls[0] == ["/opt/tools/archive-wrapper", "zip_slip", "../../../x"]
-    assert r["external_tool"]["returncode"] == 0
+    assert r["external_tool"]["returncode"] == 0 and r["external_tool"]["ok"] is True
