@@ -8,7 +8,7 @@
 
 ## 0. 한 줄 정의
 
-결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 24개 고도화 층(§A~§X)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§X 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)를 더한다. 신규 시나리오는 S35~S55(유출·WiFi·RC·Web/Linux 권한상승·아카이브)까지 확장된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
+결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 층(§A~§Z)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S35~S71(유출·WiFi·RC·Web/Linux 권한상승·아카이브·다중센서 폴트인젝션)까지 확장된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
 
 ---
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 2. 24층 아키텍처 스택
+## 2. 26층 아키텍처 스택
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -71,6 +71,8 @@
 | §V | `dronesploit/` | WiFi 계층 공격 S39~S42(deauth·evil twin·재밍·기본자격증명)+COTS/소형 UAS 표적 프로파일+sploitkit식 모듈 프레임+드론 CVE 레지스트리 | 802.11 공격면(dronesploit) |
 | §W | `advanced/` | 고급 드론 공격 S43~S47: RC 조종링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics + 기법/도구 카탈로그(ATT&CK→실도구) | Awesome-Drone/ired.team |
 | §X | `toolsearch/` | 공격 막힐 때 GitHub 툴 레포 자동검색: blocked/사각 시 목표별 실 도구 추천(라이브 GITHUB_TOKEN/큐레이션 시드). 읽기전용 | 능력갭→도구발견 |
+| §Y | `benchmark/` | xbow식 능력 벤치마크: UAV 챌린지 스위트+탐지회피 채점(달성 AND 미탐지)+레드팀 KPI 스코어카드(목표 근거화·라운드별 추세 퍼플팀 투영)+외부 벤치마크 어댑터 | xbow·MITRE Eval·M-Trends |
+| §Z | `simtest/` | 시뮬 기반 공격: 다중센서 폴트인젝션 S56~S59(IMU·기압·지자기·에어스피드, 점진주입=EKF 우회)+환경 공격 증폭+인시던트-KB 시나리오 생성+비행로그 분석 오라클 | AutoSimTestFramework |
 
 ---
 
@@ -160,7 +162,7 @@
 
 ## 7. 검증 상태
 
-- **399 테스트 green** (동언 코어 182 불변 + 고도화 217), 전부 결정론 Tier-0(§K/§L/§Q/§T/§U/§X만 실 소켓/FS·env seam).
+- **442 테스트 green** (동언 코어 182 불변 + 고도화 260), 전부 결정론 Tier-0(§K/§L/§Q/§T/§U/§X만 실 소켓/FS·env seam).
 - 층별 실행 데모 20+종: `benchmarks/*_eval.py` (closed_loop·roe·emso·combat·replan·targeting·maneuver·deception·sustainment·killchain·infra·campaign_chains·s30·s31_34·kpi_report·integrations·threat_intel·apt_emulation …).
 - **§P KPI 요지**: 사각지대율·은밀관통 캠페인·임계보정·MEA·임무영향(MRT-C) 등 JP 3-60/3-12/5-0 평가 지표 커버(시간지표 MTTD만 라이브).
 - **§Q 외부연동**: 전부 opt-in seam(env→real / 미지정→결정론 폴백). APT 에뮬레이션 8종(한국 방산 관련 Lazarus·Kimsuky 포함).
