@@ -1,4 +1,4 @@
-"""지상 세그먼트 공격 테스트 — GCS·ROS·데이터링크·클라우드. 결정론·무의존."""
+"""지상 세그먼트 공격 테스트 — GCS·ROS·데이터링크·인프라. 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.assessment import OBJECTIVES, adaptive_engage
@@ -7,8 +7,8 @@ from redteam_core.groundseg import GROUND_SCENARIOS, build_artifact, run_ground,
 
 
 def test_scenarios_span_four_surfaces():
-    assert set(surfaces()) == {"gcs", "ros", "datalink", "cloud"}
-    assert len(GROUND_SCENARIOS) == 14   # 재번호 후 비연속(ground+cloud)
+    assert set(surfaces()) == {"gcs", "ros", "datalink", "infra"}
+    assert len(GROUND_SCENARIOS) == 14   # 재번호 후 비연속(ground+infra)
 
 
 def test_objectives_registered():

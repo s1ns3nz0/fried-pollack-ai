@@ -13,7 +13,7 @@ import re
 # 테스트 파일 → 한글 기능명
 _FEATURE = {
     "test_execute": "시나리오 실 실행기 §U (MAVLink·HTTP·유출)",
-    "test_groundseg": "지상 세그먼트 공격 (GCS·ROS·데이터링크·클라우드)",
+    "test_groundseg": "지상 세그먼트 공격 (GCS·ROS·데이터링크·인프라)",
     "test_groundseg_exec": "지상 세그먼트 실 실행 (loopback 실증)",
     "test_realistic_range": "실 상황 유사 통합 레인지 (loopback 실공격)",
     "test_doctrine5": "결정평면 5종 (JADC2·Mosaic·OODA·Information·MissionCmd)",

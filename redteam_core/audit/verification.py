@@ -26,7 +26,7 @@ _AUDIT: List[AuditItem] = [
     # ── real_exec: 실제 표적 도달을 바이트로 확인 ──
     AuditItem("execute §U (MAVLink·HTTP·kubectl·exfil)", "real_exec", 25,
               "build_mavlink_* 실 프레임 + udp/http_deliver, loopback 수신 검증"),
-    AuditItem("groundseg (GCS·ROS·데이터링크·클라우드)", "real_exec", 14,
+    AuditItem("groundseg (GCS·ROS·데이터링크·인프라)", "real_exec", 14,
               "execute_real 실 파일 쓰기·소켓·HTTP·ROS XML-RPC, loopback 실증"),
     AuditItem("information (SOCReport·OSCAL·PR)", "real_exec", 3,
               "execute_real 실 위조 아티팩트 디스크 생성, loopback 검증"),

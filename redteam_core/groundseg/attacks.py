@@ -1,4 +1,4 @@
-"""지상 세그먼트 공격 — GCS 앱·ROS·데이터링크·클라우드 (S41~S84).
+"""지상 세그먼트 공격 — GCS 앱·ROS·데이터링크·인프라 (S41~S84).
 
 각 시나리오는 실 공격 아티팩트(악성 미션파일·ROS pub·RTSP 요청 등)를 생성한다.
 UAV Sentinel 미감시 계층 = 사각지대. 실 실행은 표적 env + §T 샌드박스.
@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-# surface: gcs | ros | datalink | cloud
+# surface: gcs | ros | datalink | infra
 GROUND_SCENARIOS = {
     # ── GCS 애플리케이션 (QGroundControl/Mission Planner) ──
     "S41": {"surface": "gcs", "name": "악성 미션파일 파싱 익스플로잇", "objective": "gcs_mission_parse",
@@ -33,19 +33,19 @@ GROUND_SCENARIOS = {
             "mitre": "T1557", "kind": "mitm"},
     "S50": {"surface": "datalink", "name": "GDT NTP 타임서버 스푸핑", "objective": "gdt_ntp_spoof",
             "mitre": "T1195", "kind": "ntp"},
-    # ── 함대 / 클라우드 백엔드 ──
-    "S81": {"surface": "cloud", "name": "함대관리 API 인증우회", "objective": "fleet_api_bypass",
+    # ── 함대 / 인프라 백엔드 ──
+    "S81": {"surface": "infra", "name": "함대관리 API 인증우회", "objective": "fleet_api_bypass",
             "mitre": "T1190", "kind": "http"},
-    "S82": {"surface": "cloud", "name": "텔레메트리 수집 오염", "objective": "telemetry_poison",
+    "S82": {"surface": "infra", "name": "텔레메트리 수집 오염", "objective": "telemetry_poison",
             "mitre": "T1565.001", "kind": "http"},
-    "S83": {"surface": "cloud", "name": "영상스트림 RTSP 하이재킹", "objective": "video_stream_hijack",
+    "S83": {"surface": "infra", "name": "영상스트림 RTSP 하이재킹", "objective": "video_stream_hijack",
             "mitre": "T1557", "kind": "rtsp"},
-    "S84": {"surface": "cloud", "name": "C4I 메시지 주입", "objective": "c4i_inject",
+    "S84": {"surface": "infra", "name": "C4I 메시지 주입", "objective": "c4i_inject",
             "mitre": "T1565", "kind": "http"},
 }
 
 _SURFACE_LABEL = {"gcs": "GCS 애플리케이션", "ros": "컴패니언/ROS",
-                  "datalink": "지상 인프라/데이터링크", "cloud": "함대/클라우드 백엔드"}
+                  "datalink": "지상 인프라/데이터링크", "infra": "함대/인프라 백엔드"}
 
 
 @dataclass

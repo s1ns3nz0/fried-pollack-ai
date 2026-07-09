@@ -253,7 +253,7 @@ for _tid, _extra in {
     "T0831": " / S8 DShot/ESC 모터 조작(§W) / S32 GNSS 스푸핑 나포(RQ-170)",
     "T0806": " / S9~S12 다중센서 폴트(§Z)",
     "T0835": " / S9~S12 센서 EKF 기만(§Z) / S14 EKF 협조 폴트",
-    # 도메인 특화 신규 시나리오(사각지대 보강, cloud 제외).
+    # 도메인 특화 신규 시나리오(사각지대 보강, 인프라 제외).
     "T1565": " / S80 ISR 핸드오프 표적정보 변조(cross-segment)",
     "T0832": " / S80 ISR 상황도 변조",
     "T1495": " / S16 ESC 펌웨어 변조",
@@ -270,7 +270,7 @@ RED_COVER["T0856"] = "S101 편대 리더 스푸핑·S117 BLOS 명령위조(swarm
 RED_COVER["T1553"] = "S73 아티팩트 서명 우회(supply chain)"
 RED_COVER["T1649"] = "S70 mTLS 인증서 위조(supply chain)"
 
-# 지상 세그먼트 소프트웨어(S41~S84) — 매트릭스 보강: 기체 외 GCS·ROS·데이터링크·클라우드.
+# 지상 세그먼트 소프트웨어(S41~S84) — 매트릭스 보강: 기체 외 GCS·ROS·데이터링크·인프라.
 # 전부 UAV Sentinel(텔레메트리 평면) 미감시 = ❌(탐지불가) → 히어로셋(은밀 공격).
 UAV_MATRIX += [
     ("Execution", "T1203", "Exploitation for Client Execution (GCS 파서)", False),

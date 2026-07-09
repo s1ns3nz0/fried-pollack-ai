@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""지상 세그먼트 공격 데모 — GCS·ROS·데이터링크·클라우드 (S41~S84).
+"""지상 세그먼트 공격 데모 — GCS·ROS·데이터링크·인프라 (S41~S84).
 
     python benchmarks/groundseg_eval.py
 
@@ -32,7 +32,7 @@ def main() -> None:
         flow = "→".join(s for s, _, _ in cr.stages)
         print(f"   {cid}: {flow}  {icon} {cr.verdict}")
 
-    print("\n핵심: 지상 소프트웨어(GCS·ROS·데이터링크·클라우드)는 UAV Sentinel이 감시하는")
+    print("\n핵심: 지상 소프트웨어(GCS·ROS·데이터링크·인프라)는 UAV Sentinel이 감시하는")
     print("      텔레메트리/공중 평면 밖 = 전부 사각지대. 공중만 방어하면 지상으로 관통.")
 
 

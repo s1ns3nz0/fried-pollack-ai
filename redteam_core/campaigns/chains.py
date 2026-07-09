@@ -48,7 +48,7 @@ _SCENARIO_STATIC = {
     "S41": None, "S42": None, "S43": None, "S44": None,   # GCS 앱
     "S45": None, "S46": None, "S47": None,                # 컴패니언/ROS
     "S48": None, "S49": None, "S50": None,                # 데이터링크
-    "S81": None, "S82": None, "S83": None, "S84": None,   # 클라우드
+    "S81": None, "S82": None, "S83": None, "S84": None,   # 인프라
     # 빈 번호 채움(extended, S6·S7·S98~S15·S110~S77) — 전부 사각지대.
     "S6": None, "S7": None, "S98": None, "S99": None, "S15": None,  # 공중·정찰·기체
     "S110": None, "S67": None, "S68": None, "S69": None, "S70": None,  # 페이로드·공급망

@@ -60,7 +60,7 @@
 | `dronesploit/` | WiFi(deauth·evil twin·재밍·기본자격 S25~S28)+COTS 표적+모듈+CVE | 802.11 |
 | `advanced/` | RC 링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics(RC S29~S31·DShot S8·흔적제거 S40)+기법카탈로그 | Awesome-Drone |
 | `simtest/` | 다중센서 폴트인젝션 S9~S12(EKF 우회)+환경 증폭+인시던트KB+비행로그 오라클 | AutoSim |
-| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S41~S50(지상)+S81~S84(인프라)(GCS 앱·ROS·데이터링크·클라우드). execute_real 실 실행 | 지상/클라우드 공격면 |
+| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S41~S50(지상)+S81~S84(인프라)(GCS 앱·ROS·데이터링크·인프라). execute_real 실 실행 | 지상/인프라 공격면 |
 
 #### 킬체인·실행 (Kill Chain / Execution)
 | 모듈 | 기능 | 교리 근거 |
