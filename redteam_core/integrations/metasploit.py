@@ -12,6 +12,7 @@ import os
 from typing import Optional
 
 from .http_json import post_json
+from .result import finalize
 
 # 우리 시나리오 → Metasploit 모듈(IT/인프라 인접 위주). UAV 특화는 msf 커버 밖.
 SCENARIO_MSF = {
@@ -79,8 +80,8 @@ def _run_real(msf_module: str, options: dict) -> dict:  # pragma: no cover
     if _mcp():
         url = _mcp().rstrip("/") + "/tools/run_module"
         response = post_json(url, {"module": msf_module, "options": options})
-        return {"mode": "real", "module": msf_module, "options": options,
-                "transport": "mcp", "response": response}
+        return finalize({"mode": "real", "module": msf_module, "options": options,
+                         "transport": "mcp", "response": response}, "response")
 
     host, port, password = _rpc()
     from pymetasploit3.msfrpc import MsfRpcClient  # type: ignore
@@ -90,5 +91,5 @@ def _run_real(msf_module: str, options: dict) -> dict:  # pragma: no cover
     for k, v in options.items():
         module[k] = v
     response = module.execute()
-    return {"mode": "real", "module": msf_module, "options": options,
-            "transport": "rpc", "response": response}
+    return finalize({"mode": "real", "module": msf_module, "options": options,
+                     "transport": "rpc", "response": response}, "response")

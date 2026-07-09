@@ -9,6 +9,7 @@ import os
 from typing import Optional
 
 from .http_json import post_json
+from .result import finalize
 
 
 def _url() -> str:
@@ -45,4 +46,5 @@ def _run_real(chain_id: str) -> dict:  # pragma: no cover
     url = _url().rstrip("/") + "/api/v2/operations"
     body = {"chain_id": chain_id, "source": "fried-pollack-ai"}
     response = post_json(url, body, headers={"KEY": _key()})
-    return {"mode": "real", "chain": chain_id, "url": url, "response": response}
+    return finalize({"mode": "real", "chain": chain_id, "url": url, "response": response},
+                    "response")

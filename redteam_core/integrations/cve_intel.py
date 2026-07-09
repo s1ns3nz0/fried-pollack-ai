@@ -12,6 +12,7 @@ import os
 from typing import List, Optional
 
 from .http_json import post_json
+from .result import finalize
 
 
 def _url() -> str:
@@ -51,4 +52,5 @@ def _query_real(cve_id: str) -> dict:  # pragma: no cover
     """실 cve-mcp-server 조회(게이트웨이 있을 때만)."""
     url = _url().rstrip("/") + "/tools/get_cve"
     record = post_json(url, {"cve_id": cve_id})
-    return {"mode": "real", "cve": cve_id, "endpoint": url, "record": record}
+    return finalize({"mode": "real", "cve": cve_id, "endpoint": url, "record": record},
+                    "record")

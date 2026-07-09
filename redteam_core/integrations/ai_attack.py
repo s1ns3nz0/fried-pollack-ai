@@ -9,6 +9,7 @@ import os
 from typing import Optional
 
 from .http_json import post_json
+from .result import finalize
 
 
 def _provider() -> str:
@@ -54,5 +55,5 @@ def _run_real(technique: str, payload: str, mitre: str) -> dict:  # pragma: no c
     prov = _provider()
     body = {"provider": prov, "technique": technique, "mitre": mitre, "payload": payload}
     response = post_json(_target(), body)
-    return {"mode": "real", "provider": prov, "technique": technique,
-            "mitre": mitre, "target": _target(), "response": response}
+    return finalize({"mode": "real", "provider": prov, "technique": technique,
+                     "mitre": mitre, "target": _target(), "response": response}, "response")
