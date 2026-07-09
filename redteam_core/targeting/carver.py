@@ -44,8 +44,8 @@ CATALOG = (
            note="스푸핑 S1 커버(초기 V낮음). 재밍 사각 가능성 → 교전 후 V상향 기대"),
     Target("GCS_CRED", "GCS 운영자 자격증명", "recon_access",
            Carver(criticality=4, accessibility=3, recuperability=3, vulnerability=4, effect=3, recognizability=4),
-           note="S6 연속임계 — 회피창 존재(중취약)"),
+           note="S34 연속임계 — 회피창 존재(중취약)"),
     Target("WEAPON", "무장 체계", "weapon_effect",
            Carver(criticality=5, accessibility=2, recuperability=2, vulnerability=2, effect=5, recognizability=3),
-           note="S11/S15 범주형 — 강도 회피 불가(저취약, 견고)"),
+           note="S3/S79 범주형 — 강도 회피 불가(저취약, 견고)"),
 )

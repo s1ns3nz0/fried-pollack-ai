@@ -10,19 +10,19 @@ COTS_PROFILES = {
         "class": "소비자 WiFi 마이크로드론",
         "control": "802.11(2.4GHz)", "telemetry": "평문",
         "surface": ["WiFi deauth", "evil twin", "기본 자격증명", "WiFi 재밍"],
-        "scenarios": ["S39", "S40", "S41", "S42"],
+        "scenarios": ["S25", "S26", "S27", "S28"],
     },
     "tactical_small_uas": {
         "class": "전술 소형 UAS(COTS 파생)",
         "control": "802.11 + 일부 MAVLink", "telemetry": "부분 암호화",
         "surface": ["WiFi deauth", "evil twin", "MAVLink 주입", "GNSS 스푸핑"],
-        "scenarios": ["S39", "S40", "S1", "S18"],
+        "scenarios": ["S25", "S26", "S1", "S20"],
     },
     "male_muav": {
         "class": "MALE(KUS-FS) — 기존 표적",
         "control": "LOS RF + SATCOM(MAVLink)", "telemetry": "암호화",
         "surface": ["MAVLink 주입", "SATCOM MITM", "GNSS 스푸핑/재밍", "GCS 침해"],
-        "scenarios": ["S1", "S2", "S3", "S6", "S30"],
+        "scenarios": ["S1", "S17", "S18", "S34", "S23"],
     },
 }
 

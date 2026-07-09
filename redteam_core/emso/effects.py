@@ -1,6 +1,6 @@
 """전자공격(EA) 효과 모델 — 재밍(J/S)·GNSS 스푸핑(포획).
 
-결정론. 산출 telemetry_hint 는 §A BDA 로 흘러 blue 룰 판정(S1/S2)에 쓰인다.
+결정론. 산출 telemetry_hint 는 §A BDA 로 흘러 blue 룰 판정(S1/S17)에 쓰인다.
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ def jam_effect(freq_mhz: float, jammer_eirp_dbm: float, jammer_dist_m: float,
                signal_eirp_dbm: float, signal_dist_m: float, n: float = 2.2) -> EwEffect:
     js = j_to_s_db(jammer_eirp_dbm, jammer_dist_m, signal_eirp_dbm, signal_dist_m, freq_mhz, n)
     denied = js >= BURNTHROUGH_JS_DB
-    # 재밍 시 표적 수신 RSSI 는 실제로 잡음바닥에 묻힘 → blue S2(RSSI≤-20, loss↑) 관측면.
+    # 재밍 시 표적 수신 RSSI 는 실제로 잡음바닥에 묻힘 → blue S17(RSSI≤-20, loss↑) 관측면.
     victim_rssi = rssi_dbm(signal_eirp_dbm, signal_dist_m, freq_mhz, n) - max(js, 0.0)
     loss_pct = min(100.0, max(0.0, (js) * 5.0)) if denied else 0.0
     return EwEffect(

@@ -20,7 +20,7 @@ PERSISTENCE_TECHNIQUES = {
     },
     "firmware_implant": {
         "detect_rule": "S4_Firmware_Tampering", "detected": True, "durable": True,
-        "note": "펌웨어/정비 임플란트 — blue S4/S21 탐지",
+        "note": "펌웨어/정비 임플란트 — blue S33/S38 탐지",
     },
 }
 
@@ -32,6 +32,6 @@ C2_TECHNIQUES = {
     },
     "rogue_router": {
         "detect_rule": "S26_Router_Endpoint_Rogue", "detected": True,
-        "note": "불량 라우터 엔드포인트 — blue S26 탐지",
+        "note": "불량 라우터 엔드포인트 — blue S22 탐지",
     },
 }

@@ -2,7 +2,7 @@
 
 취약한 추출기를 흉내내되 **실제로 밖에 쓰지 않고**, 각 엔트리의 해석 경로가 격리
 베이스를 벗어나는지 검사해 탈출 엔트리를 잡는다. red 가 만든 악성 아카이브(§N
-S39~S41)를 추출 전에 봉인·판정 = 방어 seam(blue Sentinel 룰 사각지대 보완).
+S25~S27)를 추출 전에 봉인·판정 = 방어 seam(blue Sentinel 룰 사각지대 보완).
 """
 from __future__ import annotations
 

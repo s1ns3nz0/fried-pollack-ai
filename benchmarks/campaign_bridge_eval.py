@@ -3,7 +3,7 @@
 
     python benchmarks/campaign_bridge_eval.py
 
-IT 계층(S48~S55)은 UAV Sentinel 사각, OT 계층(S1~S29)에서 탐지 — blue 가 어디서
+IT 계층(S53~S60)은 UAV Sentinel 사각, OT 계층(S1~S89)에서 탐지 — blue 가 어디서
 잡는지 보여준다. 결정론·무의존(Tier-0).
 """
 from __future__ import annotations
@@ -36,8 +36,8 @@ def main():
         print(f"     {DESC[c]}")
         print(f"     최초 탐지: {first}\n")
     print("핵심: C16 = 순수 IT 권한상승은 UAV SOC 에 완전 사각(🥷).")
-    print("      C15 = IT 발판은 사각이나 OT 임무층(S12) 닿는 순간 탐지 = 방어 경계선.")
-    print("      C18 = 인증우회로도 무장(S11)은 범주형 견고차단(탐지).")
+    print("      C15 = IT 발판은 사각이나 OT 임무층(S36) 닿는 순간 탐지 = 방어 경계선.")
+    print("      C18 = 인증우회로도 무장(S3)은 범주형 견고차단(탐지).")
 
 
 if __name__ == "__main__":

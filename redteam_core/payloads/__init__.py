@@ -5,9 +5,9 @@
 라이브러리 + 변형 컨버터(PyRIT seed+converter 모델). 대상은 팀 자체 SOC(pollack-ai)
 방어 AI = 인가된 레드팀 적대 에뮬레이션.
 
-  - S32 프롬프트 인젝션: `prompt_inject` (AML.T0051)
-  - S33 모델 추출: `extraction` (AML.T0057)
-  - S7 적대 패치: `adversarial` (AML.T0043)
+  - S90 프롬프트 인젝션: `prompt_inject` (AML.T0051)
+  - S91 모델 추출: `extraction` (AML.T0057)
+  - S88 적대 패치: `adversarial` (AML.T0043)
 
 안전: 대상은 시험창 내 자체 SOC. 페이로드는 공개 레드팀 시드 수준, 결정론.
 """

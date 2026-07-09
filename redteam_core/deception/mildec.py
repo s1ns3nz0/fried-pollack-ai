@@ -4,7 +4,7 @@
 (SATURATION_THRESHOLD)를 넘으면 포화 → 진짜 공격에 배정될 주의가 분산돼 실제
 탐지가 억제된다(§A 단독이면 탐지될 공격이 기만 하에 생존).
 
-SATURATION_THRESHOLD 는 blue S9(SOC 용량 베이스라인)과 대응하는 값 — red 는
+SATURATION_THRESHOLD 는 blue S19(SOC 용량 베이스라인)과 대응하는 값 — red 는
 blue 의 방어 임계를 역으로 무기화한다.
 """
 from __future__ import annotations
@@ -14,7 +14,7 @@ from typing import List, Tuple
 
 from ..assessment import assess_action
 
-# SOC 동시 알림 처리한계(분석주의 예산). blue S9 용량 임계와 대응.
+# SOC 동시 알림 처리한계(분석주의 예산). blue S19 용량 임계와 대응.
 SATURATION_THRESHOLD = 5
 
 

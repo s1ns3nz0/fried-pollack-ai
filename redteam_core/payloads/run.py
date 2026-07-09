@@ -1,6 +1,6 @@
 """페이로드 실행 배선 — §N 생성 페이로드를 탐지 파이프라인(§A)에 흘린다.
 
-각 구체 페이로드를 assess_action 으로 관측해 탐지/우회를 기록한다. S32/S33/S7 은
+각 구체 페이로드를 assess_action 으로 관측해 탐지/우회를 기록한다. S90/S91/S88 은
 blue 미매핑(사각지대)이라 우회율 100% 로 나오며, 이것이 방어 공백의 정량 지표다.
 """
 from __future__ import annotations
@@ -33,23 +33,23 @@ def _outcome(scenario, action, pid, preview) -> PayloadOutcome:
 
 def run_prompt_injection(target="GNSS 스푸핑", converters=None) -> List[PayloadOutcome]:
     converters = converters or ["none", "base64"]
-    return [_outcome("S32", "ml_prompt_inject", p.pid, p.text)
+    return [_outcome("S90", "ml_prompt_inject", p.pid, p.text)
             for p in generate_prompt_injections(target, converters)]
 
 
 def run_model_extraction() -> List[PayloadOutcome]:
-    return [_outcome("S33", "ml_extract_secret", f"Q{q.step}", q.query)
+    return [_outcome("S91", "ml_extract_secret", f"Q{q.step}", q.query)
             for q in generate_extraction_ladder()]
 
 
 def run_adversarial() -> List[PayloadOutcome]:
-    return [_outcome("S7", "ml_craft_adversarial", a.sid, f"{a.patch_type}:{a.target_misclass}")
+    return [_outcome("S88", "ml_craft_adversarial", a.sid, f"{a.patch_type}:{a.target_misclass}")
             for a in generate_adversarial_specs()]
 
 
 def run_adaptive(ctx: SituationContext) -> List[PayloadOutcome]:
     """상황 맞춤 페이로드를 생성해 탐지 파이프라인에 흘린다."""
-    action = "ml_extract_secret" if ctx.scenario == "S33" else "ml_prompt_inject"
+    action = "ml_extract_secret" if ctx.scenario == "S91" else "ml_prompt_inject"
     payloads = AdaptivePayloadGenerator().generate(ctx)
     return [_outcome(ctx.scenario, action, p.pid, p.text) for p in payloads]
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""편대/군집 비행 공격 데모 — S103~S110 (MITRE ATT&CK 기반).
+"""편대/군집 비행 공격 데모 — S101~S108 (MITRE ATT&CK 기반).
 
     python benchmarks/swarm_eval.py
 """

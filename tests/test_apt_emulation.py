@@ -13,18 +13,18 @@ def _clear_env(monkeypatch):
 
 def test_ctid_fallback_uses_seed_plan():
     assert apt.status()["mode"] == "fallback"
-    assert apt.emulation_plan("APT28 (G0007)") == ["S34", "S6", "S10", "S13", "S15", "S11", "S17"]
+    assert apt.emulation_plan("APT28 (G0007)") == ["S97", "S34", "S35", "S37", "S79", "S3", "S92"]
     assert len(apt.APT_EMULATION) == 8            # 확장된 8개 APT
 
 
 def test_run_apt_emulation_detection_profile():
     r = apt.run_apt_emulation("APT28 (G0007)")
-    # 무장(S11)·모바일GCS(S10) 등 배포룰에서 탐지됨.
-    assert r.verdict == "detected" and "S11" in r.detected_at
+    # 무장(S3)·모바일GCS(S35) 등 배포룰에서 탐지됨.
+    assert r.verdict == "detected" and "S3" in r.detected_at
 
 
 def test_aml_adversary_fully_stealthy():
-    # AML 계열은 전 단계(S29 RAG·S7 온보드·S32·S33·S8) 미배포 = 완전 사각.
+    # AML 계열은 전 단계(S89 RAG·S88 온보드·S90·S91·S100) 미배포 = 완전 사각.
     r = apt.run_apt_emulation("AML Adversary (ATLAS)")
     assert r.verdict == "stealthy" and r.detected_at == []
     assert all(d is None for _s, d in r.steps)
@@ -36,10 +36,10 @@ def test_korea_relevant_apts_present():
 
 
 def test_next_ttp_follows_pattern():
-    assert apt.next_ttp_by_pattern("Volt Typhoon (G1017)") == "S34"
-    assert apt.next_ttp_by_pattern("Volt Typhoon (G1017)", ["S34"]) == "S6"
+    assert apt.next_ttp_by_pattern("Volt Typhoon (G1017)") == "S97"
+    assert apt.next_ttp_by_pattern("Volt Typhoon (G1017)", ["S97"]) == "S34"
     assert apt.next_ttp_by_pattern(
-        "Volt Typhoon (G1017)", ["S34", "S6", "S27", "S26", "S24", "S2"]) is None
+        "Volt Typhoon (G1017)", ["S97", "S34", "S39", "S22", "S21", "S17"]) is None
 
 
 def test_ctid_env_flips_mode(monkeypatch):

@@ -20,12 +20,12 @@ from redteam_core.advanced import (                              # noqa: E402
 
 def main() -> None:
     print("=== fried-pollack-ai · 고급 드론 공격 §W ===\n")
-    print("① RC 링크 + DShot 모터 공격 (S43~S46, dry)")
+    print("① RC 링크 + DShot 모터 공격 (S29~S8, dry)")
     for sid, meta in RF_SCENARIOS.items():
         r = run_rf(sid, dry=True)
         print(f"   {sid} {meta['name']:<20} [{meta['proto']:<14}] → {r.artifact}")
 
-    print("\n② anti-forensics (S47)")
+    print("\n② anti-forensics (S40)")
     af = run_antiforensics(dry=True)
     print(f"   방법 {af.methods}")
 

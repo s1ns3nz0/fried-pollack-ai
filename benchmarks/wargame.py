@@ -22,9 +22,9 @@ _PROFILE = str(Path(__file__).resolve().parent.parent / "engagement_profile.yaml
 
 # 프로토콜/역할 → 적용 시나리오(액션). recon 사실 + 프로파일 서비스에 매핑.
 _PROTO_SCEN = {
-    "mavlink": [("S1/S30 GNSS 스푸핑·재밍", "gnss_spoof"), ("Execution 무장", "force_arm")],
+    "mavlink": [("S1/S23 GNSS 스푸핑·재밍", "gnss_spoof"), ("Execution 무장", "force_arm")],
 }
-_ROLE_SCEN = {"fc": [("S4 펌웨어 변조", None)]}
+_ROLE_SCEN = {"fc": [("S33 펌웨어 변조", None)]}
 
 
 def _payload(action, conn):

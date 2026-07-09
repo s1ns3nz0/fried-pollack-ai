@@ -1,4 +1,4 @@
-"""익스플로잇 정적 분석기 — Web/API·Linux 권한상승 탐지 (§T 확장, S48~S52).
+"""익스플로잇 정적 분석기 — Web/API·Linux 권한상승 탐지 (§T 확장, S53~S57).
 
 red 익스플로잇(§N exploits)을 실행 없이 정적 분석해 악성 지표·판정을 낸다. blue
 Sentinel(UAV 도메인)이 못 보는 IT 계층을 §T 가 방어 seam 으로 커버. IDOR 처럼
@@ -150,7 +150,7 @@ def _ekf_fault(p):
 def _isr_handoff(p):
     r = AnalyzeReport(p.scenario, p.kind)
     r.indicators.append("공군→육군 ISR 핸드오프 표적정보 변조 → 오표적(데이터 무결성)")
-    r.verdict = "malicious"                          # S17 인접 무결성 룰이 부분 탐지
+    r.verdict = "malicious"                          # S92 인접 무결성 룰이 부분 탐지
     return r
 
 

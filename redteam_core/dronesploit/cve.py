@@ -9,13 +9,13 @@ from typing import List
 
 DRONE_CVES = [
     {"cve": "CVE-2015-3789", "model": "Parrot AR.Drone", "class": "WiFi 개방 telnet",
-     "technique": "WiFi 무인증 접근", "scenario": "S42"},
+     "technique": "WiFi 무인증 접근", "scenario": "S28"},
     {"cve": "CVE-2018-11538", "model": "DJI 다수", "class": "SSL/인증 우회",
-     "technique": "세션 하이재킹", "scenario": "S40"},
+     "technique": "세션 하이재킹", "scenario": "S26"},
     {"cve": "CVE-2019-XXXX", "model": "경상용 다수", "class": "deauth→링크거부",
-     "technique": "802.11 deauth", "scenario": "S39"},
+     "technique": "802.11 deauth", "scenario": "S25"},
     {"cve": "CVE-2020-XXXX", "model": "MAVLink 기반", "class": "무서명 MAVLink 주입",
-     "technique": "명령 주입", "scenario": "S18"},
+     "technique": "명령 주입", "scenario": "S20"},
     {"cve": "GNSS-SPOOF", "model": "GPS 의존 UAS", "class": "항법 스푸핑",
      "technique": "GNSS 스푸핑", "scenario": "S1"},
 ]

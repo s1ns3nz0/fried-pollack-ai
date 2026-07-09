@@ -1,4 +1,4 @@
-"""WiFi 계층 공격 — deauth·evil twin·WiFi 재밍·비콘 (S39~S42).
+"""WiFi 계층 공격 — deauth·evil twin·WiFi 재밍·비콘 (S25~S28).
 
 소형/전술 UAS(COTS WiFi 제어)의 802.11 공격면. 실 주입은 monitor 어댑터+env+§T
 샌드박스 통과 시에만(기본 dry: 아티팩트만). 실 RF/deauth 무방사 기본.
@@ -9,15 +9,15 @@ import json
 import os
 from dataclasses import dataclass
 
-# S39~S42 시나리오 메타
+# S25~S28 시나리오 메타
 WIFI_SCENARIOS = {
-    "S39": {"name": "WiFi Deauth(링크 거부)", "objective": "wifi_deauth",
+    "S25": {"name": "WiFi Deauth(링크 거부)", "objective": "wifi_deauth",
             "mitre": "T1499 / 802.11 deauth", "action": "wifi_deauth"},
-    "S40": {"name": "Evil Twin(C2 하이재킹)", "objective": "wifi_evil_twin",
+    "S26": {"name": "Evil Twin(C2 하이재킹)", "objective": "wifi_evil_twin",
             "mitre": "T1557 / rogue AP", "action": "wifi_evil_twin"},
-    "S41": {"name": "WiFi 재밍(통제 상실)", "objective": "wifi_jam",
+    "S27": {"name": "WiFi 재밍(통제 상실)", "objective": "wifi_jam",
             "mitre": "T1499 / RF DoS", "action": "wifi_jam"},
-    "S42": {"name": "기본 자격증명/SSID 변조", "objective": "wifi_cred",
+    "S28": {"name": "기본 자격증명/SSID 변조", "objective": "wifi_cred",
             "mitre": "T1078 / default creds", "action": "wifi_cred"},
 }
 

@@ -59,7 +59,7 @@ def main():
           "PARAM_SET frame", _bytes(build_mavlink_param_set_frame("BRD_SAFETYENABLE", 0.0)))
 
     # 5. 방어 회피 — 상황 맞춤 SOC 인젝션(§N)
-    ctx = SituationContext(scenario="S32", target_rule="S1_GNSS_Spoofing")
+    ctx = SituationContext(scenario="S90", target_rule="S1_GNSS_Spoofing")
     inj = AdaptivePayloadGenerator().generate(ctx)[0]
     stage("Defense Evasion", "AML.T0051", "SOC LLM 프롬프트 인젝션(탐지 억제)",
           "injection string", inj.text)

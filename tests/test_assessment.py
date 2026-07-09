@@ -22,14 +22,14 @@ def test_continuous_rule_evades_below_threshold():
 
 
 def test_categorical_rule_cannot_be_evaded_by_intensity():
-    # S11: 공격이면 강도와 무관하게 탐지 확정.
+    # S3: 공격이면 강도와 무관하게 탐지 확정.
     out = assess_action("force_arm", categorical_attack=True)
     assert out.kind == "categorical" and out.detected is True
     assert out.intensity is None            # 연속 강도 개념 없음
 
 
 def test_probe_boundary_brackets_blue_threshold():
-    # S6: FailCount 20 에서 시작 → 5 미만으로 내려가며 경계 브래킷.
+    # S34: FailCount 20 에서 시작 → 5 미만으로 내려가며 경계 브래킷.
     rec = probe_boundary("active_scan", start_intensity=20)
     assert rec.detected_at is not None and rec.evaded_at is not None
     assert rec.evaded_at < rec.blue_assumed <= rec.detected_at   # 경계가 가상값을 감쌈

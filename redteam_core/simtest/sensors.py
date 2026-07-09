@@ -1,4 +1,4 @@
-"""다중센서 폴트인젝션 — S56~S59 (IMU·기압계·지자기·에어스피드).
+"""다중센서 폴트인젝션 — S9~S12 (IMU·기압계·지자기·에어스피드).
 
 GNSS(S1) 넘어 관성/기압/지자기/에어스피드 센서를 스푸핑·폴트 → 오토파일럿 EKF가
 오염 데이터로 상태추정 오류 → 자세 불안정·고도 오판·항로 이탈. 점진 주입(ramp)이면
@@ -9,16 +9,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 SENSOR_SCENARIOS = {
-    "S56": {"name": "IMU 스푸핑/폴트(자이로·가속도)", "objective": "imu_spoof",
+    "S9": {"name": "IMU 스푸핑/폴트(자이로·가속도)", "objective": "imu_spoof",
             "sensor": "imu", "effect": "자세추정 오류→불안정/추락", "mitre": "T0806 / ICS 센서조작",
             "ekf_gate": 0.35},
-    "S57": {"name": "기압계 스푸핑(고도)", "objective": "baro_spoof",
+    "S10": {"name": "기압계 스푸핑(고도)", "objective": "baro_spoof",
             "sensor": "baro", "effect": "고도 오판→지형충돌/실속", "mitre": "T0806",
             "ekf_gate": 0.30},
-    "S58": {"name": "지자기 스푸핑(방위)", "objective": "mag_spoof",
+    "S11": {"name": "지자기 스푸핑(방위)", "objective": "mag_spoof",
             "sensor": "mag", "effect": "방위 오류→항로 이탈(toilet-bowling)", "mitre": "T0806",
             "ekf_gate": 0.40},
-    "S59": {"name": "에어스피드 스푸핑", "objective": "airspeed_spoof",
+    "S12": {"name": "에어스피드 스푸핑", "objective": "airspeed_spoof",
             "sensor": "airspeed", "effect": "실속/과속 오판→비행제어 상실", "mitre": "T0806",
             "ekf_gate": 0.25},
 }

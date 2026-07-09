@@ -1,4 +1,4 @@
-"""아카이브 경로순회 도구 연동 — evilarc/slipit/tarslip (S39~S41).
+"""아카이브 경로순회 도구 연동 — evilarc/slipit/tarslip (S25~S27).
 
 env ARCHIVE_TOOL(evilarc|slipit|tarslip) 지정 시 실 도구로 악성 아카이브 생성,
 아니면 내부 §N 생성기 폴백. 생성물은 §T 샌드박스로 detonate(escape 탐지) 후에만

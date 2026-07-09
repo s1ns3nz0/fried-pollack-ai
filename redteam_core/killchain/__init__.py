@@ -5,7 +5,7 @@
 수행/탐지/차단을 판정해 '완전 관통' 및 '은밀 관통' 여부를 낸다.
 
 교리: Lockheed Cyber Kill Chain 7단계 + ATT&CK. 새 능력의 탐지는 blue 실제 룰
-(S4/S21 펌웨어·정비 임플란트, S26 불량 라우터 C2)에 매핑 — D8 준수(공유 산출물).
+(S33/S38 펌웨어·정비 임플란트, S22 불량 라우터 C2)에 매핑 — D8 준수(공유 산출물).
 """
 from .capabilities import C2_TECHNIQUES, PERSISTENCE_TECHNIQUES
 from .chain import KillChainResult, StageResult, run_killchain

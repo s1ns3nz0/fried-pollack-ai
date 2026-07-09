@@ -1,7 +1,7 @@
 """EMSO 교전 — EA 액션을 물리 지오메트리·스펙트럼으로 계획하고 효과를 산출.
 
 RoE 게이트(§B)가 JCEOI 승인을 강제하므로, 여기서는 물리효과와 telemetry_hint 만
-낸다. 산출은 §A BDA 로 연결(gnss_spoof→S1, jam→S2 관측면).
+낸다. 산출은 §A BDA 로 연결(gnss_spoof→S1, jam→S17 관측면).
 """
 from __future__ import annotations
 

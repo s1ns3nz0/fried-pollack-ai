@@ -1,4 +1,4 @@
-"""S30 GNSS 재밍 시나리오 배선 테스트 — 결정론·무의존."""
+"""S23 GNSS 재밍 시나리오 배선 테스트 — 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.assessment import OBJECTIVES, adaptive_engage, run_engagement

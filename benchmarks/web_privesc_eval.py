@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Web/API·Linux 권한상승 신규 시나리오 데모 — S48~S52 + §T 분석 + 배선.
+"""Web/API·Linux 권한상승 신규 시나리오 데모 — S53~S57 + §T 분석 + 배선.
 
     python benchmarks/web_privesc_eval.py
 
@@ -18,7 +18,7 @@ from redteam_core.payloads.exploits import EXPLOIT_SCENARIOS, run_exploit    # n
 
 
 def main():
-    print("=== fried-pollack-ai · Web/API·Linux 권한상승 (S48~S52) + §T 분석 ===\n")
+    print("=== fried-pollack-ai · Web/API·Linux 권한상승 (S53~S57) + §T 분석 ===\n")
     print(f"  {'시나리오':<7}{'기법':<9}{'판정':<13}{'지표'}")
     for sid in EXPLOIT_SCENARIOS:
         o = run_exploit(sid)

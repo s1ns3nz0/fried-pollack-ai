@@ -15,24 +15,24 @@ from .chains import CHAINS, run_chain
 # 에스컬레이션: 🟢자동 🟡HITL(COMPONENT) 🟠JFC(비가역) 🔴NATIONAL+JCEOI(EW) ⛔ConOps밖
 SCENARIO_META = {
     "S1":  ("GNSS 스푸핑", "MAVLink GPS_INPUT 프레임(71B)", "T0842/EW", "🔴", "OT"),
-    "S4":  ("펌웨어 변조", "POST /preflight {hash:deadbeef, sbom:false}", "T1195", "🟡", "OT"),
-    "S11": ("무장", "POST /arm {action:ARM}", "ICS 무장", "⛔/🟠", "OT"),
-    "S12": ("임무 자기승인", "POST /plan {planner==approver}", "IDOR/T1078", "🟡", "OT"),
-    "S16": ("AOI 이탈", "telemetry: 좌표 ∉ AOI 박스", "T0831", "🟡", "OT"),
-    "S17": ("SAR 좌표 유출", "SAR 타깃 exfil 레코드", "T1041", "🟡+exfil", "OT"),
-    "S48": ("인증우회/IDOR", "GET /weapon/operator-02", "IDOR/T1078", "🟡", "IT"),
-    "S49": ("웹셸 업로드", "imagery.php: <?php system($_GET['c']); ?>", "T1505.003", "🟡", "IT"),
-    "S50": ("SUID/GTFOBins", "find . -exec /bin/sh -p \\; -quit", "T1548.001", "🟠", "IT"),
-    "S51": ("컨테이너 escape", "podspec: hostPath /var/run/docker.sock", "T1611", "🟠", "IT"),
-    "S52": ("cron 하이재킹", "/etc/cron.d/rogue: * * * * * root /opt/rogue", "T1053.003", "🟡", "IT"),
-    "S53": ("아카이브 Zip Slip", "zip 엔트리 ../../../opt/uav/startup.d/rogue.sh", "CWE-22/T1195", "🟡", "IT"),
+    "S33":  ("펌웨어 변조", "POST /preflight {hash:deadbeef, sbom:false}", "T1195", "🟡", "OT"),
+    "S3": ("무장", "POST /arm {action:ARM}", "ICS 무장", "⛔/🟠", "OT"),
+    "S36": ("임무 자기승인", "POST /plan {planner==approver}", "IDOR/T1078", "🟡", "OT"),
+    "S109": ("AOI 이탈", "telemetry: 좌표 ∉ AOI 박스", "T0831", "🟡", "OT"),
+    "S92": ("SAR 좌표 유출", "SAR 타깃 exfil 레코드", "T1041", "🟡+exfil", "OT"),
+    "S53": ("인증우회/IDOR", "GET /weapon/operator-02", "IDOR/T1078", "🟡", "IT"),
+    "S54": ("웹셸 업로드", "imagery.php: <?php system($_GET['c']); ?>", "T1505.003", "🟡", "IT"),
+    "S55": ("SUID/GTFOBins", "find . -exec /bin/sh -p \\; -quit", "T1548.001", "🟠", "IT"),
+    "S56": ("컨테이너 escape", "podspec: hostPath /var/run/docker.sock", "T1611", "🟠", "IT"),
+    "S57": ("cron 하이재킹", "/etc/cron.d/rogue: * * * * * root /opt/rogue", "T1053.003", "🟡", "IT"),
+    "S58": ("아카이브 Zip Slip", "zip 엔트리 ../../../opt/uav/startup.d/rogue.sh", "CWE-22/T1195", "🟡", "IT"),
 }
 
 _CHAIN_NARRATIVE = {
     "C14": "악성 아카이브(Zip Slip)로 펌웨어 번들에 임플란트 드롭 → 펌웨어 변조 → 변조 기체 GNSS 스푸핑. 전달은 파일추출 계층이라 UAV SOC 사각.",
     "C15": "웹셸로 스텁 침해 → 컨테이너 escape 로 호스트 장악 → 그 권한으로 임무 자기승인 → 무장. IT 발판은 사각이나 OT 임무층에서 잡힘.",
     "C16": "웹셸→SUID 권한상승→컨테이너 escape→cron 지속. 전 단계가 IT 계층이라 UAV Sentinel 완전 사각(최악 공백).",
-    "C17": "악성 아카이브 전달 → 웹셸 → SAR 좌표 유출. 전달·웹셸은 사각, 유출 룰(S17)에서 탐지.",
+    "C17": "악성 아카이브 전달 → 웹셸 → SAR 좌표 유출. 전달·웹셸은 사각, 유출 룰(S92)에서 탐지.",
     "C18": "인증우회(IDOR)로 무장 엔드포인트 직접 접근 → 무장 시도. 우회는 사각이나 무장 범주형(2인통제) 견고차단.",
 }
 

@@ -1,4 +1,4 @@
-"""S31~S34 신규 시나리오 배선 테스트 — 결정론·무의존."""
+"""S24~S97 신규 시나리오 배선 테스트 — 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.assessment import OBJECTIVES, adaptive_engage, assess_action
@@ -28,6 +28,6 @@ def test_s33_model_extraction_blindspot():
 
 
 def test_s34_recon_detected_but_evadable():
-    # active_scan → S6(연속임계) → 강도 하향으로 회피 달성.
+    # active_scan → S34(연속임계) → 강도 하향으로 회피 달성.
     r = adaptive_engage("network_recon")
     assert r.verdict == "achieved" and r.winning_ttp == "active_scan"

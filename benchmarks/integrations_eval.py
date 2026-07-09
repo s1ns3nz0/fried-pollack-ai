@@ -26,7 +26,7 @@ def main() -> None:
 
     print("\n② 폴백 실행 시연 (env 미지정)")
     a = ai_attack.run_ai_attack("prompt_injection")
-    print(f"   AI공격(S32)  : mode={a['mode']} detected={a['detected']} ({a['mitre']})")
+    print(f"   AI공격(S90)  : mode={a['mode']} detected={a['detected']} ({a['mitre']})")
     c = caldera.run_operation("C9")
     print(f"   Caldera(C9)  : mode={c['mode']} verdict={c['verdict']}")
     s = sitl.inject_gps_spoof()

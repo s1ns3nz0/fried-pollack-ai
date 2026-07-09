@@ -64,7 +64,7 @@ def main():
           f"· CDE={d.cde_tier} · {d.rationale}")
 
     _h(4, "무기화 §N — 상황 맞춤 페이로드(S1 억제 인젝션)")
-    ctx = SituationContext(scenario="S32", target_rule="S1_GNSS_Spoofing")
+    ctx = SituationContext(scenario="S90", target_rule="S1_GNSS_Spoofing")
     for p in AdaptivePayloadGenerator().generate(ctx)[:1]:
         print(f"  SOC 인젝션: {p.text}")
         print(f"    ↳ {p.rationale}")

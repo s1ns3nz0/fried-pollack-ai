@@ -18,17 +18,17 @@ def test_taxii_fallback_without_env():
 
 
 def test_profile_scenario_maps_actors():
-    # S6(GCS 자격증명)은 APT28 + Volt Typhoon 둘 다 구사.
-    actors = ti.profile_scenario("S6")
+    # S34(GCS 자격증명)은 APT28 + Volt Typhoon 둘 다 구사.
+    actors = ti.profile_scenario("S34")
     assert "APT28 (G0007)" in actors and "Volt Typhoon (G1017)" in actors
-    assert ti.threat_count("S6") >= 2
+    assert ti.threat_count("S34") >= 2
 
 
 def test_ti_boosts_most_threatened_target():
     hptl = ti.ti_prioritized_targets()
     by_sid = {r["scenario"]: r for r in hptl}
-    # GCS 자격증명(S6)이 최다 위협(≥2) → 최대 TI 가산.
-    s6 = by_sid["S6"]
+    # GCS 자격증명(S34)이 최다 위협(≥2) → 최대 TI 가산.
+    s6 = by_sid["S34"]
     assert s6["active_threats"] >= 2 and s6["ti_score"] == s6["carver"] + s6["active_threats"] * 2
     # HPTL 은 TI 점수 내림차순 정렬.
     assert [r["ti_score"] for r in hptl] == sorted((r["ti_score"] for r in hptl), reverse=True)

@@ -1,4 +1,4 @@
-"""커버리지 최대화 보강(S65~S71) 테스트 — C2 은닉 + advanced. 결정론·무의존."""
+"""커버리지 최대화 보강(S15~S66) 테스트 — C2 은닉 + advanced. 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.transport.covert_c2 import (
@@ -29,12 +29,12 @@ def test_advanced_scenarios_detected():
     verdicts = {}
     for sid, fn in ADVANCED_SCENARIOS.items():
         verdicts[sid] = analyze(fn()).verdict
-    assert verdicts["S66"] == "malicious"               # 파괴
-    assert verdicts["S67"] == "malicious"               # rootkit
-    assert verdicts["S68"] == "malicious"               # fw mode
-    assert verdicts["S69"] == "malicious"               # auth 변조
-    assert verdicts["S71"] == "malicious"               # 탈취
-    assert analyze(ADVANCED_SCENARIOS["S70"]()).blind_spot is True   # 유출 대체매체=사각
+    assert verdicts["S61"] == "malicious"               # 파괴
+    assert verdicts["S62"] == "malicious"               # rootkit
+    assert verdicts["S63"] == "malicious"               # fw mode
+    assert verdicts["S64"] == "malicious"               # auth 변조
+    assert verdicts["S66"] == "malicious"               # 탈취
+    assert analyze(ADVANCED_SCENARIOS["S65"]()).blind_spot is True   # 유출 대체매체=사각
 
 
 def test_effective_coverage_now_100():

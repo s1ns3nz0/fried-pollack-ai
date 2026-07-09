@@ -21,7 +21,7 @@ from redteam_core.simtest import (                                # noqa: E402
 def main() -> None:
     print("=== fried-pollack-ai · simtest §Z (AutoSim 영감) ===\n")
 
-    print("① 다중센서 폴트인젝션 (S56~S59, 점진 주입 ramp=0.1)")
+    print("① 다중센서 폴트인젝션 (S9~S12, 점진 주입 ramp=0.1)")
     for sid, m in SENSOR_SCENARIOS.items():
         r = run_sensor_fault(sid, ramp_rate=0.1)
         tag = "🥷 은밀 수용" if r.stealthy else "🔴 EKF 거부"
@@ -41,7 +41,7 @@ def main() -> None:
     o = analyze_flightlog(log)
     print(f"   효과={o['effect']} · 시그니처={o['signatures']}")
 
-    print("\n핵심: 센서 계층(S56~S59)은 EKF 오염 신규 공격면·전부 사각지대.")
+    print("\n핵심: 센서 계층(S9~S12)은 EKF 오염 신규 공격면·전부 사각지대.")
     print("      환경이 효과를 증폭(도심협곡 GNSS ×1.6). 인시던트-KB가 시나리오 근거화.")
 
 

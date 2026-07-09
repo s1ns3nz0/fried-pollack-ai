@@ -1,4 +1,4 @@
-"""데이터 유출 시나리오 테스트 — S35~S38. 결정론·무의존."""
+"""데이터 유출 시나리오 테스트 — S93~S96. 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.assessment import OBJECTIVES
@@ -19,8 +19,8 @@ def test_exfil_scenarios_are_blindspots():
 
 
 def test_crypto_key_scenario_present():
-    s38 = EXFIL_SCENARIOS["S38"]
-    assert "암호키" in s38["name"] and "S18" in s38["note"]
+    s38 = EXFIL_SCENARIOS["S96"]
+    assert "암호키" in s38["name"] and "S20" in s38["note"]
 
 
 def test_exfil_campaigns():

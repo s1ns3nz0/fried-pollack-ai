@@ -76,44 +76,44 @@ def range_targets(tmp_path_factory):
 
 
 def test_ground_gcs_file_lands_on_disk(range_targets):
-    """S86 GCS 악성 미션파일이 실제 표적 디렉토리에 생성되는가."""
-    r = ground_exec("S86")
+    """S41 GCS 악성 미션파일이 실제 표적 디렉토리에 생성되는가."""
+    r = ground_exec("S41")
     assert r["sent"] and os.path.exists(r["path"])
     assert b"passwd" in open(r["path"], "rb").read()
 
 
 def test_ground_mavros_mavlink_received(range_targets):
-    """S92 MAVROS 명령이 실제 MAVLink UDP 로 표적에 도달하는가."""
-    r = ground_exec("S92")
+    """S47 MAVROS 명령이 실제 MAVLink UDP 로 표적에 도달하는가."""
+    r = ground_exec("S47")
     assert r["sent"]
     data, _ = range_targets["socks"]["MAVLINK_ENDPOINT"].recvfrom(256)
     assert len(data) > 0
 
 
 def test_ground_ntp_packet_received(range_targets):
-    """S95 GDT NTP 스푸핑 48바이트 패킷이 표적에 도달하는가."""
-    r = ground_exec("S95")
+    """S50 GDT NTP 스푸핑 48바이트 패킷이 표적에 도달하는가."""
+    r = ground_exec("S50")
     assert r["sent"]
     data, _ = range_targets["socks"]["NTP_TARGET"].recvfrom(64)
     assert len(data) == 48
 
 
 def test_ground_fleet_api_http_hit(range_targets):
-    """S96 함대관리 API 인증우회 HTTP 요청이 표적 서버에 도달하는가."""
-    r = ground_exec("S96")
+    """S81 함대관리 API 인증우회 HTTP 요청이 표적 서버에 도달하는가."""
+    r = ground_exec("S81")
     assert r["sent"] and r.get("status") == 200
     assert any("/api/fleet/42" in h for h in range_targets["ev"]["http"])
 
 
 def test_ground_ros_master_xmlrpc(range_targets):
-    """S90 무인증 ROS 마스터 XML-RPC 실 호출이 응답을 받는가."""
-    r = ground_exec("S90")
+    """S45 무인증 ROS 마스터 XML-RPC 실 호출이 응답을 받는가."""
+    r = ground_exec("S45")
     assert r["sent"] and "system_state" in r
 
 
 def test_information_forged_report_written(range_targets):
-    """S100 위조 SOCReport 가 실제 파일로 표적에 생성되는가."""
-    r = info_exec("S100")
+    """S85 위조 SOCReport 가 실제 파일로 표적에 생성되는가."""
+    r = info_exec("S85")
     assert r["sent"] and os.path.exists(r["path"])
     assert b"true_state" in open(r["path"], "rb").read()
 

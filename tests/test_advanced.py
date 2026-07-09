@@ -9,18 +9,18 @@ from redteam_core.assessment import OBJECTIVES, adaptive_engage
 
 
 def test_rf_scenarios_and_objectives():
-    assert set(RF_SCENARIOS) == {"S43", "S44", "S45", "S46"}
+    assert set(RF_SCENARIOS) == {"S29", "S30", "S31", "S8"}
     for obj in ("rc_link_hijack", "rc_override", "rc_downgrade", "dshot_motor", "antiforensics"):
         assert obj in OBJECTIVES
 
 
 def test_rf_dry_no_transmission():
-    r = run_rf("S43", dry=True)
+    r = run_rf("S29", dry=True)
     assert r.transmitted is False and "bind" in r.artifact.lower()
 
 
 def test_dshot_motor_artifact():
-    r = run_rf("S46", dry=True)
+    r = run_rf("S8", dry=True)
     assert "DShot" in r.artifact or "MOTOR" in r.artifact
 
 
@@ -36,6 +36,6 @@ def test_advanced_scenarios_are_blindspots():
 
 
 def test_catalog_maps_tools():
-    assert any(t["scenario"] == "S43" for t in TECHNIQUE_TOOLS)
-    assert tools_for_scenario("S6")[0]["tools"]
+    assert any(t["scenario"] == "S29" for t in TECHNIQUE_TOOLS)
+    assert tools_for_scenario("S34")[0]["tools"]
     assert len(EVASION_TECHNIQUES) >= 3

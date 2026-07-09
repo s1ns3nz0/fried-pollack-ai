@@ -13,12 +13,12 @@ from typing import Optional
 
 # 우리 시나리오 → Metasploit 모듈(IT/인프라 인접 위주). UAV 특화는 msf 커버 밖.
 SCENARIO_MSF = {
-    "S6": ("auxiliary/scanner/http/http_login", {"RHOSTS": "", "USERPASS_FILE": ""}),
-    "S23": ("auxiliary/dos/http/slowloris", {"RHOSTS": ""}),
-    "S25": ("auxiliary/dos/tcp/synflood", {"RHOST": ""}),
-    "S34": ("auxiliary/scanner/portscan/tcp", {"RHOSTS": ""}),
-    "S39": ("auxiliary/dos/wifi/deauth", {"CHANNEL": "6", "ADDR_DST": ""}),
-    "S36": ("auxiliary/server/capture/http", {}),
+    "S34": ("auxiliary/scanner/http/http_login", {"RHOSTS": "", "USERPASS_FILE": ""}),
+    "S51": ("auxiliary/dos/http/slowloris", {"RHOSTS": ""}),
+    "S52": ("auxiliary/dos/tcp/synflood", {"RHOST": ""}),
+    "S97": ("auxiliary/scanner/portscan/tcp", {"RHOSTS": ""}),
+    "S25": ("auxiliary/dos/wifi/deauth", {"CHANNEL": "6", "ADDR_DST": ""}),
+    "S94": ("auxiliary/server/capture/http", {}),
 }
 
 

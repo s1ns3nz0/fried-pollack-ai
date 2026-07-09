@@ -14,8 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from redteam_core.tempo import tempo_tradeoff          # noqa: E402
 
-ACTIONS = [("active_scan", "S6 브루트포스"), ("gnss_spoof", "S1 GNSS 스푸핑"),
-           ("spoof_telemetry", "S18 MAVLink")]
+ACTIONS = [("active_scan", "S34 브루트포스"), ("gnss_spoof", "S1 GNSS 스푸핑"),
+           ("spoof_telemetry", "S20 MAVLink")]
 
 
 def main() -> None:

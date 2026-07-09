@@ -2,7 +2,7 @@
 
 에이전트의 약했던 '정보활동' 기능 보강. 탐지 '회피'를 넘어 방어자를 적극 '기만'한다:
 미끼(decoy) 공격으로 blue SOC 의 분석주의를 포화시켜 진짜 공격을 은폐한다.
-이는 blue 가 모델링한 S8/S9(군집포화·SOC 과부하) 위협을 red 가 역이용하는 것.
+이는 blue 가 모델링한 S100/S19(군집포화·SOC 과부하) 위협을 red 가 역이용하는 것.
 
 교리:
   - JP 3-13 Information Operations · JP 3-13.4 Military Deception(MILDEC).

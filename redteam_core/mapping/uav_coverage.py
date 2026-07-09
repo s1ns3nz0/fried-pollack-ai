@@ -1,7 +1,7 @@
 """UAV ATT&CK 커버리지 매트릭스 — 팀 UAV 매트릭스(15전술·111기법) 대비 RED 커버리지.
 
 동언님·수지님이 만든 'UAV ATT&CK 매핑표(Enterprise+ICS)'를 기준선으로, 우리 RED
-에이전트(S1~S55 + 액션/모듈)가 각 기법을 실제로 공격하는지 매핑한다. 산출:
+에이전트(S1~S60 + 액션/모듈)가 각 기법을 실제로 공격하는지 매핑한다. 산출:
 per-tactic 커버리지·갭(미커버 기법)·히어로셋(blue 탐지불가 ❌ 기법 중 우리가 공격).
 
 detectable=False(❌) = blue Sentinel 로그/룰로 탐지 불가 기법 → 우리가 커버하면
@@ -128,140 +128,140 @@ UAV_MATRIX: List[Tuple[str, str, str, bool]] = [
 
 # 기법ID → 우리 RED 가 실제로 공격하는 시나리오/모듈. (미기재 = 갭)
 RED_COVER: Dict[str, str] = {
-    "T1595": "S34/S6 active_scan(§F recon)",
+    "T1595": "S97/S34 active_scan(§F recon)",
     "T1592": "recon 표적정보 수집(§F)",
-    "T1190": "S49 웹셸·스텁 취약점(§N exploits)",
-    "T1133": "S48 IDOR·noVNC/QGC 악용",
-    "T1195": "S4/S53~S55 공급망·아카이브(§N archive)",
-    "T1078": "S6/S48 자격증명 탈취",
-    "T0860": "S30/S39~S42 무선 침해(§C/§V)",
-    "T0864": "S21 정비 임플란트(§L)",
-    "T1059": "S49 웹셸 명령실행",
+    "T1190": "S54 웹셸·스텁 취약점(§N exploits)",
+    "T1133": "S53 IDOR·noVNC/QGC 악용",
+    "T1195": "S33/S58~S60 공급망·아카이브(§N archive)",
+    "T1078": "S34/S53 자격증명 탈취",
+    "T0860": "S23/S25~S28 무선 침해(§C/§V)",
+    "T0864": "S38 정비 임플란트(§L)",
+    "T1059": "S54 웹셸 명령실행",
     "T1106": "MAVLink API 직접 호출(§K)",
-    "T1204": "S12 악성 미션·무장 유도",
-    "T0821": "S5 파라미터 변조",
-    "T1692.001": "S18 비인가 MAVLink 주입",
+    "T1204": "S36 악성 미션·무장 유도",
+    "T0821": "S2 파라미터 변조",
+    "T1692.001": "S20 비인가 MAVLink 주입",
     "T1542.001": "§L FileImplant/펌웨어 백도어",
     "T0859": "백도어 계정(§L persistence)",
-    "T1546": "S52 cron/조건부 실행(§N exploits)",
-    "T1068": "S50 권한상승 익스플로잇(§N)",
-    "T1078.pe": "S48/S6 고권한 계정 탈취",
+    "T1546": "S57 cron/조건부 실행(§N exploits)",
+    "T1068": "S55 권한상승 익스플로잇(§N)",
+    "T1078.pe": "S53/S34 고권한 계정 탈취",
     "T1036": "masquerade — 정상 GCS 위장(§H)",
-    "T1601": "S13 사이버태세/시스템이미지 변조",
-    "T0878": "S20 경보 억제(Failsafe)",
+    "T1601": "S37 사이버태세/시스템이미지 변조",
+    "T0878": "S5 경보 억제(Failsafe)",
     "T0840": "네트워크 연결 열거(§G maneuver)",
-    "T0842": "S18 MAVLink 스니핑",
+    "T0842": "S20 MAVLink 스니핑",
     "T1210": "§G 원격서비스 익스플로잇",
-    "T1563": "S3/VNC 세션 하이재킹",
+    "T1563": "S18/VNC 세션 하이재킹",
     "T1570": "§G Lateral Tool Transfer",
     "T1021": "§G 컨테이너간 원격서비스 피벗",
     "T1550": "탈취 세션토큰 재사용(§G)",
     "T1694": "무인증 5790 발판(§G)",
-    "T1080": "S14 TI/임무 오염(taint)",
-    "T1557": "S3 SATCOM 중간자",
-    "T1185": "S48/noVNC 세션 탈취",
-    "T1074": "S37 스테이징 유출(§M)",
+    "T1080": "S78 TI/임무 오염(taint)",
+    "T1557": "S18 SATCOM 중간자",
+    "T1185": "S53/noVNC 세션 탈취",
+    "T1074": "S95 스테이징 유출(§M)",
     "T1071": "§K MAVLink C2",
     "T1571": "§K 비표준 포트 C2 비콘",
-    "T1090": "S26 mavlink-router 프록시",
+    "T1090": "S22 mavlink-router 프록시",
     "T1008": "LOS/BLOS 폴백(§K)",
-    "T1659": "S3 콘텐츠 주입",
+    "T1659": "S18 콘텐츠 주입",
     "T1105": "§K Ingress Tool Transfer",
     "T1095": "§K 원시 TCP/UDP 운반",
     "T1104": "다단계 채널(§K/§G)",
     "T1219": "MAVProxy/QGC 원격제어(§Q)",
-    "T1041": "S17/S36 C2 채널 유출",
-    "T1020": "S35 SAR 자동 유출",
-    "T1029": "S37 주기 버스트 전송",
+    "T1041": "S92/S94 C2 채널 유출",
+    "T1020": "S93 SAR 자동 유출",
+    "T1029": "S95 주기 버스트 전송",
     "T1048": "대체 프로토콜 유출(§M)",
-    "T1030": "S37 분할 유출(chunk)",
-    "T0836": "S5 파라미터 변조",
-    "T1693": "S4 펌웨어 변조",
-    "T1692": "S18 위조 MAVLink",
-    "T0806": "S11 Brute Force I/O(무장)",
-    "T0838": "S19 Failsafe 임계 변조",
-    "T0814": "S30/S31 재밍 DoS(§C)",
-    "T1695": "S31 통신 차단(재밍)",
-    "T1691.002": "S28 보고 메시지 차단",
-    "T0881": "S23 서비스 중단",
-    "T0816": "S25 컨테이너 재시작",
+    "T1030": "S95 분할 유출(chunk)",
+    "T0836": "S2 파라미터 변조",
+    "T1693": "S33 펌웨어 변조",
+    "T1692": "S20 위조 MAVLink",
+    "T0806": "S3 Brute Force I/O(무장)",
+    "T0838": "S4 Failsafe 임계 변조",
+    "T0814": "S23/S24 재밍 DoS(§C)",
+    "T1695": "S24 통신 차단(재밍)",
+    "T1691.002": "S7 보고 메시지 차단",
+    "T0881": "S51 서비스 중단",
+    "T0816": "S52 컨테이너 재시작",
     "T0892": "자격 변경 잠금",
     "T0835": "S1 GNSS I/O 조작",
     "T0832": "S1 위조 텔레메트리(기만)",
-    "T0827": "S30 통제 상실(JAM)",
-    "T0880": "S19/S20 안전 상실",
+    "T0827": "S23 통제 상실(JAM)",
+    "T0880": "S4/S5 안전 상실",
     "T0879": "추락/강제착륙",
-    "T1498": "S30 네트워크 재밍 DoS",
-    "T1565": "S17 SAR 데이터 변조",
-    "T0815": "S28 영상 상실",
+    "T1498": "S23 네트워크 재밍 DoS",
+    "T1565": "S92 SAR 데이터 변조",
+    "T0815": "S7 영상 상실",
     "T0831": "S1 통제 조작",
-    "T0813": "S30 통제 거부(재밍)",
-    "T0829": "S28 영상 스트림 지속 단절",
+    "T0813": "S23 통제 거부(재밍)",
+    "T0829": "S7 영상 스트림 지속 단절",
     "T0826": "장기 재밍 가용성 상실",
     "T0837": "Failsafe 무력화 보호 상실",
     "T0828": "임무 실패 성과 저하",
-    "T1499": "S25 엔드포인트 DoS",
-    "T1529": "S23 시스템 종료",
-    "T1495": "S4 펌웨어 손상",
+    "T1499": "S52 엔드포인트 DoS",
+    "T1529": "S51 시스템 종료",
+    "T1495": "S33 펌웨어 손상",
     "T1531": "계정 잠금/삭제",
     # 동언님 병렬 시나리오(§V WiFi·§W 고급)로 커버되는 기법 매핑 보정.
-    "T0887": "S39~S42 WiFi RF 스니핑(§V)",
-    "T1070": "S43~S47 anti-forensics 흔적 제거(§W)",
-    "T0843": "S14 taint + §G 편대 전파(program download)",
-    "T1560": "S37 스테이징 + §N 아카이브 번들(collected data)",
-    # 신규 IT 계층(팀 매트릭스엔 없지만 우리가 추가) — S48~S55 는 위 T1190/T1068 등에 매핑됨.
-    # 보강 구현(S65~S71) — 커버리지 최대화, 실 아티팩트로 구현.
-    "T1572": "S65 C2 터널링(SATCOM 캡슐화, §K covert_c2)",
-    "T1573": "S65 C2 암호채널(XOR, §K covert_c2)",
-    "T1001": "S65 C2 난독(더미 인터리브, §K covert_c2)",
-    "T1132": "S65 C2 인코딩(base64, §K covert_c2)",
-    "T0809": "S66 데이터 파괴(§N advanced)",
-    "T1485": "S66 데이터 파괴(§N advanced)",
-    "T1014": "S67 rootkit(§N advanced)",
-    "T0851": "S67 rootkit-inhibit(§N advanced)",
-    "T0800": "S68 FW 업데이트 모드 강제(§N advanced)",
-    "T1556": "S69 인증 프로세스 변조(§N advanced)",
-    "T1011": "S70 유출-SATCOM 대체매체(§N advanced)",
-    "T1567": "S70 유출-REST 웹서비스(§N advanced)",
-    "T0882": "S71 작전정보 탈취(§N advanced)",
-    # 수동 수집·심화 정찰 실 구현(S63~S64) — red 수행 O, blue 로그 없음(사각).
-    "T1125": "S63 영상 수동 도청(§N collection)",
-    "T1119": "S63 자동 수집(§N collection)",
-    "T0845": "S63 임무/파라미터 추출(§N collection)",
-    "T1113": "S63 화면 캡처(§N collection)",
-    "T1005": "S63 로컬 파일 수집(§N collection)",
-    "T1056": "S63 키입력 가로채기(§N collection)",
-    "T1590": "S64 네트워크 구조 정찰(§N collection)",
-    "T1596": "S64 CVE DB 검색(§Q cve_intel)",
+    "T0887": "S25~S28 WiFi RF 스니핑(§V)",
+    "T1070": "S29~S40 anti-forensics 흔적 제거(§W)",
+    "T0843": "S78 taint + §G 편대 전파(program download)",
+    "T1560": "S95 스테이징 + §N 아카이브 번들(collected data)",
+    # 신규 IT 계층(팀 매트릭스엔 없지만 우리가 추가) — S53~S60 는 위 T1190/T1068 등에 매핑됨.
+    # 보강 구현(S15~S66) — 커버리지 최대화, 실 아티팩트로 구현.
+    "T1572": "S15 C2 터널링(SATCOM 캡슐화, §K covert_c2)",
+    "T1573": "S15 C2 암호채널(XOR, §K covert_c2)",
+    "T1001": "S15 C2 난독(더미 인터리브, §K covert_c2)",
+    "T1132": "S15 C2 인코딩(base64, §K covert_c2)",
+    "T0809": "S61 데이터 파괴(§N advanced)",
+    "T1485": "S61 데이터 파괴(§N advanced)",
+    "T1014": "S62 rootkit(§N advanced)",
+    "T0851": "S62 rootkit-inhibit(§N advanced)",
+    "T0800": "S63 FW 업데이트 모드 강제(§N advanced)",
+    "T1556": "S64 인증 프로세스 변조(§N advanced)",
+    "T1011": "S65 유출-SATCOM 대체매체(§N advanced)",
+    "T1567": "S65 유출-REST 웹서비스(§N advanced)",
+    "T0882": "S66 작전정보 탈취(§N advanced)",
+    # 수동 수집·심화 정찰 실 구현(S98~S99) — red 수행 O, blue 로그 없음(사각).
+    "T1125": "S98 영상 수동 도청(§N collection)",
+    "T1119": "S98 자동 수집(§N collection)",
+    "T0845": "S98 임무/파라미터 추출(§N collection)",
+    "T1113": "S98 화면 캡처(§N collection)",
+    "T1005": "S98 로컬 파일 수집(§N collection)",
+    "T1056": "S98 키입력 가로채기(§N collection)",
+    "T1590": "S99 네트워크 구조 정찰(§N collection)",
+    "T1596": "S99 CVE DB 검색(§Q cve_intel)",
     # UAV 특화 신규 기법 매핑(마이터 매트릭스 신규 반영).
-    "T0855": "S44 RC override 명령 주입(§W)",
-    "T1552": "S42 WiFi 기본 자격증명(§V)",
-    "T1555": "S43 RC 링크 바인딩 자격 탈취(§W)",
-    "T1600": "S45 RC 프로토콜 다운그레이드(§W)",
-    # 신규 시나리오 S60~S62 (APT 에뮬레이션 도출).
-    "T1090.002": "S60 위성 링크 C2 하이재킹(Turla, §N uav_novel)",
+    "T0855": "S30 RC override 명령 주입(§W)",
+    "T1552": "S28 WiFi 기본 자격증명(§V)",
+    "T1555": "S29 RC 링크 바인딩 자격 탈취(§W)",
+    "T1600": "S31 RC 프로토콜 다운그레이드(§W)",
+    # 신규 시나리오 S13~S14 (APT 에뮬레이션 도출).
+    "T1090.002": "S13 위성 링크 C2 하이재킹(Turla, §N uav_novel)",
 }
 
 # 미매핑 시나리오를 기존 기법 라벨에 병기(시나리오 반영, 커버리지 % 불변).
 for _tid, _extra in {
-    "T1557": " / S40 WiFi Evil Twin(§V)",
-    "T1498": " / S41 WiFi 재밍(§V)",
-    "T0831": " / S46 DShot/ESC 모터 조작(§W) / S61 GNSS 스푸핑 나포(RQ-170)",
-    "T0806": " / S56~S59 다중센서 폴트(§Z)",
-    "T0835": " / S56~S59 센서 EKF 기만(§Z) / S62 EKF 협조 폴트",
+    "T1557": " / S26 WiFi Evil Twin(§V)",
+    "T1498": " / S27 WiFi 재밍(§V)",
+    "T0831": " / S8 DShot/ESC 모터 조작(§W) / S32 GNSS 스푸핑 나포(RQ-170)",
+    "T0806": " / S9~S12 다중센서 폴트(§Z)",
+    "T0835": " / S9~S12 센서 EKF 기만(§Z) / S14 EKF 협조 폴트",
     # 도메인 특화 신규 시나리오(사각지대 보강, cloud 제외).
-    "T1565": " / S72 ISR 핸드오프 표적정보 변조(cross-segment)",
-    "T0832": " / S72 ISR 상황도 변조",
-    "T1495": " / S73 ESC 펌웨어 변조",
-    "T0879": " / S73 ESC 모터 파괴→추락",
-    "T0856": " / S103 편대 리더 스푸핑(swarm)",
-    "T0857": " / S109 스웜 명령 리플레이(swarm)",
-    "T0859": " / S107 Sybil 위장 멤버(swarm)",
+    "T1565": " / S80 ISR 핸드오프 표적정보 변조(cross-segment)",
+    "T0832": " / S80 ISR 상황도 변조",
+    "T1495": " / S16 ESC 펌웨어 변조",
+    "T0879": " / S16 ESC 모터 파괴→추락",
+    "T0856": " / S101 편대 리더 스푸핑(swarm)",
+    "T0857": " / S107 스웜 명령 리플레이(swarm)",
+    "T0859": " / S105 Sybil 위장 멤버(swarm)",
 }.items():
     if _tid in RED_COVER:
         RED_COVER[_tid] += _extra
 
-# 지상 세그먼트 소프트웨어(S86~S99) — 매트릭스 보강: 기체 외 GCS·ROS·데이터링크·클라우드.
+# 지상 세그먼트 소프트웨어(S41~S84) — 매트릭스 보강: 기체 외 GCS·ROS·데이터링크·클라우드.
 # 전부 UAV Sentinel(텔레메트리 평면) 미감시 = ❌(탐지불가) → 히어로셋(은밀 공격).
 UAV_MATRIX += [
     ("Execution", "T1203", "Exploitation for Client Execution (GCS 파서)", False),
@@ -270,22 +270,22 @@ UAV_MATRIX += [
     ("Impact", "T1565.001", "Stored Data Manipulation (텔레메트리 수집)", False),
 ]
 for _gt, _gn in {
-    "T1203": "S86 GCS 악성 미션파일 파싱",
-    "T1059": "S87 GCS QML/플러그인 인젝션",
-    "T1195.002": "S88 GCS 자동업데이트 MITM",
-    "T1565": "S89 GCS 설정변조 / S99 C4I 위조명령",
-    "T1190": "S90 무인증 ROS 마스터 / S96 함대API 인증우회",
-    "T0855": "S91 ROS 토픽/서비스 인젝션",
-    "T0831": "S92 MAVROS 명령주입",
-    "T0857": "S93 모뎀/SATCOM 펌웨어",
-    "T1557": "S94 텔레메트리 릴레이 MITM / S98 RTSP 하이재킹",
-    "T1195": "S95 GDT NTP 스푸핑",
-    "T1565.001": "S97 텔레메트리 수집 오염",
+    "T1203": "S41 GCS 악성 미션파일 파싱",
+    "T1059": "S42 GCS QML/플러그인 인젝션",
+    "T1195.002": "S43 GCS 자동업데이트 MITM",
+    "T1565": "S44 GCS 설정변조 / S84 C4I 위조명령",
+    "T1190": "S45 무인증 ROS 마스터 / S81 함대API 인증우회",
+    "T0855": "S46 ROS 토픽/서비스 인젝션",
+    "T0831": "S47 MAVROS 명령주입",
+    "T0857": "S48 모뎀/SATCOM 펌웨어",
+    "T1557": "S49 텔레메트리 릴레이 MITM / S83 RTSP 하이재킹",
+    "T1195": "S50 GDT NTP 스푸핑",
+    "T1565.001": "S82 텔레메트리 수집 오염",
 }.items():
     RED_COVER[_gt] = (RED_COVER[_gt] + " / " + _gn) if _gt in RED_COVER else _gn
 
 # 미커버 기법 분류: 'excluded'=진짜 불가능(공격자 자기 인프라만).
-# SOFT 제외(수동수집·정찰)는 S63~S64 로 실 구현해 커버로 전환 → 제외에서 제거.
+# SOFT 제외(수동수집·정찰)는 S98~S99 로 실 구현해 커버로 전환 → 제외에서 제거.
 GAP_SCOPE: Dict[str, str] = {
     # 공격자가 자기 컴퓨터에서 도구 개발·획득·스테이징 — sim 밖, red 불가(반박 불가).
     "T1587": "excluded", "T1588": "excluded", "T1608": "excluded",
@@ -361,9 +361,9 @@ def verified_summary() -> dict:
     covered = [tid for _, tid, _, _ in UAV_MATRIX if tid in RED_COVER]
 
     def is_callable_artifact(tid: str) -> bool:
-        # ARTIFACT_REGISTRY(23) OR craft 함수(S48~S64) OR core action(MAP).
+        # ARTIFACT_REGISTRY(23) OR craft 함수(S53~S99) OR core action(MAP).
         return (tid in art or tid in map_ids
-                or bool(re.search(r"S(4[89]|5[0-9]|6[0-9]|7[01])", RED_COVER[tid])))
+                or bool(re.search(r"S(9|1[0-5]|32|5[3-9]|6[0-6]|9[89])\b", RED_COVER[tid])))
 
     verified = [t for t in covered if is_callable_artifact(t)]
     return {

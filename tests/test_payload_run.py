@@ -16,7 +16,7 @@ def test_prompt_injection_all_bypass_blindspot():
 def test_model_extraction_ladder_bypasses():
     outs = run_model_extraction()
     assert len(outs) == 5 and bypass_rate(outs) == 1.0
-    assert outs[0].scenario == "S33"
+    assert outs[0].scenario == "S91"
 
 
 def test_adversarial_specs_execute():

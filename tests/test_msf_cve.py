@@ -19,7 +19,7 @@ def test_status_includes_new_integrations():
 
 
 def test_msf_maps_it_scenarios_dry():
-    r = metasploit.run_scenario("S6")           # http_login
+    r = metasploit.run_scenario("S34")           # http_login
     assert r["mode"] == "fallback(dry)" and "http_login" in r["module"]
 
 
@@ -30,11 +30,11 @@ def test_msf_unmapped_uav_scenario():
 
 def test_cve_fallback_static_registry():
     r = cve_intel.lookup_cve("CVE-2015-3789")   # 정적 레지스트리
-    assert r["mode"] == "fallback(static)" and r["record"]["scenario"] == "S42"
+    assert r["mode"] == "fallback(static)" and r["record"]["scenario"] == "S28"
 
 
 def test_cve_for_scenario():
-    assert any(c["scenario"] == "S40" for c in cve_intel.cves_for_scenario("S40"))
+    assert any(c["scenario"] == "S26" for c in cve_intel.cves_for_scenario("S26"))
 
 
 def test_msf_env_flips_mode(monkeypatch):

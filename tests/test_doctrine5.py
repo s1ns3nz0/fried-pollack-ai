@@ -61,8 +61,8 @@ def test_ooda_race_inside_loop():
 
 # ── Information ──
 def test_information_forge_passes_without_signature():
-    assert attack_reporting_chain("S100", integrity_signed=False).success is True
-    assert attack_reporting_chain("S100", integrity_signed=True).success is False
+    assert attack_reporting_chain("S85", integrity_signed=False).success is True
+    assert attack_reporting_chain("S85", integrity_signed=True).success is False
 
 
 # ── Mission Command ──

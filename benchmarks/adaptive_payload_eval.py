@@ -19,9 +19,9 @@ from redteam_core.payloads import (                          # noqa: E402
 )
 
 CASES = [
-    SituationContext(scenario="S32", target_rule="S1_GNSS_Spoofing"),
-    SituationContext(scenario="S32", target_rule="S6_Operator_BruteForce"),
-    SituationContext(scenario="S33", target_rule="S1_GNSS_Spoofing"),
+    SituationContext(scenario="S90", target_rule="S1_GNSS_Spoofing"),
+    SituationContext(scenario="S90", target_rule="S6_Operator_BruteForce"),
+    SituationContext(scenario="S91", target_rule="S1_GNSS_Spoofing"),
 ]
 
 

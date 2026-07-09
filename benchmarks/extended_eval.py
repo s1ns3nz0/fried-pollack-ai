@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""빈 번호 채움 시나리오 데모 — S22·S28·S63~S65·S74~S85 (17개).
+"""빈 번호 채움 시나리오 데모 — S6·S7·S98~S15·S110~S77 (17개).
 
     python benchmarks/extended_eval.py
 """
@@ -23,7 +23,7 @@ def main() -> None:
         print()
     nums = sorted(int(s[1:]) for s in EXTENDED_SCENARIOS)
     print(f"채운 번호: {['S%d' % n for n in nums]}")
-    print("→ 이제 S1~S102 연속(빈 번호 0).")
+    print("→ 이제 S1~S87 연속(빈 번호 0).")
 
 
 if __name__ == "__main__":

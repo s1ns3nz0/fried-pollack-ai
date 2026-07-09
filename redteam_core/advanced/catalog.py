@@ -9,15 +9,15 @@ from typing import List
 
 # ATT&CK 기법 → (실 도구, 우리 시나리오)
 TECHNIQUE_TOOLS = [
-    {"tactic": "Recon", "technique": "T1595", "tools": ["nmap", "masscan"], "scenario": "S34"},
-    {"tactic": "Initial Access", "technique": "T1078", "tools": ["hydra", "medusa"], "scenario": "S6"},
-    {"tactic": "Delivery", "technique": "T1195", "tools": ["cosign", "syft"], "scenario": "S4"},
-    {"tactic": "Lateral Movement", "technique": "TA0008", "tools": ["impacket", "crackmapexec"], "scenario": "S24"},
-    {"tactic": "C2", "technique": "TA0011", "tools": ["Sliver", "Mythic", "Caldera"], "scenario": "S36"},
-    {"tactic": "Exfiltration", "technique": "T1041", "tools": ["dnscat2", "chisel"], "scenario": "S36"},
-    {"tactic": "AI/ML", "technique": "AML.T0051", "tools": ["PyRIT", "Garak"], "scenario": "S32"},
-    {"tactic": "RF/EW", "technique": "T1557", "tools": ["gps-sdr-sim", "gr-frsky", "bladeRF"], "scenario": "S43"},
-    {"tactic": "Defense Evasion", "technique": "T1070", "tools": ["timestomp", "shred"], "scenario": "S47"},
+    {"tactic": "Recon", "technique": "T1595", "tools": ["nmap", "masscan"], "scenario": "S97"},
+    {"tactic": "Initial Access", "technique": "T1078", "tools": ["hydra", "medusa"], "scenario": "S34"},
+    {"tactic": "Delivery", "technique": "T1195", "tools": ["cosign", "syft"], "scenario": "S33"},
+    {"tactic": "Lateral Movement", "technique": "TA0008", "tools": ["impacket", "crackmapexec"], "scenario": "S21"},
+    {"tactic": "C2", "technique": "TA0011", "tools": ["Sliver", "Mythic", "Caldera"], "scenario": "S94"},
+    {"tactic": "Exfiltration", "technique": "T1041", "tools": ["dnscat2", "chisel"], "scenario": "S94"},
+    {"tactic": "AI/ML", "technique": "AML.T0051", "tools": ["PyRIT", "Garak"], "scenario": "S90"},
+    {"tactic": "RF/EW", "technique": "T1557", "tools": ["gps-sdr-sim", "gr-frsky", "bladeRF"], "scenario": "S29"},
+    {"tactic": "Defense Evasion", "technique": "T1070", "tools": ["timestomp", "shred"], "scenario": "S40"},
 ]
 
 # 방어 회피 기법(§I 소모/§H 기만 심화)

@@ -1,4 +1,4 @@
-"""blue 탐지 룰 스펙 — dah-sentinel-content 의 실제 S1~S28 KQL 에서 씨앗 추출.
+"""blue 탐지 룰 스펙 — dah-sentinel-content 의 실제 S1~S7 KQL 에서 씨앗 추출.
 
 D8 준수: 여기 담기는 것은 blue 의 룰 정의(공유 산출물)에서 **수동 씨앗 복사**한
 임계/조건일 뿐, pollack-ai(SOC 에이전트) 코드도 룰 repo 런타임 의존도 아니다.
@@ -6,7 +6,7 @@ D8 준수: 여기 담기는 것은 blue 의 룰 정의(공유 산출물)에서 *
 
 임계 위치 참고(정정): blue 룰 임계는 대부분 `UAV_Threshold_List` watchlist 로
 외부화(ThresholdKey/Value) 돼 있어 §A 보정값을 watchlist 갱신으로 반영 가능하다.
-단 아래 씨앗 중 S6(FailCount>=5/3)·S1(zScore=3.0·gateMultiplier=1.5)은 쿼리
+단 아래 씨앗 중 S34(FailCount>=5/3)·S1(zScore=3.0·gateMultiplier=1.5)은 쿼리
 리터럴이라, 이 둘의 보정은 쿼리 임계 수정이 필요하다.
 
 `kind`:
@@ -42,7 +42,7 @@ def _ge(param: str, thr: float) -> Callable[[dict], bool]:
     return lambda row: float(row.get(param, 0.0)) >= thr
 
 
-# ── S1~S18 씨앗 (실제 룰에서 추출) ────────────────────────────────────────────
+# ── S1~S20 씨앗 (실제 룰에서 추출) ────────────────────────────────────────────
 # 값 출처는 provenance 에 명시. 연속 룰이 폐루프 임계 보정의 핵심 대상.
 DETECTION_RULES: Dict[str, RuleSpec] = {
     "S1_GNSS_Spoofing": RuleSpec(

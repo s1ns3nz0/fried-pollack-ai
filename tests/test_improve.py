@@ -23,19 +23,19 @@ def test_audit_renders():
 
 def test_information_execute_real_writes_file(tmp_path, monkeypatch):
     monkeypatch.setenv("INFO_TARGET_DIR", str(tmp_path))
-    r = execute_real("S100")                       # SOCReport 위조
+    r = execute_real("S85")                       # SOCReport 위조
     assert r["sent"] is True and os.path.exists(r["path"])
     assert b"true_state" in open(r["path"], "rb").read()   # 거짓 보고 실 생성
 
 
 def test_information_signed_blocks(monkeypatch, tmp_path):
     monkeypatch.setenv("INFO_TARGET_DIR", str(tmp_path))
-    assert execute_real("S102", integrity_signed=True)["sent"] is False
+    assert execute_real("S87", integrity_signed=True)["sent"] is False
 
 
 def test_information_no_target_fails_closed(monkeypatch):
     monkeypatch.delenv("INFO_TARGET_DIR", raising=False)
-    assert execute_real("S100")["sent"] is False
+    assert execute_real("S85")["sent"] is False
 
 
 def test_capability_index_covers_domains():

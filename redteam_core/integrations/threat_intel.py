@@ -1,7 +1,7 @@
 """위협 인텔 연동 — 위협행위자 프로파일링 + STIX/TAXII seam (§O 확장).
 
 TI 소비: red 가 '지금 누가 어떤 자산을 위협하나'를 반영해 표적 우선순위(§F)를 조정.
-교리: JP 2-0 정보 → JP 3-60 표적개발. (S14 'TI 소스 오염'은 TI를 *공격*하는 별개 시나리오.)
+교리: JP 2-0 정보 → JP 3-60 표적개발. (S78 'TI 소스 오염'은 TI를 *공격*하는 별개 시나리오.)
 
   - THREAT_ACTORS: ATT&CK Groups 기반 방산 UAV/OT/AI 위협행위자 시드(오프라인).
   - STIX/TAXII seam: env TAXII_URL/COLLECTION 지정 시 실 피드, 아니면 시드 폴백.
@@ -15,15 +15,15 @@ from typing import Dict, List
 # 방산 UAV/OT/AI 관련 위협행위자 시드(ATT&CK Group ID) → 연관 시나리오.
 THREAT_ACTORS: Dict[str, dict] = {
     "Sandworm (G0034)": {"focus": "OT/ICS 파괴·공급망",
-                         "scenarios": ["S2", "S4", "S19", "S23", "S25"]},
+                         "scenarios": ["S17", "S33", "S4", "S51", "S52"]},
     "APT28 (G0007)": {"focus": "방산 espionage·자격증명",
-                      "scenarios": ["S6", "S10", "S11", "S15", "S17"]},
+                      "scenarios": ["S34", "S35", "S3", "S79", "S92"]},
     "Volt Typhoon (G1017)": {"focus": "핵심인프라 LOTL·측면이동",
-                             "scenarios": ["S6", "S24", "S26"]},
+                             "scenarios": ["S34", "S21", "S22"]},
     "EW Threat Cluster": {"focus": "전자전/GNSS(귀속 불확실)",
-                          "scenarios": ["S1", "S3", "S9", "S30", "S31"]},
+                          "scenarios": ["S1", "S18", "S19", "S23", "S24"]},
     "AML Adversary (ATLAS)": {"focus": "적대적 ML·프롬프트 인젝션",
-                              "scenarios": ["S5", "S7", "S32", "S33"]},
+                              "scenarios": ["S2", "S88", "S90", "S91"]},
 }
 
 
@@ -75,7 +75,7 @@ def threat_count(scenario_id: str) -> int:
 
 # ── §F 연결: TI 가중 표적 우선순위 ───────────────────────────────────────────
 # CATALOG 목표 → 대표 시나리오(위협 수 산정용).
-_OBJECTIVE_SCENARIO = {"nav_denial": "S1", "recon_access": "S6", "weapon_effect": "S11"}
+_OBJECTIVE_SCENARIO = {"nav_denial": "S1", "recon_access": "S34", "weapon_effect": "S3"}
 _TI_WEIGHT = 2                          # 활성 위협행위자 1명당 CARVER 가산
 
 

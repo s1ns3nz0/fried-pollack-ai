@@ -19,8 +19,8 @@ class OrientDenialResult:
     note: str
 
 
-def orient_phase_denial(contradictions: int, reframe_scenario: str = "S29") -> OrientDenialResult:
-    """모순 근거 주입으로 Orient 불확실성 극대화. S5/S29(RAG 포이즈닝) 재프레임."""
+def orient_phase_denial(contradictions: int, reframe_scenario: str = "S89") -> OrientDenialResult:
+    """모순 근거 주입으로 Orient 불확실성 극대화. S2/S89(RAG 포이즈닝) 재프레임."""
     # 2^k 균등 가설이면 정규화 엔트로피 = k/(k+ref). 모순이 많을수록 1에 근접.
     u = round(contradictions / (contradictions + 2), 3) if contradictions else 0.0
     paralyzed = u >= 0.5

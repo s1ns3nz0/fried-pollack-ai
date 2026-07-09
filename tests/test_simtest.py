@@ -9,18 +9,18 @@ from redteam_core.simtest import (
 
 
 def test_sensor_scenarios_and_objectives():
-    assert set(SENSOR_SCENARIOS) == {"S56", "S57", "S58", "S59"}
+    assert set(SENSOR_SCENARIOS) == {"S9", "S10", "S11", "S12"}
     for obj in ("imu_spoof", "baro_spoof", "mag_spoof", "airspeed_spoof"):
         assert obj in OBJECTIVES
 
 
 def test_gradual_injection_bypasses_ekf():
-    r = run_sensor_fault("S56", ramp_rate=0.1)     # 점진 → 게이트 통과
+    r = run_sensor_fault("S9", ramp_rate=0.1)     # 점진 → 게이트 통과
     assert r.accepted is True and r.stealthy is True
 
 
 def test_abrupt_injection_rejected():
-    r = run_sensor_fault("S57", ramp_rate=1.0)     # 급변 → EKF 거부
+    r = run_sensor_fault("S10", ramp_rate=1.0)     # 급변 → EKF 거부
     assert r.accepted is False and "거부" in r.effect
 
 
@@ -33,7 +33,7 @@ def test_environment_amplifies_gnss_spoof():
 
 def test_incident_kb_grounds_scenarios():
     scs = scenarios_from_incidents()
-    assert any(s["scenario"] == "S58" and "toilet" in s["from_incident"].lower() for s in scs)
+    assert any(s["scenario"] == "S11" and "toilet" in s["from_incident"].lower() for s in scs)
     assert all(s["provenance"] for s in scs)
 
 

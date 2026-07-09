@@ -1,4 +1,4 @@
-"""AI 공격 도구 연동 — PyRIT/Garak (S32 프롬프트인젝션·S33 모델추출).
+"""AI 공격 도구 연동 — PyRIT/Garak (S90 프롬프트인젝션·S91 모델추출).
 
 env AI_ATTACK_PROVIDER(pyrit|garak) + AI_TARGET_URL 지정 시 실 도구로 표적 LLM
 공격, 아니면 결정론 폴백(사각지대 모델). 판정권은 모델 밖 유지(조언·실행만).

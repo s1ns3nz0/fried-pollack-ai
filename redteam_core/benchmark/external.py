@@ -11,7 +11,7 @@ from typing import List
 # 외부 벤치마크 → 우리 계층 매핑
 EXTERNAL_BENCHMARKS = [
     {"name": "xbow validation-benchmarks", "kind": "web CTF(104)", "env": "XBOW_PATH",
-     "maps": "§exploits S48~S52·§X toolsearch", "note": "flag 캡처 오라클"},
+     "maps": "§exploits S53~S57·§X toolsearch", "note": "flag 캡처 오라클"},
     {"name": "Cybench", "kind": "CTF agent(40)", "env": "CYBENCH_PATH",
      "maps": "에이전트 파이프라인 전체", "note": "난이도·서브태스크 채점"},
     {"name": "NYU CTF Bench", "kind": "CTF(200)", "env": "NYUCTF_PATH",
@@ -19,9 +19,9 @@ EXTERNAL_BENCHMARKS = [
     {"name": "CyberSecEval", "kind": "LLM 오펜시브", "env": "CYBERSECEVAL_PATH",
      "maps": "§N payloads·§Q integrations", "note": "공격 능력·거부율"},
     {"name": "garak", "kind": "LLM 취약점 프로브", "env": "GARAK_TARGET",
-     "maps": "§N S32/S33·ai_attack", "note": "인젝션·추출 프로브"},
+     "maps": "§N S90/S91·ai_attack", "note": "인젝션·추출 프로브"},
     {"name": "AgentDojo", "kind": "프롬프트 인젝션", "env": "AGENTDOJO_PATH",
-     "maps": "§N S32", "note": "간접 인젝션 스위트"},
+     "maps": "§N S90", "note": "간접 인젝션 스위트"},
 ]
 
 

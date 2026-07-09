@@ -1,4 +1,4 @@
-"""프롬프트 인젝션 페이로드 생성 (S32, AML.T0051) — PyRIT seed+converter 방식.
+"""프롬프트 인젝션 페이로드 생성 (S90, AML.T0051) — PyRIT seed+converter 방식.
 
 UAV SOC 맥락: 방어 LLM 은 텔레메트리/임무 텍스트를 컨텍스트로 읽는다. 따라서
 간접 인젝션(indirect)은 임무·표적·경보 필드에 숨긴다. 결정론(무작위 없음).

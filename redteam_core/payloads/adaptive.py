@@ -40,7 +40,7 @@ _DEFAULT_CTX = {"exception_watchlist": "Approved_List", "threshold_watchlist": "
 
 @dataclass
 class SituationContext:
-    scenario: str                      # "S32"(인젝션) | "S33"(추출)
+    scenario: str                      # "S90"(인젝션) | "S91"(추출)
     target_rule: str                   # 겨냥할 blue 룰
     mission_context: str = "안흥 시험장"
     raw_matching: bool = True          # blue 가 raw 텍스트 매칭 → homoglyph 유효
@@ -72,7 +72,7 @@ class AdaptivePayloadGenerator:
     """상황 맞춤 결정론 조립 (+ 선택적 LLM 변형)."""
 
     def generate(self, ctx: SituationContext) -> List[AdaptivePayload]:
-        if ctx.scenario == "S33":
+        if ctx.scenario == "S91":
             payloads = self._extraction(ctx)
         else:
             payloads = self._injection(ctx)
@@ -81,7 +81,7 @@ class AdaptivePayloadGenerator:
                 p.variants.extend(self._llm_variants(p, ctx))
         return payloads
 
-    # --- S32: 겨냥 룰의 예외 워치리스트·임계를 사칭하는 인젝션 -----------------
+    # --- S90: 겨냥 룰의 예외 워치리스트·임계를 사칭하는 인젝션 -----------------
     def _injection(self, ctx: SituationContext) -> List[AdaptivePayload]:
         rc = ctx.rule_ctx()
         field0 = rc["fields"][0]
@@ -105,7 +105,7 @@ class AdaptivePayloadGenerator:
                 p.variants.append(_homoglyph(p.text))
         return out
 
-    # --- S33: 겨냥 룰의 실제 워치리스트·임계 키를 삽입한 추출 질의 -------------
+    # --- S91: 겨냥 룰의 실제 워치리스트·임계 키를 삽입한 추출 질의 -------------
     def _extraction(self, ctx: SituationContext) -> List[AdaptivePayload]:
         rc = ctx.rule_ctx()
         out: List[AdaptivePayload] = []

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""데이터 유출 시나리오 데모 — S35~S38 (암호키 포함).
+"""데이터 유출 시나리오 데모 — S93~S96 (암호키 포함).
 
     python benchmarks/exfil_eval.py
 
@@ -17,7 +17,7 @@ from redteam_core.campaigns import run_chain                      # noqa: E402
 
 
 def main() -> None:
-    print("=== fried-pollack-ai · 데이터 유출 시나리오 S35~S38 ===\n")
+    print("=== fried-pollack-ai · 데이터 유출 시나리오 S93~S96 ===\n")
     print(f"  {'#':<5}{'시나리오':<20}{'MITRE':<14}{'결과':<10}{'탐지'}")
     for sid in EXFIL_SCENARIOS:
         r = run_exfil(sid)
@@ -31,8 +31,8 @@ def main() -> None:
         flow = "→".join(s for s, _, _ in cr.stages)
         print(f"  {cid}: {flow}  {head}")
 
-    print("\n핵심: 유출 계열(S35~S38) 전용 탐지룰 미배포 = 사각지대. "
-          "특히 S38 암호키 유출 → MAVLink 서명키 탈취 → 서명 위조로 S18(무서명 탐지) 우회.")
+    print("\n핵심: 유출 계열(S93~S96) 전용 탐지룰 미배포 = 사각지대. "
+          "특히 S96 암호키 유출 → MAVLink 서명키 탈취 → 서명 위조로 S20(무서명 탐지) 우회.")
     print("      → 방어 보강: 유출량/채널 이상 탐지 + 키 접근 감사 + 서명키 로테이션.")
 
 

@@ -7,7 +7,7 @@ from redteam_core.kpi import calibration, coverage_gap, dwell
 def test_coverage_gap_identifies_ew_ai_blind_spots():
     cg = coverage_gap()
     # 재밍·프롬프트인젝션·모델추출이 사각지대에 포함.
-    for sid in ("S30", "S31", "S32", "S33"):
+    for sid in ("S23", "S24", "S90", "S91"):
         assert sid in cg["blind_spots"]
     assert 0.0 < cg["blind_spot_ratio"] < 1.0
 

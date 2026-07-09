@@ -111,7 +111,7 @@ def pytest_runtest_logreport(report) -> None:
     icon = {"passed": "✅", "failed": "❌", "skipped": "⏭"}.get(report.outcome, "?")
     name = report.nodeid.split("::")[-1]
     desc = _DOCS.get(report.nodeid, "")
-    # 시나리오 번호 추출(S12·C3 등) — 이름·설명에서
+    # 시나리오 번호 추출(S36·C3 등) — 이름·설명에서
     scn = sorted(set(re.findall(r"[SC]\d{1,3}", name + " " + desc)))
     scn_s = (" · 시나리오 " + ",".join(scn)) if scn else ""
     _emit(f"{icon} [{feat}] {name}  {tag}{scn_s}  ({report.duration:.3f}s)")

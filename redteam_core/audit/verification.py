@@ -34,7 +34,7 @@ _AUDIT: List[AuditItem] = [
               "실 소켓 전송·FileImplant 실 파일(§K/§L)"),
     # ── grounded_model: 근거 있는 모델 ──
     AuditItem("assessment 탐지룰(DETECTION_RULES)", "grounded_model", 0,
-              "실 S1/S6/S18 임계값(z=3.0·fail>=5·unsigned)에서 시드"),
+              "실 S1/S34/S20 임계값(z=3.0·fail>=5·unsigned)에서 시드"),
     AuditItem("benchmark KPI 목표(targets)", "grounded_model", 0,
               "ATT&CK Eval·M-Trends·CrowdStrike·JP 3-60 정박(출처 명시)"),
     AuditItem("emso J/S 물리", "grounded_model", 0,
@@ -44,11 +44,11 @@ _AUDIT: List[AuditItem] = [
     AuditItem("mapping ATT&CK 커버리지", "grounded_model", 0,
               "공개 ATT&CK-ICS/ATLAS 택소노미 매핑"),
     # ── self_model: 자기충족(정직 표시) ──
-    AuditItem("dronesploit WiFi(S39~42)", "self_model", 4,
+    AuditItem("dronesploit WiFi(S25~42)", "self_model", 4,
               "802.11 프레임 요지·모델, 실 주입 미구현(파라미터 손설정)"),
-    AuditItem("advanced RC/DShot(S43~47)", "self_model", 5,
+    AuditItem("advanced RC/DShot(S29~47)", "self_model", 5,
               "RC/ESC 아티팩트 문자열·모델, 실 SDR 미구현"),
-    AuditItem("simtest 센서(S56~59)", "self_model", 4,
+    AuditItem("simtest 센서(S9~59)", "self_model", 4,
               "EKF 게이트 모델, 게이트값 손설정(실 HIL 미검증)"),
     AuditItem("jadc2 융합", "self_model", 0,
               "상관 임계 2.5 손설정, 실 상관기 미연동"),

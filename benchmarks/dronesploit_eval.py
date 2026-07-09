@@ -20,7 +20,7 @@ from redteam_core.dronesploit import (                           # noqa: E402
 def main() -> None:
     print("=== fried-pollack-ai · dronesploit 영감 §V ===\n")
 
-    print("① WiFi 계층 공격 (S39~S42, dry)")
+    print("① WiFi 계층 공격 (S25~S28, dry)")
     for sid, meta in WIFI_SCENARIOS.items():
         r = run_wifi(sid, dry=True)
         print(f"   {sid} {meta['name']:<22} {meta['mitre']:<24} → {r.artifact}")
@@ -30,7 +30,7 @@ def main() -> None:
         print(f"   {name:<20} {p['class']:<22} 공격면 {len(p['surface'])} · 시나리오 {p['scenarios']}")
 
     print("\n③ sploitkit식 모듈 (총 {}개) — 예시 실행".format(len(MODULE_REGISTRY)))
-    m = load_module("exploit/wifi/S40")
+    m = load_module("exploit/wifi/S26")
     m.set("SSID", "MPD-GCS")
     print(f"   use {m.path}; set SSID {m.options['SSID']}; run → {m.run()['artifact']}")
 

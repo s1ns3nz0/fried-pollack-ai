@@ -22,76 +22,76 @@ from .rules import action_to_rule
 # 목표(효과) → 이를 달성하는 TTP 대안(선호순). jam 은 현재 blue 미매핑=사각지대.
 OBJECTIVES = {
     "nav_denial": ["gnss_spoof", "jam"],            # 항법 거부: 스푸핑→(불가시)재밍
-    "nav_jam_denial": ["jam"],                       # S30: GNSS 재밍 단독(항법 거부, 사각지대)
-    "c2_jam_denial": ["jam"],                        # S31: C2 링크 재밍(통신 거부, 사각지대)
-    "soc_llm_inject": ["ml_prompt_inject"],          # S32: SOC LLM 프롬프트 인젝션(사각지대)
-    "model_extraction": ["ml_extract_secret"],       # S33: 모델 추출·탈취(사각지대)
-    "network_recon": ["active_scan"],                # S34: 능동 정찰(→ S6 탐지)
+    "nav_jam_denial": ["jam"],                       # S23: GNSS 재밍 단독(항법 거부, 사각지대)
+    "c2_jam_denial": ["jam"],                        # S24: C2 링크 재밍(통신 거부, 사각지대)
+    "soc_llm_inject": ["ml_prompt_inject"],          # S90: SOC LLM 프롬프트 인젝션(사각지대)
+    "model_extraction": ["ml_extract_secret"],       # S91: 모델 추출·탈취(사각지대)
+    "network_recon": ["active_scan"],                # S97: 능동 정찰(→ S34 탐지)
     "recon_access": ["active_scan"],                # 정찰/자격증명
     "weapon_effect": ["force_arm", "unauthorized_command"],  # 둘 다 범주형 → 견고
     # ── 데이터 유출(Exfiltration) 계열 — 전용 탐지룰 미배포=사각지대 ──
-    "data_exfiltration": ["exfil_bulk"],             # S35: 대량 영상/SAR 유출
-    "covert_exfil": ["exfil_c2_covert"],             # S36: C2 채널 은닉 유출(T1041)
-    "staged_exfil": ["exfil_staged"],                # S37: 스테이징 후 분할 유출(T1074/T1030)
-    "crypto_key_exfil": ["steal_crypto_key"],        # S38: 암호키 유출(→ 서명 위조로 S18 우회)
+    "data_exfiltration": ["exfil_bulk"],             # S93: 대량 영상/SAR 유출
+    "covert_exfil": ["exfil_c2_covert"],             # S94: C2 채널 은닉 유출(T1041)
+    "staged_exfil": ["exfil_staged"],                # S95: 스테이징 후 분할 유출(T1074/T1030)
+    "crypto_key_exfil": ["steal_crypto_key"],        # S96: 암호키 유출(→ 서명 위조로 S20 우회)
     # ── WiFi 계층(§V, dronesploit) — 소형/전술 UAS 802.11, 전용 탐지룰 미배포 ──
-    "wifi_deauth": ["wifi_deauth"],                  # S39: deauth 링크 거부
-    "wifi_evil_twin": ["wifi_evil_twin"],            # S40: evil twin C2 하이재킹
-    "wifi_jam": ["wifi_jam"],                        # S41: WiFi 재밍
-    "wifi_cred": ["wifi_cred"],                      # S42: 기본 자격증명/SSID
+    "wifi_deauth": ["wifi_deauth"],                  # S25: deauth 링크 거부
+    "wifi_evil_twin": ["wifi_evil_twin"],            # S26: evil twin C2 하이재킹
+    "wifi_jam": ["wifi_jam"],                        # S27: WiFi 재밍
+    "wifi_cred": ["wifi_cred"],                      # S28: 기본 자격증명/SSID
     # ── 고급 드론 공격(§W) — RC 링크·DShot·anti-forensics, 전용 탐지룰 미배포 ──
-    "rc_link_hijack": ["rc_link_hijack"],            # S43: RC 바인딩 탈취
-    "rc_override": ["rc_override"],                  # S44: RC override
-    "rc_downgrade": ["rc_downgrade"],                # S45: RC 프로토콜 다운그레이드
-    "dshot_motor": ["dshot_motor"],                  # S46: DShot 모터 조작
-    "antiforensics": ["antiforensics"],              # S47: anti-forensics
+    "rc_link_hijack": ["rc_link_hijack"],            # S29: RC 바인딩 탈취
+    "rc_override": ["rc_override"],                  # S30: RC override
+    "rc_downgrade": ["rc_downgrade"],                # S31: RC 프로토콜 다운그레이드
+    "dshot_motor": ["dshot_motor"],                  # S8: DShot 모터 조작
+    "antiforensics": ["antiforensics"],              # S40: anti-forensics
     # ── 다중센서 폴트인젝션(§Z, AutoSim) — EKF 오염, 전용 탐지룰 미배포 ──
-    "imu_spoof": ["imu_spoof"],                      # S56: IMU 스푸핑
-    "baro_spoof": ["baro_spoof"],                    # S57: 기압계 스푸핑
-    "mag_spoof": ["mag_spoof"],                      # S58: 지자기 스푸핑
-    "airspeed_spoof": ["airspeed_spoof"],            # S59: 에어스피드 스푸핑
-    # ── 지상 세그먼트 소프트웨어(S86~S99) — UAV Sentinel 미감시 = 사각지대 ──
-    "gcs_mission_parse": ["gcs_mission_parse"],      # S86: 악성 미션파일 파싱
-    "gcs_plugin_inject": ["gcs_plugin_inject"],      # S87: QML/플러그인 인젝션
-    "gcs_update_mitm": ["gcs_update_mitm"],          # S88: 자동업데이트 MITM
-    "gcs_config_tamper": ["gcs_config_tamper"],      # S89: 설정/로그 변조
-    "ros_master_access": ["ros_master_access"],      # S90: 무인증 ROS 마스터
-    "ros_topic_inject": ["ros_topic_inject"],        # S91: ROS 토픽 인젝션
-    "mavros_cmd_inject": ["mavros_cmd_inject"],      # S92: MAVROS 명령 주입
-    "modem_firmware": ["modem_firmware"],            # S93: 모뎀/SATCOM 펌웨어
-    "telemetry_relay_mitm": ["telemetry_relay_mitm"],  # S94: 릴레이 MITM
-    "gdt_ntp_spoof": ["gdt_ntp_spoof"],              # S95: GDT NTP 스푸핑
-    "fleet_api_bypass": ["fleet_api_bypass"],        # S96: 함대 API 인증우회
-    "telemetry_poison": ["telemetry_poison"],        # S97: 텔레메트리 수집 오염
-    "video_stream_hijack": ["video_stream_hijack"],  # S98: 영상스트림 하이재킹
-    "c4i_inject": ["c4i_inject"],                    # S99: C4I 메시지 주입
-    # ── 빈 번호 채움(extended, S22·S28·S63~S65·S74~S85) — 전부 사각지대 ──
-    "param_mass_reset": ["param_mass_reset"],            # S22
-    "video_downlink_inject": ["video_downlink_inject"],  # S28
-    "passive_telemetry_sniff": ["passive_telemetry_sniff"],  # S63
-    "passive_asset_enum": ["passive_asset_enum"],        # S64
-    "bms_power_spoof": ["bms_power_spoof"],              # S65
-    "gimbal_hijack": ["gimbal_hijack"],                  # S74
-    "registry_image_tamper": ["registry_image_tamper"],  # S75
-    "cicd_pipeline_compromise": ["cicd_pipeline_compromise"],  # S76
-    "secrets_vault_theft": ["secrets_vault_theft"],      # S77
-    "mtls_cert_forge": ["mtls_cert_forge"],              # S78
-    "dependency_confusion": ["dependency_confusion"],    # S79
-    "iac_tamper": ["iac_tamper"],                        # S80
-    "artifact_signing_bypass": ["artifact_signing_bypass"],  # S81
-    "build_provenance_attack": ["build_provenance_attack"],  # S82
-    "dds_discovery_flood": ["dds_discovery_flood"],      # S83
-    "mqtt_bus_poison": ["mqtt_bus_poison"],              # S84
-    "geofence_tamper": ["geofence_tamper"],              # S85
-    # ── 편대/군집 비행(swarm, S103~S110) — 집단 조정 로직, 전부 사각지대 ──
-    "swarm_leader_spoof": ["swarm_leader_spoof"],            # S103
-    "swarm_consensus_poison": ["swarm_consensus_poison"],    # S104
-    "swarm_collision_induce": ["swarm_collision_induce"],    # S105
-    "swarm_formation_scatter": ["swarm_formation_scatter"],  # S106
-    "swarm_sybil_inject": ["swarm_sybil_inject"],            # S107
-    "swarm_flocking_tamper": ["swarm_flocking_tamper"],      # S108
-    "swarm_command_replay": ["swarm_command_replay"],        # S109
-    "swarm_mesh_partition": ["swarm_mesh_partition"],        # S110
+    "imu_spoof": ["imu_spoof"],                      # S9: IMU 스푸핑
+    "baro_spoof": ["baro_spoof"],                    # S10: 기압계 스푸핑
+    "mag_spoof": ["mag_spoof"],                      # S11: 지자기 스푸핑
+    "airspeed_spoof": ["airspeed_spoof"],            # S12: 에어스피드 스푸핑
+    # ── 지상 세그먼트 소프트웨어(S41~S84) — UAV Sentinel 미감시 = 사각지대 ──
+    "gcs_mission_parse": ["gcs_mission_parse"],      # S41: 악성 미션파일 파싱
+    "gcs_plugin_inject": ["gcs_plugin_inject"],      # S42: QML/플러그인 인젝션
+    "gcs_update_mitm": ["gcs_update_mitm"],          # S43: 자동업데이트 MITM
+    "gcs_config_tamper": ["gcs_config_tamper"],      # S44: 설정/로그 변조
+    "ros_master_access": ["ros_master_access"],      # S45: 무인증 ROS 마스터
+    "ros_topic_inject": ["ros_topic_inject"],        # S46: ROS 토픽 인젝션
+    "mavros_cmd_inject": ["mavros_cmd_inject"],      # S47: MAVROS 명령 주입
+    "modem_firmware": ["modem_firmware"],            # S48: 모뎀/SATCOM 펌웨어
+    "telemetry_relay_mitm": ["telemetry_relay_mitm"],  # S49: 릴레이 MITM
+    "gdt_ntp_spoof": ["gdt_ntp_spoof"],              # S50: GDT NTP 스푸핑
+    "fleet_api_bypass": ["fleet_api_bypass"],        # S81: 함대 API 인증우회
+    "telemetry_poison": ["telemetry_poison"],        # S82: 텔레메트리 수집 오염
+    "video_stream_hijack": ["video_stream_hijack"],  # S83: 영상스트림 하이재킹
+    "c4i_inject": ["c4i_inject"],                    # S84: C4I 메시지 주입
+    # ── 빈 번호 채움(extended, S6·S7·S98~S15·S110~S77) — 전부 사각지대 ──
+    "param_mass_reset": ["param_mass_reset"],            # S6
+    "video_downlink_inject": ["video_downlink_inject"],  # S7
+    "passive_telemetry_sniff": ["passive_telemetry_sniff"],  # S98
+    "passive_asset_enum": ["passive_asset_enum"],        # S99
+    "bms_power_spoof": ["bms_power_spoof"],              # S15
+    "gimbal_hijack": ["gimbal_hijack"],                  # S110
+    "registry_image_tamper": ["registry_image_tamper"],  # S67
+    "cicd_pipeline_compromise": ["cicd_pipeline_compromise"],  # S68
+    "secrets_vault_theft": ["secrets_vault_theft"],      # S69
+    "mtls_cert_forge": ["mtls_cert_forge"],              # S70
+    "dependency_confusion": ["dependency_confusion"],    # S71
+    "iac_tamper": ["iac_tamper"],                        # S72
+    "artifact_signing_bypass": ["artifact_signing_bypass"],  # S73
+    "build_provenance_attack": ["build_provenance_attack"],  # S74
+    "dds_discovery_flood": ["dds_discovery_flood"],      # S75
+    "mqtt_bus_poison": ["mqtt_bus_poison"],              # S76
+    "geofence_tamper": ["geofence_tamper"],              # S77
+    # ── 편대/군집 비행(swarm, S101~S108) — 집단 조정 로직, 전부 사각지대 ──
+    "swarm_leader_spoof": ["swarm_leader_spoof"],            # S101
+    "swarm_consensus_poison": ["swarm_consensus_poison"],    # S102
+    "swarm_collision_induce": ["swarm_collision_induce"],    # S103
+    "swarm_formation_scatter": ["swarm_formation_scatter"],  # S104
+    "swarm_sybil_inject": ["swarm_sybil_inject"],            # S105
+    "swarm_flocking_tamper": ["swarm_flocking_tamper"],      # S106
+    "swarm_command_replay": ["swarm_command_replay"],        # S107
+    "swarm_mesh_partition": ["swarm_mesh_partition"],        # S108
     # ── 운용 방식별(opmodes, S111~S126) — 임무·제어·모드·기종, 전부 사각지대 ──
     "loiter_center_spoof": ["loiter_center_spoof"],          # S111
     "rtb_force": ["rtb_force"],                              # S112
@@ -114,8 +114,8 @@ OBJECTIVES = {
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.
 EFFECT_FLOOR = {
     "gnss_spoof": 0.05,      # > blue S1 게이트(0.0238) → 회피창 없음 → 전환 유발
-    "active_scan": 1.0,      # < blue S6(5) → 회피창 존재 → 강도 하향으로 회피 성공
-    "spoof_telemetry": 2.0,  # < blue S18(5) → 회피창 존재
+    "active_scan": 1.0,      # < blue S34(5) → 회피창 존재 → 강도 하향으로 회피 성공
+    "spoof_telemetry": 2.0,  # < blue S20(5) → 회피창 존재
 }
 _DEFAULT_START = {"gnss_spoof": 0.8, "active_scan": 20.0, "spoof_telemetry": 16.0}
 

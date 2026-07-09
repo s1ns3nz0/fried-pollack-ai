@@ -18,16 +18,16 @@ def test_all_chains_compose_known_scenarios():
 
 def test_turla_satellite_c2_chain():
     r = run_uav_apt("Turla (G0010, 위성 C2)")
-    assert r.chain[0] == "S3" and "S17" in r.chain      # SATCOM MITM → SAR 유출
+    assert r.chain[0] == "S18" and "S92" in r.chain      # SATCOM MITM → SAR 유출
     assert r.origin == "Russia FSB"
 
 
 def test_rq170_gnss_hijack_chain():
     r = run_uav_apt("RQ-170 GNSS Hijack (Iran 2011)")
-    assert "S30" in r.chain and "S61" in r.chain         # 재밍 + GNSS 나포(S61)
-    assert r.chain[-1] == "S20"                          # 강제착륙(Failsafe 억제)
+    assert "S23" in r.chain and "S32" in r.chain         # 재밍 + GNSS 나포(S32)
+    assert r.chain[-1] == "S5"                          # 강제착륙(Failsafe 억제)
 
 
 def test_multisensor_ekf_defeat_uses_sensor_scenarios():
     r = run_uav_apt("Multi-Sensor Deception (EKF Defeat)")
-    assert set(["S56", "S57", "S58", "S59"]).issubset(set(r.chain))
+    assert set(["S9", "S10", "S11", "S12"]).issubset(set(r.chain))

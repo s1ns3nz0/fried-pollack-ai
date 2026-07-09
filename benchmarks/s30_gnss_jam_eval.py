@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""S30 — GNSS 재밍(항법 거부) 시나리오 실행 데모.
+"""S23 — GNSS 재밍(항법 거부) 시나리오 실행 데모.
 
     python benchmarks/s30_gnss_jam_eval.py
 
@@ -27,7 +27,7 @@ CASES = [
 
 
 def main() -> None:
-    print("=== fried-pollack-ai · S30 GNSS 재밍(항법 거부) 시나리오 ===")
+    print("=== fried-pollack-ai · S23 GNSS 재밍(항법 거부) 시나리오 ===")
     print("EMSO J/S 물리 → 항법거부 → blue 탐지(사각지대) → 전투평가\n")
     print(f"  {'시나리오':<16}{'J/S(dB)':<10}{'효과':<7}{'blue탐지':<10}{'종합':<8}{'재타격'}")
     for label, geom in CASES:

@@ -13,27 +13,27 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
 # APT → 순서 있는 킬체인 패턴(확장). ATT&CK Group 운용 특성 반영.
-# 정찰(S34)로 시작해 7단계 킬체인을 최대한 커버.
+# 정찰(S97)로 시작해 7단계 킬체인을 최대한 커버.
 APT_EMULATION = {
     # ── 기존 5개(확장) ──
-    "Sandworm (G0034)": ["S34", "S4", "S21", "S19", "S20", "S23", "S25"],   # OT 파괴
-    "APT28 (G0007)": ["S34", "S6", "S10", "S13", "S15", "S11", "S17"],      # 방산 espionage
-    "Volt Typhoon (G1017)": ["S34", "S6", "S27", "S26", "S24", "S2"],       # LOTL 인프라
-    "EW Threat Cluster": ["S1", "S30", "S31", "S3", "S9", "S18"],           # 전자전 확전
-    "AML Adversary (ATLAS)": ["S29", "S7", "S32", "S33", "S8"],             # AI 계층(전 단계 미배포)
+    "Sandworm (G0034)": ["S97", "S33", "S38", "S4", "S5", "S51", "S52"],   # OT 파괴
+    "APT28 (G0007)": ["S97", "S34", "S35", "S37", "S79", "S3", "S92"],      # 방산 espionage
+    "Volt Typhoon (G1017)": ["S97", "S34", "S39", "S22", "S21", "S17"],       # LOTL 인프라
+    "EW Threat Cluster": ["S1", "S23", "S24", "S18", "S19", "S20"],           # 전자전 확전
+    "AML Adversary (ATLAS)": ["S89", "S88", "S90", "S91", "S100"],             # AI 계층(전 단계 미배포)
     # ── 신규 3개(한국 방산 관련 DPRK + 항공우주) ──
-    "Lazarus (G0032)": ["S34", "S6", "S4", "S11", "S23", "S25"],            # DPRK 파괴·탈취
-    "Kimsuky (G0094)": ["S34", "S6", "S10", "S12", "S17"],                  # DPRK ROK 방산 espionage
-    "APT33 (G0064)": ["S34", "S4", "S1", "S11"],                            # 항공우주 표적
+    "Lazarus (G0032)": ["S97", "S34", "S33", "S3", "S51", "S52"],            # DPRK 파괴·탈취
+    "Kimsuky (G0094)": ["S97", "S34", "S35", "S36", "S92"],                  # DPRK ROK 방산 espionage
+    "APT33 (G0064)": ["S97", "S33", "S1", "S3"],                            # 항공우주 표적
 }
 
-# campaigns 에 없는 시나리오의 탐지상태 — **배포된 S1~S28 룰 기준**.
-# 배포룰 존재=탐지(True) / 미배포(S7·S29·군집·AI계열)=사각(None).
+# campaigns 에 없는 시나리오의 탐지상태 — **배포된 S1~S7 룰 기준**.
+# 배포룰 존재=탐지(True) / 미배포(S88·S89·군집·AI계열)=사각(None).
 _EXTRA_STATIC = {
-    "S2": True, "S3": True, "S5": True, "S9": True, "S10": True, "S18": True,
-    "S19": True, "S21": True, "S23": True, "S24": True, "S25": True,
-    "S26": True, "S27": True,
-    "S7": None, "S29": None,                       # 미배포 = 사각지대
+    "S17": True, "S18": True, "S2": True, "S19": True, "S35": True, "S20": True,
+    "S4": True, "S38": True, "S51": True, "S21": True, "S52": True,
+    "S22": True, "S39": True,
+    "S88": None, "S89": None,                       # 미배포 = 사각지대
 }
 
 

@@ -1,4 +1,4 @@
-"""Web/API·Linux 권한상승 S48~S52 생성·분석·배선 테스트. 결정론·무의존."""
+"""Web/API·Linux 권한상승 S53~S57 생성·분석·배선 테스트. 결정론·무의존."""
 from __future__ import annotations
 
 from redteam_core.payloads.exploits import (
@@ -11,7 +11,7 @@ from redteam_core.sandbox import analyze
 
 def test_s48_idor_blind_spot():
     r = analyze(craft_idor())
-    assert r.scenario == "S48" and r.blind_spot is True     # blue 방어 공백
+    assert r.scenario == "S53" and r.blind_spot is True     # blue 방어 공백
 
 
 def test_s49_webshell_malicious():
@@ -26,7 +26,7 @@ def test_s49_pickle_deserialization_malicious():
 
 def test_s50_suid_gtfobins_malicious():
     r = analyze(craft_suid("find"))
-    assert r.scenario == "S50" and r.verdict == "malicious"
+    assert r.scenario == "S55" and r.verdict == "malicious"
 
 
 def test_s51_container_escape_malicious():
@@ -37,14 +37,14 @@ def test_s51_container_escape_malicious():
 
 def test_s52_cron_hijack_malicious():
     r = analyze(craft_cron_hijack())
-    assert r.scenario == "S52" and r.verdict == "malicious"
+    assert r.scenario == "S57" and r.verdict == "malicious"
 
 
 def test_run_exploit_wiring():
     # 배선: 레지스트리 전 시나리오가 run_exploit 로 실행되고 판정을 낸다.
-    assert set(EXPLOIT_SCENARIOS) == {"S48", "S49", "S50", "S51", "S52"}
+    assert set(EXPLOIT_SCENARIOS) == {"S53", "S54", "S55", "S56", "S57"}
     for sid in EXPLOIT_SCENARIOS:
         out = run_exploit(sid)
         assert out["scenario"] == sid and out["blue_detected"] is None
-    assert run_exploit("S48")["blind_spot"] is True                  # IDOR 사각지대
-    assert run_exploit("S51")["sandbox_verdict"] == "malicious"      # escape §T 탐지
+    assert run_exploit("S53")["blind_spot"] is True                  # IDOR 사각지대
+    assert run_exploit("S56")["sandbox_verdict"] == "malicious"      # escape §T 탐지

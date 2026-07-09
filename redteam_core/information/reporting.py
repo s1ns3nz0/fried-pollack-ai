@@ -11,11 +11,11 @@ from dataclasses import dataclass
 
 # 시나리오 → 정보산출물 표적
 REPORT_TARGETS = {
-    "S100": {"name": "SOCReport 위조", "artifact": "soc_report",
+    "S85": {"name": "SOCReport 위조", "artifact": "soc_report",
              "goal": "탐지 결과와 무관한 거짓 사건보고 산출"},
-    "S101": {"name": "OSCAL 증거 변조", "artifact": "oscal_evidence",
+    "S86": {"name": "OSCAL 증거 변조", "artifact": "oscal_evidence",
              "goal": "규정준수 증거체인 조작(감사 회피)"},
-    "S102": {"name": "RuleUpdate PR 주입", "artifact": "rule_update_pr",
+    "S87": {"name": "RuleUpdate PR 주입", "artifact": "rule_update_pr",
              "goal": "룰 변경 PR 본문에 백도어 완화조건 삽입"},
 }
 

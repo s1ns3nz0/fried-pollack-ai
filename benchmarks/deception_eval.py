@@ -29,7 +29,7 @@ def main() -> None:
         print(f"  {n:<8}{r.decoy_alerts:<10}{_b(r.soc_saturated):<8}"
               f"{_b(r.real_detected_under_mildec):<12}{_b(r.mildec_effective)}")
     print("\n교리: JP 3-13.4 MILDEC — 미끼(decoy)로 분석주의를 소모시켜 진짜 공격 은폐.")
-    print("      red 가 blue 의 방어 임계(S9 SOC 용량)를 역으로 무기화.")
+    print("      red 가 blue 의 방어 임계(S19 SOC 용량)를 역으로 무기화.")
 
 
 def _b(x) -> str:
