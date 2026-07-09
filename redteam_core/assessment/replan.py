@@ -83,6 +83,15 @@ OBJECTIVES = {
     "dds_discovery_flood": ["dds_discovery_flood"],      # S83
     "mqtt_bus_poison": ["mqtt_bus_poison"],              # S84
     "geofence_tamper": ["geofence_tamper"],              # S85
+    # ── 편대/군집 비행(swarm, S103~S110) — 집단 조정 로직, 전부 사각지대 ──
+    "swarm_leader_spoof": ["swarm_leader_spoof"],            # S103
+    "swarm_consensus_poison": ["swarm_consensus_poison"],    # S104
+    "swarm_collision_induce": ["swarm_collision_induce"],    # S105
+    "swarm_formation_scatter": ["swarm_formation_scatter"],  # S106
+    "swarm_sybil_inject": ["swarm_sybil_inject"],            # S107
+    "swarm_flocking_tamper": ["swarm_flocking_tamper"],      # S108
+    "swarm_command_replay": ["swarm_command_replay"],        # S109
+    "swarm_mesh_partition": ["swarm_mesh_partition"],        # S110
 }
 
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.

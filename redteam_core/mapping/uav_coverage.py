@@ -254,6 +254,9 @@ for _tid, _extra in {
     "T0832": " / S72 ISR 상황도 변조",
     "T1495": " / S73 ESC 펌웨어 변조",
     "T0879": " / S73 ESC 모터 파괴→추락",
+    "T0856": " / S103 편대 리더 스푸핑(swarm)",
+    "T0857": " / S109 스웜 명령 리플레이(swarm)",
+    "T0859": " / S107 Sybil 위장 멤버(swarm)",
 }.items():
     if _tid in RED_COVER:
         RED_COVER[_tid] += _extra
