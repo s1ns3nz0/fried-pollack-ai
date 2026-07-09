@@ -8,8 +8,8 @@ fried-pollack-ai는 **UAV(무인기) 대상 공격측 AI 레드팀 에이전트*
 전용 LLM(오라클 veto 하) + 메모리 기반 학습으로 구성된다. 근거 논문·이식 출처는
 [`REFERENCES.md`](REFERENCES.md).
 
-**현재 규모**: Python 모듈 196 · 원자 액션 22 · 무기고 커버 **23/23=100%**(런타임검증 95.7%,
-AML.T0020 스테이징) · 벤치 16 시나리오/**8 PoV 페어** · **566 tests green** · Tier-0(무의존 실행).
+**현재 규모**: Python 모듈 197 · 원자 액션 22 · 무기고 커버 **23/23=100%**(런타임검증 95.7%,
+AML.T0020 스테이징) · 벤치 16 시나리오/**8 PoV 페어** · **616 tests green** · Tier-0(무의존 실행).
 
 > **문서 자립성**: 이 문서는 **저장소만 클론해도 완결**되도록 작성됐다. 코드 주석의 외부
 > 설계원문 `§`-번호(§1.0·§1.6·§2.7 등)는 **§15 크로스워크**로 이 문서 내부 절에 매핑되고,
@@ -334,7 +334,7 @@ planner가 `recommend()`의 **trusted-FAIL 무익 액션만 스킵**(=미시도)
 
 ## 13. 테스트·CI
 
-- **566 tests**(79 파일) — 안전 라우팅 회귀 그물 + 능력 평면 오라클 매트릭스 + PoV + 학습 +
+- **616 tests**(85 파일) — 안전 라우팅 회귀 그물 + 능력 평면 오라클 매트릭스 + PoV + 학습 +
   judge/인젝션 + 영속/어댑터 + OPSEC + ablation + no-phantom + redaction.
 - **CI**(`.github/workflows/ci.yml`): pytest → `check_gates --run` → `verify_claims` → gitleaks.
 - 전부 결정론·오프라인(Tier-0). LLM·실 SITL은 선택적 seam이라 CI 무의존.
