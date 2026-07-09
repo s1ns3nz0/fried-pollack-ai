@@ -51,4 +51,4 @@ def test_ctid_env_flips_mode(monkeypatch):
 def test_ctid_live_pull_reads_actor_chain(monkeypatch):
     monkeypatch.setenv("CTID_PLAN_URL", "https://example.test/ctid")
     monkeypatch.setattr(apt, "get_json", lambda url: {"APT28 (G0007)": ["S97", "S34"]})
-    assert apt._pull_ctid_plan("APT28 (G0007)") == ["S97", "S34"]
+    assert apt.ctid_plan_detail("APT28 (G0007)")["chain"] == ["S97", "S34"]

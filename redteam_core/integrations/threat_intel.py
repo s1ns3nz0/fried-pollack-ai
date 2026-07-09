@@ -48,20 +48,42 @@ def status() -> dict:
 
 def active_actors() -> List[str]:
     """활성 위협행위자. TAXII 연동 시 피드 기반(본선), 아니면 시드 전체."""
-    if taxii_available():  # pragma: no cover
-        return _pull_actors_from_taxii()
+    if taxii_available():
+        return taxii_actors_detail()["actors"]
     return list(THREAT_ACTORS)
 
 
-def _pull_actors_from_taxii() -> List[str]:  # pragma: no cover
-    """실 STIX/TAXII 피드에서 intrusion-set 추출(env 활성)."""
+def _parse_taxii_actors(data) -> tuple:
+    """TAXII 2.1 collection objects(=STIX bundle) → intrusion-set names.
+
+    반환 (actors, warning). malformed 면 ([], warning) 로 상위가 시드 폴백.
+    """
+    if not isinstance(data, dict):
+        return [], "TAXII response is not a JSON object"
+    objects = data.get("objects")
+    if not isinstance(objects, list):
+        return [], "TAXII response missing 'objects' array (STIX bundle/collection expected)"
+    actors = [o["name"] for o in objects
+              if isinstance(o, dict) and o.get("type") == "intrusion-set" and o.get("name")]
+    if not actors:
+        return [], "no intrusion-set objects in TAXII collection"
+    return actors, None
+
+
+def taxii_actors_detail() -> dict:
+    """실 TAXII pull + schema 검증. {actors, source, warning} 반환(fail-soft, 시드 폴백)."""
+    seed = list(THREAT_ACTORS)
+    if not taxii_available():
+        return {"actors": seed, "source": "seed", "warning": None}
     url, coll = _taxii()
     sep = "&" if "?" in url else "?"
     data = get_json(f"{url}{sep}collection={coll}")
-    objects = data.get("objects", []) if isinstance(data, dict) else []
-    actors = [o.get("name") for o in objects
-              if isinstance(o, dict) and o.get("type") == "intrusion-set" and o.get("name")]
-    return actors or list(THREAT_ACTORS)
+    if isinstance(data, dict) and set(data) == {"error"}:      # http_json transport/status 오류
+        return {"actors": seed, "source": "seed_fallback", "warning": f"TAXII fetch error: {data['error']}"}
+    actors, warn = _parse_taxii_actors(data)
+    if not actors:
+        return {"actors": seed, "source": "seed_fallback", "warning": warn}
+    return {"actors": actors, "source": "taxii", "warning": None}
 
 
 # ── 프로파일링 ───────────────────────────────────────────────────────────────

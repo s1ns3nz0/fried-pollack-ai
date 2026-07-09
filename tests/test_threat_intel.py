@@ -52,4 +52,4 @@ def test_taxii_live_pull_reads_intrusion_sets(monkeypatch):
             {"type": "malware", "name": "ignored"},
         ]
     })
-    assert ti._pull_actors_from_taxii() == ["APT28 (G0007)"]
+    assert ti.taxii_actors_detail()["actors"] == ["APT28 (G0007)"]

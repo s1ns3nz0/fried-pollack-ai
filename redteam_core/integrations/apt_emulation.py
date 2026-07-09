@@ -60,20 +60,47 @@ def status() -> dict:
 
 def emulation_plan(actor: str) -> List[str]:
     """APT 킬체인 순서. CTID 연동 시 실 플랜(본선), 아니면 시드."""
-    if ctid_available():  # pragma: no cover
-        return _pull_ctid_plan(actor)
+    if ctid_available():
+        return ctid_plan_detail(actor)["chain"]
     return list(APT_EMULATION.get(actor, []))
 
 
-def _pull_ctid_plan(actor: str) -> List[str]:  # pragma: no cover
-    """실 CTID Adversary Emulation Library 에서 플랜 pull(env 활성)."""
+def _parse_ctid_plan(data, actor: str) -> tuple:
+    """CTID JSON manifest → 시나리오 chain. 지원 형태:
+
+      1) actor-keyed : {"<actor>": ["S97", "S34", ...]}
+      2) plans array : {"plans": [{"actor": "<actor>", "chain": ["S97", ...]}]}
+
+    반환 (chain, warning). malformed/미발견 면 ([], warning) 로 상위가 시드 폴백.
+    """
+    if not isinstance(data, dict):
+        return [], "CTID response is not a JSON object"
+    if isinstance(data.get(actor), list):                       # 형태 1
+        return [str(x) for x in data[actor]], None
+    plans = data.get("plans")
+    if isinstance(plans, list):                                 # 형태 2
+        for row in plans:
+            if isinstance(row, dict) and row.get("actor") == actor:
+                chain = row.get("chain")
+                if isinstance(chain, list):
+                    return [str(x) for x in chain], None
+                return [], f"CTID plan for {actor!r} has non-list 'chain'"
+        return [], f"CTID plan for {actor!r} not found in 'plans'"
+    return [], f"CTID manifest missing actor key {actor!r} or 'plans' array"
+
+
+def ctid_plan_detail(actor: str) -> dict:
+    """실 CTID pull + schema 검증. {chain, source, warning} 반환(fail-soft, 시드 폴백)."""
+    seed = list(APT_EMULATION.get(actor, []))
+    if not ctid_available():
+        return {"chain": seed, "source": "seed", "warning": None}
     data = get_json(os.environ["CTID_PLAN_URL"])
-    if isinstance(data.get(actor), list):
-        return [str(x) for x in data[actor]]
-    for row in data.get("plans", []):
-        if row.get("actor") == actor:
-            return [str(x) for x in row.get("chain", [])]
-    return list(APT_EMULATION.get(actor, []))
+    if isinstance(data, dict) and set(data) == {"error"}:       # http_json transport/status 오류
+        return {"chain": seed, "source": "seed_fallback", "warning": f"CTID fetch error: {data['error']}"}
+    chain, warn = _parse_ctid_plan(data, actor)
+    if not chain:
+        return {"chain": seed, "source": "seed_fallback", "warning": warn}
+    return {"chain": chain, "source": "ctid", "warning": None}
 
 
 # ── APT 에뮬레이션 실행 ───────────────────────────────────────────────────────
