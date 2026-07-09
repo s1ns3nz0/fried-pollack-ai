@@ -249,6 +249,11 @@ for _tid, _extra in {
     "T0831": " / S46 DShot/ESC 모터 조작(§W) / S61 GNSS 스푸핑 나포(RQ-170)",
     "T0806": " / S56~S59 다중센서 폴트(§Z)",
     "T0835": " / S56~S59 센서 EKF 기만(§Z) / S62 EKF 협조 폴트",
+    # 도메인 특화 신규 시나리오(사각지대 보강, cloud 제외).
+    "T1565": " / S72 ISR 핸드오프 표적정보 변조(cross-segment)",
+    "T0832": " / S72 ISR 상황도 변조",
+    "T1495": " / S73 ESC 펌웨어 변조",
+    "T0879": " / S73 ESC 모터 파괴→추락",
 }.items():
     if _tid in RED_COVER:
         RED_COVER[_tid] += _extra

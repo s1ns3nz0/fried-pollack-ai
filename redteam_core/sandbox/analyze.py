@@ -147,12 +147,27 @@ def _ekf_fault(p):
     return r
 
 
+def _isr_handoff(p):
+    r = AnalyzeReport(p.scenario, p.kind)
+    r.indicators.append("공군→육군 ISR 핸드오프 표적정보 변조 → 오표적(데이터 무결성)")
+    r.verdict = "malicious"                          # S17 인접 무결성 룰이 부분 탐지
+    return r
+
+
+def _esc_firmware(p):
+    r = AnalyzeReport(p.scenario, p.kind)
+    r.indicators.append("ESC 펌웨어 변조 → 모터 지속 장악(제어상실·추락)")
+    r.verdict = "malicious"
+    return r
+
+
 _DISPATCH = {"upload": _upload, "escape": _escape,
              "suid": _suid, "cron": _cron, "idor": _idor,
              "destruction": _destruction, "rootkit": _rootkit, "fw_mode": _fw_mode,
              "auth_modify": _auth_modify, "exfil_alt": _exfil_alt, "theft": _theft,
              "collection": _collection, "recon": _recon,
-             "sat_c2": _sat_c2, "gnss_capture": _gnss_capture, "ekf_fault": _ekf_fault}
+             "sat_c2": _sat_c2, "gnss_capture": _gnss_capture, "ekf_fault": _ekf_fault,
+             "isr_handoff": _isr_handoff, "esc_firmware": _esc_firmware}
 
 
 def analyze(payload) -> AnalyzeReport:
