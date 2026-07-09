@@ -92,6 +92,23 @@ OBJECTIVES = {
     "swarm_flocking_tamper": ["swarm_flocking_tamper"],      # S108
     "swarm_command_replay": ["swarm_command_replay"],        # S109
     "swarm_mesh_partition": ["swarm_mesh_partition"],        # S110
+    # ── 운용 방식별(opmodes, S111~S126) — 임무·제어·모드·기종, 전부 사각지대 ──
+    "loiter_center_spoof": ["loiter_center_spoof"],          # S111
+    "rtb_force": ["rtb_force"],                              # S112
+    "track_lock_hijack": ["track_lock_hijack"],              # S113
+    "survey_grid_tamper": ["survey_grid_tamper"],            # S114
+    "control_mode_transition": ["control_mode_transition"],  # S115
+    "stabilization_poison": ["stabilization_poison"],        # S116
+    "blos_command_forge": ["blos_command_forge"],            # S117
+    "autonomy_hijack": ["autonomy_hijack"],                  # S118
+    "mode_force_guided": ["mode_force_guided"],              # S119
+    "failsafe_mode_block": ["failsafe_mode_block"],          # S120
+    "mode_report_spoof": ["mode_report_spoof"],              # S121
+    "acro_destabilize": ["acro_destabilize"],                # S122
+    "fixedwing_stall": ["fixedwing_stall"],                  # S123
+    "rotary_yaw_loss": ["rotary_yaw_loss"],                  # S124
+    "vtol_transition_attack": ["vtol_transition_attack"],    # S125
+    "takeoff_landing_phase": ["takeoff_landing_phase"],      # S126
 }
 
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.
