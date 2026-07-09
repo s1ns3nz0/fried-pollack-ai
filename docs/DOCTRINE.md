@@ -8,7 +8,7 @@
 
 ## 0. 한 줄 정의
 
-결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 모듈(7개 기능 도메인)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S1~S126(테마별: 공중→링크→지상→IT→클라우드→AI→유출→정찰→군집→운용)로 정렬된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
+결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 모듈(7개 기능 도메인)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S1~S126(테마별: 공중→링크→지상→IT→인프라→AI→유출→정찰→군집→운용)로 정렬된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
 
 ---
 
@@ -60,7 +60,7 @@
 | `dronesploit/` | WiFi(deauth·evil twin·재밍·기본자격 S25~S28)+COTS 표적+모듈+CVE | 802.11 |
 | `advanced/` | RC 링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics(RC S29~S31·DShot S8·흔적제거 S40)+기법카탈로그 | Awesome-Drone |
 | `simtest/` | 다중센서 폴트인젝션 S9~S12(EKF 우회)+환경 증폭+인시던트KB+비행로그 오라클 | AutoSim |
-| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S41~S50(지상)+S81~S84(클라우드)(GCS 앱·ROS·데이터링크·클라우드). execute_real 실 실행 | 지상/클라우드 공격면 |
+| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S41~S50(지상)+S81~S84(인프라)(GCS 앱·ROS·데이터링크·클라우드). execute_real 실 실행 | 지상/클라우드 공격면 |
 
 #### 킬체인·실행 (Kill Chain / Execution)
 | 모듈 | 기능 | 교리 근거 |
