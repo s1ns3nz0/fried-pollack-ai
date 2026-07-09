@@ -45,6 +45,11 @@ OBJECTIVES = {
     "rc_downgrade": ["rc_downgrade"],                # S45: RC 프로토콜 다운그레이드
     "dshot_motor": ["dshot_motor"],                  # S46: DShot 모터 조작
     "antiforensics": ["antiforensics"],              # S47: anti-forensics
+    # ── 다중센서 폴트인젝션(§Z, AutoSim) — EKF 오염, 전용 탐지룰 미배포 ──
+    "imu_spoof": ["imu_spoof"],                      # S56: IMU 스푸핑
+    "baro_spoof": ["baro_spoof"],                    # S57: 기압계 스푸핑
+    "mag_spoof": ["mag_spoof"],                      # S58: 지자기 스푸핑
+    "airspeed_spoof": ["airspeed_spoof"],            # S59: 에어스피드 스푸핑
 }
 
 # 연속 액션의 '효과 바닥' — 이 미만이면 효과 미달. blue 임계와의 관계가 회피창을 정함.

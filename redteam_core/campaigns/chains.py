@@ -42,6 +42,8 @@ _SCENARIO_STATIC = {
     "S48": None, "S49": None, "S50": None, "S51": None, "S52": None,
     # 아카이브 경로순회(S53~S55) — 파일추출 계층 = 사각지대(§T 탐지).
     "S53": None, "S54": None, "S55": None,
+    # 다중센서 폴트인젝션(S56~S59, §Z) — EKF 계층 전용 탐지룰 미배포 = 사각지대.
+    "S56": None, "S57": None, "S58": None, "S59": None,
 }
 
 # 캠페인 체인(신규 C8~C10 포함). C1~C7 은 대조용 일부만.
