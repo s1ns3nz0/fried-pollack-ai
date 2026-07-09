@@ -11,6 +11,8 @@ from __future__ import annotations
 import os
 from typing import Optional
 
+from .http_json import post_json
+
 # 우리 시나리오 → Metasploit 모듈(IT/인프라 인접 위주). UAV 특화는 msf 커버 밖.
 SCENARIO_MSF = {
     "S34": ("auxiliary/scanner/http/http_login", {"RHOSTS": "", "USERPASS_FILE": ""}),
@@ -73,7 +75,20 @@ def run_scenario(scenario_id: str) -> dict:
 
 
 def _run_real(msf_module: str, options: dict) -> dict:  # pragma: no cover
-    """실 MCP/RPC 실행 경로(게이트웨이/서버 있을 때만). 여기선 미실행."""
-    # MCP: POST {MSF_MCP_URL}/tools/run_module. RPC: pymetasploit3 MsfRpcClient.
+    """실 MCP/RPC 실행 경로(게이트웨이/서버 있을 때만)."""
+    if _mcp():
+        url = _mcp().rstrip("/") + "/tools/run_module"
+        response = post_json(url, {"module": msf_module, "options": options})
+        return {"mode": "real", "module": msf_module, "options": options,
+                "transport": "mcp", "response": response}
+
+    host, port, password = _rpc()
+    from pymetasploit3.msfrpc import MsfRpcClient  # type: ignore
+    client = MsfRpcClient(password, server=host, port=port, ssl=False)
+    kind, name = msf_module.split("/", 1)
+    module = client.modules.use(kind, name)
+    for k, v in options.items():
+        module[k] = v
+    response = module.execute()
     return {"mode": "real", "module": msf_module, "options": options,
-            "transport": "mcp" if _mcp() else "rpc"}
+            "transport": "rpc", "response": response}

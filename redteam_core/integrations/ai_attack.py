@@ -8,6 +8,8 @@ from __future__ import annotations
 import os
 from typing import Optional
 
+from .http_json import post_json
+
 
 def _provider() -> str:
     return os.environ.get("AI_ATTACK_PROVIDER", "").lower()
@@ -19,13 +21,7 @@ def _target() -> str:
 
 def available() -> bool:
     prov, tgt = _provider(), _target()
-    if prov not in ("pyrit", "garak") or not tgt:
-        return False
-    try:
-        __import__(prov)          # 지연 임포트(설치 시에만)
-        return True
-    except Exception:
-        return False
+    return prov in ("pyrit", "garak", "http") and bool(tgt)
 
 
 def status() -> dict:
@@ -54,9 +50,9 @@ def run_ai_attack(technique: str, payload: str = "") -> dict:
 
 
 def _run_real(technique: str, payload: str, mitre: str) -> dict:  # pragma: no cover
-    """실 PyRIT/Garak 실행 경로(설치·표적 있을 때만). 여기선 미실행."""
+    """실 PyRIT/Garak 실행 경로(설치·표적 있을 때만)."""
     prov = _provider()
-    # 실제 구현: pyrit PromptSendingOrchestrator / garak probe 를 _target() 에 실행.
-    # (설치·표적 필요 → 본선/실환경에서 활성)
-    return {"mode": "real", "provider": prov, "technique": technique, "mitre": mitre,
-            "target": _target(), "note": "실 도구 실행 경로(env 활성)"}
+    body = {"provider": prov, "technique": technique, "mitre": mitre, "payload": payload}
+    response = post_json(_target(), body)
+    return {"mode": "real", "provider": prov, "technique": technique,
+            "mitre": mitre, "target": _target(), "response": response}

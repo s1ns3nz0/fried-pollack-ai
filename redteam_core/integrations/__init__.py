@@ -9,7 +9,7 @@
 """
 from . import (
     ai_attack, apt_emulation, archive_tools, caldera, cve_intel, metasploit,
-    sitl, threat_intel,
+    pentest_mcp, sitl, threat_intel,
 )
 
 
@@ -24,8 +24,9 @@ def integration_status() -> dict:
         "archive_tools": archive_tools.status(),
         "metasploit": metasploit.status(),
         "cve_intel": cve_intel.status(),
+        "pentest_mcp": pentest_mcp.status(),
     }
 
 
 __all__ = ["ai_attack", "apt_emulation", "archive_tools", "caldera", "cve_intel",
-           "metasploit", "sitl", "threat_intel", "integration_status"]
+           "metasploit", "pentest_mcp", "sitl", "threat_intel", "integration_status"]

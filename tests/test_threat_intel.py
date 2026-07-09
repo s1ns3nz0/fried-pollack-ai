@@ -39,5 +39,17 @@ def test_ti_boosts_most_threatened_target():
 def test_taxii_env_flips_availability(monkeypatch):
     monkeypatch.setenv("TAXII_URL", "https://otx.alienvault.com/taxii")
     monkeypatch.setenv("TAXII_COLLECTION", "user_AlienVault")
-    # 라이브러리 없으면 여전히 False(정직) — env만으로 True 주장 안 함.
-    assert ti.taxii_available() in (True, False)
+    assert ti.taxii_available() is True
+    assert ti.status()["mode"] == "real"
+
+
+def test_taxii_live_pull_reads_intrusion_sets(monkeypatch):
+    monkeypatch.setenv("TAXII_URL", "https://otx.alienvault.com/taxii")
+    monkeypatch.setenv("TAXII_COLLECTION", "user_AlienVault")
+    monkeypatch.setattr(ti, "get_json", lambda url: {
+        "objects": [
+            {"type": "intrusion-set", "name": "APT28 (G0007)"},
+            {"type": "malware", "name": "ignored"},
+        ]
+    })
+    assert ti._pull_actors_from_taxii() == ["APT28 (G0007)"]

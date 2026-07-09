@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -59,7 +60,7 @@ def _parse_pose(text: str, model: str) -> dict:
     """gz topic 출력(텍스트/JSON)에서 model의 position을 추출. 형식 관용 처리."""
     text = (text or "").strip()
     if not text:
-        return {}
+        raise RuntimeError(f"Gazebo pose 없음: model={model}")
     try:
         data = json.loads(text)
         for pose in data.get("pose", []) if isinstance(data, dict) else []:
@@ -68,7 +69,19 @@ def _parse_pose(text: str, model: str) -> dict:
                 return {"x": pos.get("x", 0.0), "y": pos.get("y", 0.0), "z": pos.get("z", 0.0)}
     except json.JSONDecodeError:
         pass
-    return {}
+
+    # gz/ign commonly prints protobuf text. Parse one pose block at a time.
+    for block in re.finditer(r"pose\s*\{(?P<body>.*?)\n\s*\}", text, re.DOTALL):
+        body = block.group("body")
+        if not re.search(rf'name:\s*"{re.escape(model)}"', body):
+            continue
+        coords = {}
+        for axis in ("x", "y", "z"):
+            m = re.search(rf"\b{axis}:\s*(-?\d+(?:\.\d+)?)", body)
+            coords[axis] = float(m.group(1)) if m else 0.0
+        return coords
+
+    raise RuntimeError(f"Gazebo pose 없음: model={model}")
 
 
 def from_config(gt_cfg: dict, home: dict) -> "GazeboBackend | None":

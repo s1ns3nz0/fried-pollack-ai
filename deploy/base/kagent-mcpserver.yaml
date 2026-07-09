@@ -1,0 +1,12 @@
+apiVersion: kagent.dev/v1alpha2
+kind: RemoteMCPServer
+metadata:
+  name: fried-pollack-toolserver
+  namespace: fried-pollack
+spec:
+  description: fried-pollack-ai coarse red-team engagement MCP toolserver
+  protocol: SSE
+  url: http://fried-pollack-toolserver.fried-pollack.svc.cluster.local:8080/sse
+  timeout: 30s
+  sseReadTimeout: 5m
+  terminateOnClose: true

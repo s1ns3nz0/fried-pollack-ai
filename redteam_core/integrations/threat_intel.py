@@ -12,6 +12,8 @@ from __future__ import annotations
 import os
 from typing import Dict, List
 
+from .http_json import get_json
+
 # 방산 UAV/OT/AI 관련 위협행위자 시드(ATT&CK Group ID) → 연관 시나리오.
 THREAT_ACTORS: Dict[str, dict] = {
     "Sandworm (G0034)": {"focus": "OT/ICS 파괴·공급망",
@@ -34,13 +36,7 @@ def _taxii() -> tuple:
 
 def taxii_available() -> bool:
     url, coll = _taxii()
-    if not url or not coll:
-        return False
-    try:
-        __import__("taxii2client")
-        return True
-    except Exception:
-        return False
+    return bool(url and coll)
 
 
 def status() -> dict:
@@ -58,8 +54,14 @@ def active_actors() -> List[str]:
 
 
 def _pull_actors_from_taxii() -> List[str]:  # pragma: no cover
-    """실 STIX/TAXII 피드에서 intrusion-set 추출(env 활성). 여기선 미실행."""
-    return list(THREAT_ACTORS)
+    """실 STIX/TAXII 피드에서 intrusion-set 추출(env 활성)."""
+    url, coll = _taxii()
+    sep = "&" if "?" in url else "?"
+    data = get_json(f"{url}{sep}collection={coll}")
+    objects = data.get("objects", []) if isinstance(data, dict) else []
+    actors = [o.get("name") for o in objects
+              if isinstance(o, dict) and o.get("type") == "intrusion-set" and o.get("name")]
+    return actors or list(THREAT_ACTORS)
 
 
 # ── 프로파일링 ───────────────────────────────────────────────────────────────

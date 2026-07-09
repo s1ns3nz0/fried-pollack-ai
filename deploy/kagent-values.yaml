@@ -1,0 +1,48 @@
+providers:
+  default: azureOpenAI
+  azureOpenAI:
+    provider: AzureOpenAI
+    model: gpt-4o-mini
+    apiKeySecretRef: kagent-azure-openai
+    apiKeySecretKey: AZUREOPENAI_API_KEY
+    config:
+      apiVersion: "2024-10-21"
+      azureEndpoint: https://dah-aoai-REDACTED.openai.azure.com/
+      azureDeployment: gpt-4o-soc
+
+database:
+  postgres:
+    bundled:
+      image:
+        registry: dahredacrr0710a.azurecr.io
+        repository: library
+        name: postgres
+        tag: "18.3-alpine"
+
+kagent-tools:
+  enabled: false
+grafana-mcp:
+  enabled: false
+querydoc:
+  enabled: false
+
+k8s-agent:
+  enabled: false
+kgateway-agent:
+  enabled: false
+istio-agent:
+  enabled: false
+promql-agent:
+  enabled: false
+observability-agent:
+  enabled: false
+argo-rollouts-agent:
+  enabled: false
+helm-agent:
+  enabled: false
+cilium-policy-agent:
+  enabled: false
+cilium-manager-agent:
+  enabled: false
+cilium-debug-agent:
+  enabled: false

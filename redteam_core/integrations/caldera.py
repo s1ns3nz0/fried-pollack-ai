@@ -8,6 +8,8 @@ from __future__ import annotations
 import os
 from typing import Optional
 
+from .http_json import post_json
+
 
 def _url() -> str:
     return os.environ.get("CALDERA_URL", "")
@@ -39,7 +41,8 @@ def run_operation(chain_id: str) -> dict:
 
 
 def _run_real(chain_id: str) -> dict:  # pragma: no cover
-    """실 Caldera 실행 경로(서버 있을 때만). 여기선 미실행."""
-    # 실제 구현: POST {_url()}/api/v2/operations (헤더 KEY=_key()) 로 adversary/ability 매핑.
-    return {"mode": "real", "chain": chain_id, "url": _url(),
-            "note": "Caldera REST operation 경로(env 활성)"}
+    """실 Caldera 실행 경로(서버 있을 때만)."""
+    url = _url().rstrip("/") + "/api/v2/operations"
+    body = {"chain_id": chain_id, "source": "fried-pollack-ai"}
+    response = post_json(url, body, headers={"KEY": _key()})
+    return {"mode": "real", "chain": chain_id, "url": url, "response": response}

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fried-pollack-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/s1ns3nz0/fried-pollack-ai.git
+    targetRevision: main
+    path: deploy/argocd/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

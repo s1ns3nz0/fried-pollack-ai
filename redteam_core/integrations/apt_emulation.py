@@ -12,6 +12,8 @@ import os
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
+from .http_json import get_json
+
 # APT → 순서 있는 킬체인 패턴(확장). ATT&CK Group 운용 특성 반영.
 # 정찰(S97)로 시작해 7단계 킬체인을 최대한 커버.
 APT_EMULATION = {
@@ -64,7 +66,13 @@ def emulation_plan(actor: str) -> List[str]:
 
 
 def _pull_ctid_plan(actor: str) -> List[str]:  # pragma: no cover
-    """실 CTID Adversary Emulation Library 에서 플랜 pull(env 활성). 여기선 미실행."""
+    """실 CTID Adversary Emulation Library 에서 플랜 pull(env 활성)."""
+    data = get_json(os.environ["CTID_PLAN_URL"])
+    if isinstance(data.get(actor), list):
+        return [str(x) for x in data[actor]]
+    for row in data.get("plans", []):
+        if row.get("actor") == actor:
+            return [str(x) for x in row.get("chain", [])]
     return list(APT_EMULATION.get(actor, []))
 
 

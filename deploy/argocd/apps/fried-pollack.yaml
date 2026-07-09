@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fried-pollack-ai
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/s1ns3nz0/fried-pollack-ai.git
+    targetRevision: main
+    path: deploy/overlays/aks
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fried-pollack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

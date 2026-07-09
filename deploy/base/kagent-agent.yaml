@@ -1,0 +1,35 @@
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: fried-pollack-redteam-orchestrator
+  namespace: fried-pollack
+spec:
+  description: Triggers the fried-pollack-ai UAV red-team engagement tool and summarizes the returned report.
+  type: Declarative
+  declarative:
+    modelConfig: fried-pollack-azure-openai
+    deployment:
+      nodeSelector:
+        workload: red-agent
+      tolerations:
+        - key: workload
+          operator: Equal
+          value: red-agent
+          effect: NoSchedule
+    systemMessage: |-
+      You are an orchestrator for fried-pollack-ai.
+
+      Critical constraints:
+      - You may call only the coarse run_engagement MCP tool.
+      - Do not select or invent individual kill-chain actions.
+      - Do not request sitl, hil, or live range modes. AKS execution is container range only.
+      - Treat physical irreversible actions as fail-closed gate reachability evidence, not as real actuation.
+      - Return a concise Markdown summary of the report and SOC payload if present.
+    tools:
+      - type: McpServer
+        mcpServer:
+          apiGroup: kagent.dev
+          kind: RemoteMCPServer
+          name: fried-pollack-toolserver
+          toolNames:
+            - run_engagement

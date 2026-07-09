@@ -11,6 +11,8 @@ from __future__ import annotations
 import os
 from typing import List, Optional
 
+from .http_json import post_json
+
 
 def _url() -> str:
     return os.environ.get("CVE_MCP_URL", "")
@@ -46,6 +48,7 @@ def cves_for_scenario(scenario_id: str) -> List[dict]:
 
 
 def _query_real(cve_id: str) -> dict:  # pragma: no cover
-    """실 cve-mcp-server 조회(게이트웨이 있을 때만). 여기선 미실행."""
-    # MCP: POST {CVE_MCP_URL}/tools/get_cve {"cve_id": cve_id} → NVD 상세.
-    return {"mode": "real", "cve": cve_id, "endpoint": _url()}
+    """실 cve-mcp-server 조회(게이트웨이 있을 때만)."""
+    url = _url().rstrip("/") + "/tools/get_cve"
+    record = post_json(url, {"cve_id": cve_id})
+    return {"mode": "real", "cve": cve_id, "endpoint": url, "record": record}

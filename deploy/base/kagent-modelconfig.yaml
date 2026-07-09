@@ -1,0 +1,14 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: fried-pollack-azure-openai
+  namespace: fried-pollack
+spec:
+  provider: AzureOpenAI
+  model: gpt-4o-mini
+  apiKeySecret: kagent-azure-openai
+  apiKeySecretKey: AZUREOPENAI_API_KEY
+  azureOpenAI:
+    azureEndpoint: https://dah-aoai-REDACTED.openai.azure.com/
+    azureDeployment: gpt-4o-soc
+    apiVersion: "2024-10-21"

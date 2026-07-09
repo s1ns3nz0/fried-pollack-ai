@@ -39,4 +39,30 @@ def test_cve_for_scenario():
 
 def test_msf_env_flips_mode(monkeypatch):
     monkeypatch.setenv("MSF_MCP_URL", "http://msf-mcp.local:8080")
-    assert metasploit.available() is True and metasploit.status()["transport"] == "mcp"
+    assert metasploit.available() is True
+    assert metasploit.status()["transport"] == "mcp"
+    assert metasploit.status()["mode"] == "real"
+
+
+def test_msf_configured_live_path_posts_mcp_tool(monkeypatch):
+    calls = []
+    monkeypatch.setenv("MSF_MCP_URL", "http://msf-mcp.local:8080")
+    monkeypatch.setattr(metasploit, "post_json",
+                        lambda url, body, headers=None: calls.append((url, body, headers)) or {"job_id": 7})
+    r = metasploit._run_real("auxiliary/scanner/portscan/tcp", {"RHOSTS": "10.50.0.30"})
+    assert r["mode"] == "real"
+    assert calls[0][0] == "http://msf-mcp.local:8080/tools/run_module"
+    assert calls[0][1]["module"] == "auxiliary/scanner/portscan/tcp"
+    assert r["response"]["job_id"] == 7
+
+
+def test_cve_configured_live_path_posts_mcp_tool(monkeypatch):
+    calls = []
+    monkeypatch.setenv("CVE_MCP_URL", "http://cve-mcp.local:8080")
+    monkeypatch.setattr(cve_intel, "post_json",
+                        lambda url, body, headers=None: calls.append((url, body, headers)) or {"cve": body["cve_id"]})
+    r = cve_intel._query_real("CVE-2015-3789")
+    assert r["mode"] == "real"
+    assert calls[0][0] == "http://cve-mcp.local:8080/tools/get_cve"
+    assert calls[0][1] == {"cve_id": "CVE-2015-3789"}
+    assert r["record"]["cve"] == "CVE-2015-3789"

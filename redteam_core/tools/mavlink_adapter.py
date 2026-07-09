@@ -61,24 +61,25 @@ class MavlinkTransport:
     def apply(self, action: str, params) -> dict:
         """원자 명령 1건을 실제로 전송하고 COMMAND_ACK를 반환. ACK≠물리상태(§1.0)."""
         m = self._link()
-        p = (list(params) + [0.0] * 7)[:7]
 
         if action == "param_set_safety":
-            # PARAM_SET: params=[<param_id 인덱스 없음>] → 실제론 이름 필요. 스캐폴드는 예시.
-            # 관례상 preconditions.param_name/value로 확장. 여기선 ARMING_CHECK=0 예시.
-            m.mav.param_set_send(self._sysid, self._compid, b"ARMING_CHECK",
-                                 0.0, self._mavutil.mavlink.MAV_PARAM_TYPE_INT32)
+            param_id, value = _param_set_args(params)
+            m.mav.param_set_send(self._sysid, self._compid, param_id.encode("ascii"),
+                                 float(value), self._mavutil.mavlink.MAV_PARAM_TYPE_INT32)
             return {"command_ack": "ACCEPTED", "action": action, "forged": False}
 
         if action in ("gnss_spoof", "jam"):
-            # RF/GNSS는 MAVLink command_long이 아니라 SDR/네트워크 계층. 별도 도구 필요.
-            raise NotImplementedError(f"{action}: SDR/RF 도구 연동 필요(command_long 아님)")
+            # RF/GNSS는 MAVLink command_long이 아니라 SDR/네트워크 계층. 여기서 예외로
+            # 전체 그래프를 죽이지 않고 오라클 검증 실패로 흘린다.
+            return {"command_ack": "UNSUPPORTED", "action": action, "forged": False,
+                    "reason": "rf_tool_not_configured"}
 
         cmd_id = CMD_FOR.get(action)
         if cmd_id is None:
             # recon/param_read 등 쓰기 아님 — no-op ACK
             return {"command_ack": "ACCEPTED", "action": action, "forged": False}
 
+        p = (list(params) + [0.0] * 7)[:7]
         m.mav.command_long_send(self._sysid, self._compid, cmd_id, 0,
                                 p[0], p[1], p[2], p[3], p[4], p[5], p[6])
         ack = m.recv_match(type="COMMAND_ACK", blocking=True, timeout=self._timeout)
@@ -94,6 +95,21 @@ CMD_FOR = {
     "takeoff": CMD["NAV_TAKEOFF"],
     "flight_terminate": CMD["DO_FLIGHTTERMINATION"],
 }
+
+
+def _param_set_args(params) -> tuple[str, float]:
+    """Return PARAM_SET id/value from dict/list, defaulting to ARMING_CHECK=0.
+
+    Existing playbooks pass numeric lists, while direct real-adapter callers can pass
+    {"param_id": "FS_THR_ENABLE", "value": 0}. Unknown shapes fail closed to the
+    conservative safety-disable probe used by older tests.
+    """
+    if isinstance(params, dict):
+        pid = str(params.get("param_id") or params.get("id") or "ARMING_CHECK")
+        return pid, float(params.get("value", 0.0))
+    if isinstance(params, (list, tuple)) and params and isinstance(params[0], str):
+        return params[0], float(params[1] if len(params) > 1 else 0.0)
+    return "ARMING_CHECK", 0.0
 
 
 # --------------------------------------------------------------------------
@@ -124,8 +140,19 @@ class MavlinkTelemetry:
             "custom_mode": hb.custom_mode if hb else 0,
             # 무서명 여부는 MAVLink signing 협상 상태로 판정(간이): 서명 미사용이면 False
             "mavlink_signing": bool(getattr(m.mav, "signing", None) and m.mav.signing.secret_key),
-            "arming_check": None,   # 파라미터 read로 확인해야 함(스캐폴드는 미조회)
+            "arming_check": self._param_value("ARMING_CHECK"),
         }
+
+    def _param_value(self, param_id: str):
+        m = self._link()
+        try:
+            m.mav.param_request_read_send(m.target_system, 1, param_id.encode("ascii"), -1)
+            msg = m.recv_match(type="PARAM_VALUE", blocking=True, timeout=self._timeout)
+            if msg is None:
+                return None
+            return int(msg.param_value) if float(msg.param_value).is_integer() else float(msg.param_value)
+        except Exception:
+            return None
 
     def global_position(self) -> tuple:
         m = self._link()

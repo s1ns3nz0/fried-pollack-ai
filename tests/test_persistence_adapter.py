@@ -21,6 +21,53 @@ from redteam_core.tools.range_factory import make_range
 from redteam_core.tools.sitl_stub import Range
 
 
+class _FakeMav:
+    def __init__(self):
+        self.param_sets = []
+        self.param_reads = []
+        self.signing = None
+
+    def param_set_send(self, sysid, compid, param_id, value, param_type):
+        self.param_sets.append((sysid, compid, param_id, value, param_type))
+
+    def param_request_read_send(self, sysid, compid, param_id, index):
+        self.param_reads.append((sysid, compid, param_id, index))
+
+
+class _FakeLink:
+    def __init__(self):
+        self.mav = _FakeMav()
+        self.target_system = 1
+
+    def wait_heartbeat(self, timeout=3.0):
+        return True
+
+    def recv_match(self, type=None, blocking=True, timeout=3.0):
+        if type == "PARAM_VALUE":
+            class Msg:
+                param_id = "ARMING_CHECK"
+                param_value = 0.0
+            return Msg()
+        if type == "HEARTBEAT":
+            class Msg:
+                base_mode = 0
+                custom_mode = 4
+            return Msg()
+        return None
+
+
+class _FakeMavutil:
+    class mavlink:
+        MAV_PARAM_TYPE_INT32 = 6
+        MAV_MODE_FLAG_SAFETY_ARMED = 128
+
+    def __init__(self):
+        self.link = _FakeLink()
+
+    def mavlink_connection(self, *args, **kwargs):
+        return self.link
+
+
 # ============================ 2a: 영속 seam ================================
 class TestPersistence:
     def _paths(self, tmp_path):
@@ -117,6 +164,60 @@ class TestRangeFactorySwap:
         if not connected:
             with pytest.raises(RuntimeError):
                 _ = r.transport.apply("set_mode", [1, 4])
+
+    def test_rf_actions_return_unsupported_instead_of_crashing(self, monkeypatch):
+        import redteam_core.tools.mavlink_adapter as ad
+        fake = _FakeMavutil()
+        monkeypatch.setattr(ad, "_require_pymavlink", lambda: fake)
+        transport = ad.MavlinkTransport("tcp:127.0.0.1:5790", target_sysid=1)
+        ack = transport.apply("gnss_spoof", [])
+        assert ack["command_ack"] == "UNSUPPORTED"
+        assert ack["reason"] == "rf_tool_not_configured"
+
+    def test_param_set_safety_uses_requested_param_id_and_value(self, monkeypatch):
+        import redteam_core.tools.mavlink_adapter as ad
+        fake = _FakeMavutil()
+        monkeypatch.setattr(ad, "_require_pymavlink", lambda: fake)
+        transport = ad.MavlinkTransport("tcp:127.0.0.1:5790", target_sysid=1)
+        ack = transport.apply("param_set_safety", {"param_id": "FS_THR_ENABLE", "value": 0})
+        assert ack["command_ack"] == "ACCEPTED"
+        assert fake.link.mav.param_sets[-1][2] == b"FS_THR_ENABLE"
+        assert fake.link.mav.param_sets[-1][3] == 0.0
+
+    def test_heartbeat_reads_arming_check_param(self, monkeypatch):
+        import redteam_core.tools.mavlink_adapter as ad
+        fake = _FakeMavutil()
+        monkeypatch.setattr(ad, "_require_pymavlink", lambda: fake)
+        telemetry = ad.MavlinkTelemetry("tcp:127.0.0.1:5790")
+        hb = telemetry.heartbeat()
+        assert hb["arming_check"] == 0
+        assert fake.link.mav.param_reads[-1][2] == b"ARMING_CHECK"
+
+
+class TestGazeboOracleParsing:
+    def test_parse_json_pose(self):
+        from redteam_core.tools.gazebo_backend import _parse_pose
+        text = '{"pose":[{"name":"iris","position":{"x":1.5,"y":2.5,"z":3.5}}]}'
+        assert _parse_pose(text, "iris") == {"x": 1.5, "y": 2.5, "z": 3.5}
+
+    def test_parse_textproto_pose(self):
+        from redteam_core.tools.gazebo_backend import _parse_pose
+        text = '''
+        pose {
+          name: "iris"
+          position {
+            x: 1.25
+            y: -2.5
+            z: 8
+          }
+        }
+        '''
+        assert _parse_pose(text, "iris") == {"x": 1.25, "y": -2.5, "z": 8.0}
+
+    def test_missing_pose_fails_closed(self):
+        from redteam_core.tools.gazebo_backend import _parse_pose
+        with pytest.raises(RuntimeError, match="Gazebo pose"):
+            _parse_pose("", "iris")
 
 
 # ============================ run.py --persist-learning 배선 ================

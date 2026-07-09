@@ -16,62 +16,15 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from datetime import datetime, timezone
 
-from redteam_core.bridge import rows_to_alert, tap_from_audit
-from redteam_core.engagement.gate import load_gate
-from redteam_core.graph.build import build_graph
-from redteam_core.learning import (new_persistent_experience_gates,
-                                    new_persistent_target_gate)
 from redteam_core.logging_util import get_logger
-from redteam_core.session import build_initial_state
-from redteam_core.settings import settings_summary
-from redteam_core.tools.range_factory import make_range
+# 실행 로직은 service 레이어에 산다(CLI·MCP 공용). 하위호환 위해 여기로 재노출.
+from redteam_core.service import (build_soc_payload, demo_approver,  # noqa: F401
+                                  run_engagement)
 
 DEFAULT_PROFILE = os.path.join(os.path.dirname(__file__), "engagement_profile.yaml")
 DEFAULT_LEARNING_DIR = os.path.join(os.path.dirname(__file__), "out", "learning")
 log = get_logger("run")
-
-
-def _persistent_gates(learning_dir: str):
-    """디스크 백엔드 학습 게이트 쌍 — 여러 run에 걸쳐 자기개선 누적(2a seam 배선)."""
-    os.makedirs(learning_dir, exist_ok=True)
-    eg = new_persistent_experience_gates(os.path.join(learning_dir, "experience.json"))
-    tg = new_persistent_target_gate(os.path.join(learning_dir, "target_profile.json"))
-    return eg, tg
-
-
-def demo_approver(ctx):
-    """HITL 콜백: 물리 비가역은 인간 전용 → 자동대응 보류(안전). 그 외 승인.
-
-    ctx = hitl_gate의 _hitl_context(dict). stdlib·LangGraph interrupt 양쪽에서 동일 계약.
-    실 운용에선 이 자리에 운용자 UI/API(비동기 승인)가 들어간다.
-    """
-    return "denied" if ctx.get("physical_irreversible") else "approved"
-
-
-def run_engagement(profile_path: str, range_mode: str = None, hardened: bool = False,
-                   apply_egress: bool = False, persist_learning: str = None) -> dict:
-    gate, profile = load_gate(profile_path, apply_egress=apply_egress)
-    if range_mode:
-        profile.setdefault("engagement", {})["range_mode"] = range_mode
-    log.info("engagement 시작 name=%r range_mode=%s hardened=%s settings=%s",
-             profile.get("engagement", {}).get("name"),
-             profile.get("engagement", {}).get("range_mode"), hardened, settings_summary())
-    # 영속 학습 게이트(옵션) — 지정 시 여러 run에 걸쳐 디스크에 자기개선 누적.
-    eg, tg = (_persistent_gates(persist_learning) if persist_learning else (None, None))
-    if persist_learning:
-        log.info("학습 영속 활성 dir=%s", persist_learning)
-    state = build_initial_state(profile, gate, make_range(profile, hardened=hardened),
-                                demo_approver, experience_gate=eg, target_gate=tg)
-    graph = build_graph()                       # 기본 LangGraph(interrupt HITL), 미설치면 stdlib
-    backend = type(graph).__name__
-    final = graph.invoke(state)
-    try:
-        final["_backend"] = backend
-    except Exception:
-        pass
-    return final
 
 
 def main() -> None:
@@ -140,10 +93,8 @@ def _print_learning(report, learning_dir) -> None:
 
 def _emit_soc(state, out_dir) -> None:
     os.makedirs(out_dir, exist_ok=True)
-    ts = datetime.now(timezone.utc).isoformat()
-    rows = tap_from_audit(state["audit_log"], state["profile"], ts=ts)   # 관측 트래픽 → UAV*_CL
-    alert = rows_to_alert(rows, state["profile"],
-                          alert_id="rt-" + ts.replace(":", "").replace("-", "")[:15])
+    soc = build_soc_payload(state)          # 인라인 산출(service) → CLI는 그걸 파일로 씀
+    rows, alert = soc["rows"], soc["alert"]
 
     ndjson_path = os.path.join(out_dir, "uav_cl_rows.ndjson")
     alert_path = os.path.join(out_dir, "soc_alert.json")
