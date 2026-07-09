@@ -8,7 +8,7 @@
 
 ## 0. 한 줄 정의
 
-결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 모듈(7개 기능 도메인)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S35~S71(유출·WiFi·RC·Web/Linux 권한상승·아카이브·다중센서 폴트인젝션)까지 확장된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
+결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 모듈(7개 기능 도메인)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S1~S126(테마별: 공중→링크→지상→IT→클라우드→AI→유출→정찰→군집→운용)로 정렬된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
 
 ---
 
@@ -17,7 +17,7 @@
 - **판정은 모델 밖에 산다(DoDD 3000.09)**: 물리 비가역·교전권한 판정은 LLM 이 아니라 결정론 게이트/오라클에 있다. LLM 은 조언 전용, 오라클 veto 하.
 - **3 기둥**: scaffold(능력)=무엇을 할 수 있나 · oracle(진위)=정말 일어났나 · gate(안전)=해도 되나.
 - **불변식 D8**: red(fried-pollack-ai) ↔ blue(pollack-ai, SOC)는 **코드 결합 없음**(동언님 `ARCHITECTURE.md:93`). 유일 접점은 단방향 `UAV*_CL` 브릿지. 교리상 OCO/DCO 권한 분리와 정합.
-- **탐지 임계의 위치(정정)**: blue 룰의 탐지 임계는 **대부분 `UAV_Threshold_List` watchlist 로 외부화**(S3·S9·S15·S16·S22·S25·C2·C3·C5 등 — `ThresholdKey/Value` 행, 쿼리 무수정 튜닝). 예외적으로 S6(`FailCount>=5/3`)·S1(`zScoreThreshold=3.0`·`gateMultiplier=1.5`)은 쿼리 리터럴. §A 는 이 룰 정의에서 임계를 **수동 씨앗 복사**할 뿐 pollack-ai/룰 repo 에 런타임 의존하지 않는다(D8 준수).
+- **탐지 임계의 위치(정정)**: blue 룰의 탐지 임계는 **대부분 `UAV_Threshold_List` watchlist 로 외부화**(S18·S19·S79·S109·S6·S52·C2·C3·C5 등 — `ThresholdKey/Value` 행, 쿼리 무수정 튜닝). 예외적으로 S34(`FailCount>=5/3`)·S1(`zScoreThreshold=3.0`·`gateMultiplier=1.5`)은 쿼리 리터럴. §A 는 이 룰 정의에서 임계를 **수동 씨앗 복사**할 뿐 pollack-ai/룰 repo 에 런타임 의존하지 않는다(D8 준수).
 - **결정론 Tier-0**: 전 층이 LLM/네트워크/SITL 없이 실행·검증 가능(§K 전송·§L 지속만 실 소켓/FS, loopback 실검증).
 
 ---
@@ -57,10 +57,10 @@
 | `transport/` | 실 전송: TCP C2 비콘 + UDP(GPS/PARAM/MISSION)/HTTP, loopback 검증 | 킬체인 3·6단계 |
 | `persistence/` | FileImplant(재부팅 생존)·ParamImplant(EEPROM)·Foothold | 킬체인 5단계 |
 | `payloads/` | ML 공격 페이로드 생성기(PyRIT/Garak식)+AdaptivePayloadGenerator+exploits | ATLAS |
-| `dronesploit/` | WiFi(deauth·evil twin·재밍·기본자격 S39~S42)+COTS 표적+모듈+CVE | 802.11 |
-| `advanced/` | RC 링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics S43~S47+기법카탈로그 | Awesome-Drone |
-| `simtest/` | 다중센서 폴트인젝션 S56~S59(EKF 우회)+환경 증폭+인시던트KB+비행로그 오라클 | AutoSim |
-| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S86~S99(GCS 앱·ROS·데이터링크·클라우드). execute_real 실 실행 | 지상/클라우드 공격면 |
+| `dronesploit/` | WiFi(deauth·evil twin·재밍·기본자격 S25~S28)+COTS 표적+모듈+CVE | 802.11 |
+| `advanced/` | RC 링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics(RC S29~S31·DShot S8·흔적제거 S40)+기법카탈로그 | Awesome-Drone |
+| `simtest/` | 다중센서 폴트인젝션 S9~S12(EKF 우회)+환경 증폭+인시던트KB+비행로그 오라클 | AutoSim |
+| `groundseg/` | 지상 세그먼트 소프트웨어 공격 S41~S50(지상)+S81~S84(클라우드)(GCS 앱·ROS·데이터링크·클라우드). execute_real 실 실행 | 지상/클라우드 공격면 |
 
 #### 킬체인·실행 (Kill Chain / Execution)
 | 모듈 | 기능 | 교리 근거 |
@@ -112,8 +112,8 @@
 |---|---|---|
 | `jadc2/` | 융합 레이어 공격 — 다중센서 정합성(개별미탐+거짓상관 FP/진짜를 노이즈 FN)+메시 저하 테스트 | JADC2 |
 | `mosaic/` | 재조합 로직 공격 + judge **실 introspection** 독립성 검증(common-mode) | Mosaic Warfare/Kill Web |
-| `ooda/` | Orient-phase denial(S29 재프레임)+red↔blue OODA 속도경쟁 스코어보드 | OODA(Boyd) |
-| `information/` | 리포팅/증거체인 공격 S100~S102(SOCReport·OSCAL·PR 위조). execute_real 실 실행 | 정보(7번째 합동기능, JP 3-0) |
+| `ooda/` | Orient-phase denial(S89 재프레임)+red↔blue OODA 속도경쟁 스코어보드 | OODA(Boyd) |
+| `information/` | 리포팅/증거체인 공격 S85~S87(SOCReport·OSCAL·PR 위조). execute_real 실 실행 | 정보(7번째 합동기능, JP 3-0) |
 
 ---
 
@@ -194,10 +194,10 @@
 
 레드 교전 결과가 곧 방어 진단이다:
 
-- **무장 목표(범주형 룰 S11/S15)**: red 가 회피·지속·도달 **전부 실패** → blue 견고. (2인통제·비인가검사 유효)
+- **무장 목표(범주형 룰 S3/S79)**: red 가 회피·지속·도달 **전부 실패** → blue 견고. (2인통제·비인가검사 유효)
 - **항법(GNSS)**: 효과바닥(0.05) > blue S1 게이트(0.0238) → 효과 내면 항상 탐지되나, **GNSS 재밍(jam)은 미매핑 사각지대** → red 피벗 성공. **⇒ blue 보강 1순위: GNSS 재밍 탐지룰 신설.**
-- **정찰(S6)**: 연속임계(5)에 회피창 존재 → 강도 하향 회피 가능. **⇒ blue 보강: 저율 브루트포스 누적 탐지.**
-- **임계 실측 보정(§A)**: S6 회피≤3/탐지≥6(가상값 5), S1 경계~0.0188(가상값 0.0238) — blue 가상값을 실측으로 대체 가능. **`UAV_Threshold_List` 로 외부화된 룰(다수)은 §A 보정값을 watchlist `Value` 갱신으로 반영(쿼리 무수정) = 깔끔한 퍼플팀 루프.** S6·S1 등 리터럴 룰만 쿼리 임계 수정 필요.
+- **정찰(S34)**: 연속임계(5)에 회피창 존재 → 강도 하향 회피 가능. **⇒ blue 보강: 저율 브루트포스 누적 탐지.**
+- **임계 실측 보정(§A)**: S34 회피≤3/탐지≥6(가상값 5), S1 경계~0.0188(가상값 0.0238) — blue 가상값을 실측으로 대체 가능. **`UAV_Threshold_List` 로 외부화된 룰(다수)은 §A 보정값을 watchlist `Value` 갱신으로 반영(쿼리 무수정) = 깔끔한 퍼플팀 루프.** S34·S1 등 리터럴 룰만 쿼리 임계 수정 필요.
 
 ---
 
@@ -207,7 +207,7 @@
 - 층별 실행 데모 20+종: `benchmarks/*_eval.py` (closed_loop·roe·emso·combat·replan·targeting·maneuver·deception·sustainment·killchain·infra·campaign_chains·s30·s31_34·kpi_report·integrations·threat_intel·apt_emulation …).
 - **§P KPI 요지**: 사각지대율·은밀관통 캠페인·임계보정·MEA·임무영향(MRT-C) 등 JP 3-60/3-12/5-0 평가 지표 커버(시간지표 MTTD만 라이브).
 - **§Q 외부연동**: 전부 opt-in seam(env→real / 미지정→결정론 폴백). APT 에뮬레이션 8종(한국 방산 관련 Lazarus·Kimsuky 포함).
-- **핵심 발견(§M~§Q)**: **AI 계층(RAG·온보드AI·프롬프트인젝션·모델추출·군집)이 전부 blue 미배포 = 유일한 완전 은밀 관통 APT(AML)**. 방어 보강 1순위=AI 계층, 2순위=GNSS/C2 재밍(S30/S31).
+- **핵심 발견(§M~§Q)**: **AI 계층(RAG·온보드AI·프롬프트인젝션·모델추출·군집)이 전부 blue 미배포 = 유일한 완전 은밀 관통 APT(AML)**. 방어 보강 1순위=AI 계층, 2순위=GNSS/C2 재밍(S23/S24).
 - 산출: `github.com/mara89ma/Red-agent @ feat/closed-loop-bda`, 12 커밋.
 
 ## 8. 남은 작업 (본선)
