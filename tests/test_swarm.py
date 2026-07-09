@@ -36,6 +36,20 @@ def test_swarm_collapse_campaign():
     assert run_chain("C23").verdict in ("stealthy", "detected")
 
 
+def test_extended_swarm_campaigns():
+    # 확장 군집 캠페인 C24~C29 전부 실행 가능.
+    for cid in ("C24", "C25", "C26", "C27", "C28", "C29"):
+        r = run_chain(cid)
+        assert r.verdict in ("stealthy", "detected", "blocked")
+        assert len(r.stages) >= 3                     # 다단계
+
+
+def test_swarm_campaigns_include_swarm_scenarios():
+    from redteam_core.campaigns.chains import CHAINS
+    for cid in ("C24", "C25", "C26", "C27", "C28", "C29"):
+        assert any(s in {f"S{n}" for n in range(103, 111)} for s in CHAINS[cid])
+
+
 def test_mitre_grounded():
     # 각 시나리오가 ICS/Enterprise ATT&CK 기법에 정박.
     assert all(m[2].startswith("T") for m in SWARM_SCENARIOS.values())

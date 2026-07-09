@@ -20,8 +20,19 @@ def main() -> None:
         r = run_swarm(sid, n=9, malicious=3)
         icon = "💥집단붕괴" if r.swarm_failure else "⚠️저하"
         print(f"  {sid:<6}{r.name:<26}{r.mitre:<9}{icon} · {r.effect}")
+    print("\n=== 확장 군집/편대 캠페인 (다단계 킬체인) ===")
+    from redteam_core.campaigns import run_chain
+    from redteam_core.campaigns.chains import CHAINS
+    _names = {"C23": "군집 붕괴", "C24": "리더 참수", "C25": "합의 전복",
+              "C26": "분단 격파", "C27": "공급망 전파", "C28": "물리 파괴", "C29": "대량 유출"}
+    icon = {"stealthy": "🥷은밀", "detected": "🔴탐지", "blocked": "⛔차단"}
+    for cid in ("C23", "C24", "C25", "C26", "C27", "C28", "C29"):
+        cr = run_chain(cid)
+        flow = "→".join(s for s, _, _ in cr.stages)
+        print(f"  {cid} {_names[cid]:<8} {icon[cr.verdict]}  {flow}")
+
     print("\n핵심: 개별 기체가 아니라 리더·분산합의·충돌회피·메시 등 '집단 조정 로직'을 노림.")
-    print("      군집 고유 공격면 = blue Sentinel 미감시 사각지대.")
+    print("      군집 공격을 단일UAV·EW·공급망·유출과 엮어 다단계 킬체인화.")
 
 
 if __name__ == "__main__":
