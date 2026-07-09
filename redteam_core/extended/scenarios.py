@@ -29,7 +29,7 @@ EXTENDED_SCENARIOS = {
     # ── 메시징/미들웨어 ──
     "S75": ("dds_discovery_flood", "DDS/ROS2 discovery 플러딩", "T1499", "미들웨어"),
     "S76": ("mqtt_bus_poison", "MQTT/메시지버스 텔레메트리 오염", "T1565.001", "미들웨어"),
-    "S77": ("geofence_tamper", "지리펜스(geofence) 변조·우회", "T0839", "미들웨어"),
+    "S77": ("geofence_tamper", "지리펜스(geofence) 변조·우회", "T0836", "미들웨어"),
 }
 
 

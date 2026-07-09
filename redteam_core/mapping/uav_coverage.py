@@ -124,6 +124,10 @@ UAV_MATRIX: List[Tuple[str, str, str, bool]] = [
     ("Lateral Movement", "T1555", "Credentials from Password Stores", False),
     ("Stealth/Evasion", "T1600", "Weaken Encryption", False),
     ("Command and Control", "T1090.002", "External Proxy (위성 링크 C2, Turla)", False),
+    # ── 신규 시나리오 커버 보강(군집·운용·공급망) ──
+    ("Impair Process Control", "T0856", "Spoof Reporting Message", False),
+    ("Stealth/Evasion", "T1553", "Subvert Trust Controls", False),
+    ("Lateral Movement", "T1649", "Steal/Forge Auth Certificates", False),
 ]
 
 # 기법ID → 우리 RED 가 실제로 공격하는 시나리오/모듈. (미기재 = 갭)
@@ -260,6 +264,11 @@ for _tid, _extra in {
 }.items():
     if _tid in RED_COVER:
         RED_COVER[_tid] += _extra
+
+# 신규 매트릭스 기법 직접 커버(append 아님).
+RED_COVER["T0856"] = "S101 편대 리더 스푸핑·S117 BLOS 명령위조(swarm/opmodes)"
+RED_COVER["T1553"] = "S73 아티팩트 서명 우회(supply chain)"
+RED_COVER["T1649"] = "S70 mTLS 인증서 위조(supply chain)"
 
 # 지상 세그먼트 소프트웨어(S41~S84) — 매트릭스 보강: 기체 외 GCS·ROS·데이터링크·클라우드.
 # 전부 UAV Sentinel(텔레메트리 평면) 미감시 = ❌(탐지불가) → 히어로셋(은밀 공격).
