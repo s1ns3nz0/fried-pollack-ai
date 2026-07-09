@@ -8,7 +8,7 @@
 
 ## 0. 한 줄 정의
 
-결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 층(§A~§Z)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S35~S71(유출·WiFi·RC·Web/Linux 권한상승·아카이브·다중센서 폴트인젝션)까지 확장된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
+결정론 레드팀 코어(scaffold/oracle/gate) 위에 **미군 사이버작전 교리에 정박한 26개 고도화 모듈(7개 기능 도메인)**을 코어 불변으로 얹어, red 가 방어자(blue SOC)를 상대로 **완전한 사이버 킬체인 + JP 3-60 타게팅 사이클 + JP 3-0 합동기능**을 수행하는 자율 에이전트. §M~§Z 는 신규 시나리오/캠페인(§M)·ML 페이로드 생성(§N)·승인 체인/임무분리(§O)·KPI 집계(§P)·외부 도구 연동/APT 에뮬레이션(§Q)·공격 템포(§R)·CMT 직무 오케스트레이션(§S)·악성코드 detonation 샌드박스(§T)·시나리오 실 실행기(§U)·WiFi/COTS 드론 공격(§V, dronesploit)·고급 드론 공격(§W, RC링크/DShot/anti-forensics)·GitHub 툴 자동검색(§X)·xbow식 능력/KPI 벤치마크(§Y)·시뮬 기반 센서/환경 공격(§Z, AutoSim)를 더한다. 신규 시나리오는 S35~S71(유출·WiFi·RC·Web/Linux 권한상승·아카이브·다중센서 폴트인젝션)까지 확장된다. 전체 조직은 `docs/CYBER_ORG.md`(USCYBERCOM CMF/CMT 직무)로 오버레이된다.
 
 ---
 
@@ -22,57 +22,85 @@
 
 ---
 
-## 2. 26층 아키텍처 스택
+## 2. 아키텍처 스택 (기능 도메인)
+
+> 레이어는 순차 알파벳(§A~§Z) 대신 **기능 도메인**으로 조직한다. 모듈 디렉토리명이 곧
+> 조직이며, §-라벨은 초기 색인의 잔재다(기존 docstring/커밋의 §-표기는 무해, 신규 모듈엔 미부여).
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ §J 킬체인 오케스트레이션 (7단계 end-to-end 관통)              │  통합
+│ 킬체인 오케스트레이션 (7단계 end-to-end 관통)                │  통합
 ├──────────────────────────────────────────────────────────────┤
-│ §F 표적개발(CARVER/HPTL) │ §G 기동/측면이동 │ §I 작전지속력   │  계획·기동·지속
-│ §E 적응 재계획(OODA)     │ §H MILDEC(기만)                    │
+│ 표적개발(CARVER/HPTL) │ 기동/측면이동 │ 작전지속력          │  계획·기동·지속
+│ 적응 재계획(OODA)     │ MILDEC(기만)                        │
 ├──────────────────────────────────────────────────────────────┤
-│ §A 폐루프 BDA(탐지관측·임계보정) │ §D 전투평가(MOE/MOP·재타격)│  관측·평가
+│ 폐루프 BDA(탐지관측·임계보정) │ 전투평가(MOE/MOP·재타격)    │  관측·평가
 ├──────────────────────────────────────────────────────────────┤
-│ §B RoE 교전권한 게이트(권한·PID·ConOps·CDE·JCEOI)            │  교전통제
+│ RoE 교전권한 게이트(권한·PID·ConOps·CDE·JCEOI)              │  교전통제
 ├──────────────────────────────────────────────────────────────┤
-│ §C EMSO(J/S·포획) │ §K 실전송(C2·전달) │ §L 설치/지속(발판)   │  효과·전송·지속
+│ EMSO(J/S·포획) │ 실전송(C2·전달) │ 설치/지속(발판)          │  효과·전송·지속
 ├──────────────────────────────────────────────────────────────┤
-│ [동언 코어] recon→planner→checker→broker→hitl→executor→       │  결정론 실행
-│             validator→reflection→reporter · 3기둥 · 22액션    │
+│ [동언 코어] recon→planner→checker→broker→hitl→executor→     │  결정론 실행
+│             validator→reflection→reporter · 3기둥 · 22액션  │
 └──────────────────────────────────────────────────────────────┘
    D8: blue 와 코드 결합 없음 — 공유 산출물(룰)만 참조
 ```
 
-### 층별 요약
+### 기능 도메인별 모듈
 
-| 층 | 모듈 | 기능 | 교리 근거 |
-|---|---|---|---|
-| §A | `assessment/bda,loop` | red 방출 `UAV*_CL` 을 blue 실제 S1~S28 룰로 평가 → 탐지 관측 → 강도 이분탐색으로 blue 가상값 임계 실측 보정 | JP 3-60 ⑥ (전투평가) |
-| §B | `roe/` | 교전권한 레벨(NONE→NATIONAL)·PID·ConOps 범위·CDE 부수효과·JCEOI 스펙트럼 데컨플릭션 판정(PERMITTED/ESCALATE/BLOCKED) | SROE·JP 3-60 ④·CJCSM 3160·JP 3-85 |
-| §C | `emso/` | 전자공격(EA): 재밍 J/S 번스루·GNSS 포획마진 → PosHorizVariance 강도. blue counter-uas RF 모델과 대칭 | JP 3-85 JEMSO |
-| §D | `assessment/combat` | MOP(임무수행)·MOE(효과+생존성)·재타격권고(강도↓/상향/TTP전환) | JP 3-60 ⑥ (MOE/MOP) |
-| §E | `assessment/replan` | 재타격 실행: 회피창 있으면 강도 하향, 효과바닥≥탐지임계면 TTP 피벗(사각지대 노출) | Persistent Engagement·OODA |
-| §F | `targeting/` | CARVER 표적가치 → HPTL. 교전결과(사각/차단)로 취약성 갱신 → 동적 재우선순위화 | JP 3-60 ② |
-| §G | `maneuver/` | 사이버 지형 그래프 순회: 초기접근→측면이동→효과, 차단시 재경로 | JP 3-12·ATT&CK Lateral Movement |
-| §H | `deception/` | 미끼로 SOC 분석주의 포화 → 진짜 공격 은폐. blue S8/S9 임계 역이용 | JP 3-13.4 MILDEC |
-| §I | `sustainment/` | TTP 소모(burn) 순환: 탐지된 TTP 는 시그니처 노출로 소진 → 목표별 지속력 산정 | JP 3-0/4-0 Sustainment |
-| §J | `killchain/` | 7단계 오케스트레이션: 전달 벡터·지속성(발판/임플란트)·C2(상용포트/불량라우터) 채워 end-to-end 관통 판정 | Lockheed Kill Chain |
-| §K | `transport/` | 실 전송: TCP C2 지속비콘(자동 재접속) + UDP(GPS/PARAM/MISSION 프레임)/HTTP 전달. loopback 실검증 | 킬체인 3·6단계 실체화 |
-| §L | `persistence/` | 설치/지속 실 메커니즘: FileImplant(재부팅 생존 검증)·ParamImplant(EEPROM 백도어)·Foothold 오케스트레이션 | 킬체인 5단계 실체화 |
-| §M | `campaigns/` | 신규 시나리오 S30~S34(재밍·AI공격) + 캠페인 체인 C8~C10 실행·탐지 프로파일 | 시나리오 보강 |
-| §N | `payloads/` | ML 공격 페이로드 실 생성기(PyRIT/Garak식 시드+컨버터) + 상황 맞춤 AdaptivePayloadGenerator | ATLAS |
-| §O | `command/` | 승인 체인(EXORD 프록시): 고권한 액션은 상급 승인 티켓 없이 fail-closed + 임무분리 불변식 | SROE·지휘체계 |
-| §P | `kpi/` | KPI 10종: 방어공백·dwell·임계보정·MITRE·RoE·재타격·MEA·임무영향·MOE지표·BDA신뢰 | JP 3-60/3-12/5-0 평가 |
-| §Q | `integrations/` | 외부 도구 opt-in seam: AI공격(PyRIT/Garak)·Caldera·SITL·TI(위협행위자)·APT 에뮬레이션(8 APT) | 실 연동(env) |
-| §R | `tempo/` | 공격 템포: low-and-slow(임계 아래 누적·∞MTTD) vs smash(즉효·즉탐지) — 시간지표 갭 | OODA 템포 |
-| §S | `orchestration/` | 사이버전투임무팀(CMT) 직무 협업: MC→TDNA→ION→BDA (USCYBERCOM CMF) | 사이버작전 조직 |
-| §T | `sandbox/` | 악성코드 detonation 샌드박스(opt-in): FS 격리+롤백·egress default-deny(scope_cidr)·악성 지표 판정(benign/suspicious/malicious). docker 백엔드 seam(live 실격리) | 격리 사이버 시험환경 |
-| §U | `execute/` | 시나리오 실 실행기: 38 시나리오를 카테고리별 실 아티팩트(MAVLink 프레임·HTTP·인젝션 페이로드·kubectl·유출 청크)로 생성·전송. dry-run 기본, 실 전송은 env+§T 샌드박스 fail-closed | 실 공격 실행 |
-| §V | `dronesploit/` | WiFi 계층 공격 S39~S42(deauth·evil twin·재밍·기본자격증명)+COTS/소형 UAS 표적 프로파일+sploitkit식 모듈 프레임+드론 CVE 레지스트리 | 802.11 공격면(dronesploit) |
-| §W | `advanced/` | 고급 드론 공격 S43~S47: RC 조종링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics + 기법/도구 카탈로그(ATT&CK→실도구) | Awesome-Drone/ired.team |
-| §X | `toolsearch/` | 공격 막힐 때 GitHub 툴 레포 자동검색: blocked/사각 시 목표별 실 도구 추천(라이브 GITHUB_TOKEN/큐레이션 시드). 읽기전용 | 능력갭→도구발견 |
-| §Y | `benchmark/` | xbow식 능력 벤치마크: UAV 챌린지 스위트+탐지회피 채점(달성 AND 미탐지)+레드팀 KPI 스코어카드(목표 근거화·라운드별 추세 퍼플팀 투영)+외부 벤치마크 어댑터 | xbow·MITRE Eval·M-Trends |
-| §Z | `simtest/` | 시뮬 기반 공격: 다중센서 폴트인젝션 S56~S59(IMU·기압·지자기·에어스피드, 점진주입=EKF 우회)+환경 공격 증폭+인시던트-KB 시나리오 생성+비행로그 분석 오라클 | AutoSimTestFramework |
+#### 공격면 (Attack Surface)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `emso/` | 전자공격(EA): 재밍 J/S 번스루·GNSS 포획마진 → PosHorizVariance 강도 | JP 3-85 JEMSO |
+| `targeting/` | CARVER 표적가치 → HPTL, 교전결과(사각/차단)로 동적 재우선순위화 | JP 3-60 ② |
+| `maneuver/` | 사이버 지형 순회: 초기접근→측면이동→효과, 차단시 재경로 | JP 3-12·ATT&CK |
+| `transport/` | 실 전송: TCP C2 비콘 + UDP(GPS/PARAM/MISSION)/HTTP, loopback 검증 | 킬체인 3·6단계 |
+| `persistence/` | FileImplant(재부팅 생존)·ParamImplant(EEPROM)·Foothold | 킬체인 5단계 |
+| `payloads/` | ML 공격 페이로드 생성기(PyRIT/Garak식)+AdaptivePayloadGenerator+exploits | ATLAS |
+| `dronesploit/` | WiFi(deauth·evil twin·재밍·기본자격 S39~S42)+COTS 표적+모듈+CVE | 802.11 |
+| `advanced/` | RC 링크(DSMX/FrSky/ELRS)·DShot 모터·anti-forensics S43~S47+기법카탈로그 | Awesome-Drone |
+| `simtest/` | 다중센서 폴트인젝션 S56~S59(EKF 우회)+환경 증폭+인시던트KB+비행로그 오라클 | AutoSim |
+
+#### 킬체인·실행 (Kill Chain / Execution)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `killchain/` | 7단계 end-to-end 관통 판정(전달·지속·C2) | Lockheed Kill Chain |
+| `campaigns/` | 신규 시나리오 + 캠페인 체인 C8~C18 실행·탐지 프로파일 | 시나리오 보강 |
+| `execute/` | 시나리오 실 실행기: 카테고리별 실 아티팩트 생성·전송(dry-run 기본, 실전송=샌드박스 fail-closed) | 실 공격 실행 |
+
+#### 적응·폐루프 (Adaptive / Closed-loop)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `assessment/bda,loop` | red 방출을 blue 실룰로 평가 → 탐지 관측 → 강도 이분탐색 임계 실측 보정 | JP 3-60 ⑥ |
+| `assessment/combat` | MOP(임무수행)·MOE(효과+생존성)·재타격 권고 | JP 3-60 ⑥ |
+| `assessment/replan` | 재타격 실행: 회피창시 강도↓, 효과바닥≥탐지임계면 TTP 피벗(사각 노출) | Persistent Engagement·OODA |
+
+#### 평가·KPI·벤치마크 (Assessment / Metrics)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `kpi/` | KPI 10종(방어공백·dwell·임계보정·MITRE·RoE·재타격·MEA·임무영향·MOE·BDA) | JP 3-60/3-12/5-0 |
+| `benchmark/` | xbow식 챌린지+탐지회피 채점(달성 AND 미탐지)+KPI 스코어카드(근거화·라운드 추세)+외부 어댑터 | xbow·MITRE Eval·M-Trends |
+
+#### 안전·통제 (Safety / Command)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `roe/` | 교전권한(NONE→NATIONAL)·PID·ConOps·CDE·JCEOI 판정(PERMITTED/ESCALATE/BLOCKED) | SROE·JP 3-60/3-85·CJCSM 3160 |
+| `command/` | 승인 체인(EXORD 프록시): 고권한 fail-closed + 임무분리 불변식 | SROE·지휘체계 |
+| `sandbox/` | detonation 샌드박스(opt-in): FS 격리+롤백·egress default-deny·악성 판정 | 격리 시험환경 |
+
+#### 조직·기만·지속 (Org / Deception / Sustainment)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `orchestration/` | CMT 직무 협업 MC→TDNA→ION→BDA (USCYBERCOM CMF) | 사이버작전 조직 |
+| `tempo/` | 공격 템포: low-and-slow(∞MTTD) vs smash(즉효·즉탐지) 시간지표 갭 | OODA 템포 |
+| `deception/` | 미끼로 SOC 분석주의 포화 → 진짜 공격 은폐 | JP 3-13.4 MILDEC |
+| `sustainment/` | TTP 소모(burn) 순환 → 목표별 지속력 산정 | JP 3-0/4-0 |
+
+#### 연동·발견 (Integration / Discovery)
+| 모듈 | 기능 | 교리 근거 |
+|---|---|---|
+| `integrations/` | 외부 도구 opt-in seam: AI공격·Caldera·SITL·TI·APT 에뮬레이션·Metasploit·CVE | 실 연동(env) |
+| `toolsearch/` | 공격 막힐 때 GitHub 툴 자동검색(라이브 GITHUB_TOKEN/큐레이션 시드), 읽기전용 | 능력갭→도구발견 |
 
 ---
 
