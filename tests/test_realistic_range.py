@@ -14,8 +14,8 @@ from xmlrpc.server import SimpleXMLRPCServer
 
 import pytest
 
-from redteam_core.groundseg import execute_real as ground_exec
-from redteam_core.information import execute_real as info_exec
+from redteam_core.groundseg import GROUND_SCENARIOS, execute_real as ground_exec
+from redteam_core.information import REPORT_TARGETS, execute_real as info_exec
 
 
 @pytest.fixture(scope="module")
@@ -60,13 +60,15 @@ def range_targets(tmp_path_factory):
 
     def _rtsp():
         srv = socket.socket(); srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        srv.bind(("127.0.0.1", 0)); srv.listen(1); srv.settimeout(4)
+        srv.bind(("127.0.0.1", 0)); srv.listen(5); srv.settimeout(8)
         os.environ["RTSP_TARGET"] = f"127.0.0.1:{srv.getsockname()[1]}"
         ready.set()
-        try:
-            c, _ = srv.accept(); c.recv(128); c.sendall(b"RTSP/1.0 200 OK\r\n\r\n"); c.close()
-        except Exception:
-            pass
+        while True:                                # 여러 요청 수용
+            try:
+                c, _ = srv.accept(); c.recv(128)
+                c.sendall(b"RTSP/1.0 200 OK\r\n\r\n"); c.close()
+            except Exception:
+                break
     threading.Thread(target=_rtsp, daemon=True).start(); ready.wait(2)
 
     yield {"dir": tdir, "ev": ev, "socks": socks}
@@ -122,3 +124,18 @@ def test_range_summary_real_delivery(range_targets):
     files = list(range_targets["dir"].iterdir())
     assert len(files) >= 2                         # 실 파일 생성됨
     assert range_targets["ev"]["http"]             # 실 HTTP 도달됨
+
+
+# ── 전체 커버리지: 모든 실행가능 시나리오가 실제 표적에 도달하는가 ──
+@pytest.mark.parametrize("sid", sorted(GROUND_SCENARIOS, key=lambda x: int(x[1:])))
+def test_all_ground_scenarios_reach_target(range_targets, sid):
+    """지상 세그먼트 전 시나리오 실 표적 도달."""
+    r = ground_exec(sid)
+    assert r.get("sent") is True, f"{sid} 미도달: {r.get('reason')}"
+
+
+@pytest.mark.parametrize("sid", sorted(REPORT_TARGETS))
+def test_all_information_scenarios_reach_target(range_targets, sid):
+    """정보(리포팅·증거체인) 전 시나리오 실 위조 파일 생성."""
+    r = info_exec(sid)
+    assert r.get("sent") is True and os.path.exists(r["path"])
