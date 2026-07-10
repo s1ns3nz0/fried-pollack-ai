@@ -12,6 +12,21 @@ kubectl apply --server-side --force-conflicts \
   -n argocd \
   -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+# The quota-sized demo topology reserves the second node pool for red-agent
+# workloads. Argo CD must tolerate that taint because the single system node
+# can reach its AKS max-pod limit during a full kagent installation.
+for workload in \
+  deployment/argocd-applicationset-controller \
+  deployment/argocd-dex-server \
+  deployment/argocd-notifications-controller \
+  deployment/argocd-redis \
+  deployment/argocd-repo-server \
+  deployment/argocd-server \
+  statefulset/argocd-application-controller; do
+  kubectl -n argocd patch "$workload" --type=merge \
+    -p '{"spec":{"template":{"spec":{"tolerations":[{"key":"workload","operator":"Equal","value":"red-agent","effect":"NoSchedule"}]}}}}'
+done
+
 az acr import -n "$ACR_NAME" \
   --source "quay.io/argoproj/argocd:${ARGOCD_VERSION}" \
   --image "argoproj/argocd:${ARGOCD_VERSION}" \

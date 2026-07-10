@@ -73,6 +73,16 @@ def test_kagent_agent_and_toolserver_run_on_red_node_pool():
     assert pod_spec["nodeSelector"] == {"workload": "red-agent"}
 
 
+def test_argocd_bootstrap_tolerates_the_red_agent_node_taint():
+    bootstrap = (ROOT / "scripts/bootstrap-argocd.sh").read_text()
+
+    assert '"key":"workload"' in bootstrap
+    assert '"value":"red-agent"' in bootstrap
+    assert '"effect":"NoSchedule"' in bootstrap
+    assert "deployment/argocd-server" in bootstrap
+    assert "statefulset/argocd-application-controller" in bootstrap
+
+
 def test_deploy_and_ci_yaml_parse():
     paths = list((ROOT / "deploy").rglob("*.yaml")) + [ROOT / ".github/workflows/ci.yml"]
 

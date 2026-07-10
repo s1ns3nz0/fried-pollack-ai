@@ -19,7 +19,7 @@ architecture are optional and progressively heavier.
 | Model authority | No LLM participates | Model assists interaction and summary; deterministic Gate, HITL, and ground truth retain authority |
 | SOC evidence | Local UAV*_CL and Alert contract emulator | Real Log Analytics and Sentinel resources |
 | Isolation evidence | Code, tests, and architecture | Separate live sim, SOC, and red AKS clusters |
-| Dashboards | Generated KPI HTML | KPI, kagent UI, optional ArgoCD, and Azure Portal links |
+| Dashboards | Generated KPI HTML | Cyber staff dashboard, KPI, kagent UI, ArgoCD, and Azure Portal links |
 
 ---
 
@@ -209,14 +209,16 @@ and its local dashboard proxies can be prepared with one command:
 ```bash
 git clone https://github.com/s1ns3nz0/pollack-infra.git
 git clone https://github.com/s1ns3nz0/fried-pollack-ai.git
+git clone https://github.com/s1ns3nz0/pollack-ai.git
 cd pollack-infra
 bash scripts/deploy-judge-demo.sh
 ```
 
 The launcher deploys all planes, builds the ToolServer image when needed,
-bootstraps kagent, generates the KPI HTML, verifies the Agent and MCP tool, and
-prints kagent UI, KPI, optional ArgoCD, Sentinel, Log Analytics, AOAI, AKS, ACR,
-and Storage links. Local proxy state is stored under
+bootstraps kagent, installs ArgoCD, generates the KPI HTML, starts the local
+cyber staff dashboard, verifies the Agent and MCP tool, and prints kagent UI,
+KPI, ArgoCD, staff dashboard, Sentinel, Log Analytics, AOAI, AKS, ACR, and
+Storage links. Local process state is stored under
 `/tmp/fried-pollack-judge-demo/` and can be stopped with:
 
 ```bash
@@ -227,6 +229,18 @@ Stopping proxies does **not** delete billable Azure resources. Tier 0 remains
 the recommended time-boxed reproduction. Tier 1 above remains the cheaper
 manual red-only alternative. The full launcher is for live control-plane and
 isolation evidence when those additional costs and prerequisites are acceptable.
+
+Preview or execute the guarded full teardown from `pollack-infra`:
+
+```bash
+bash scripts/destroy-all.sh
+bash scripts/destroy-all.sh --execute \
+  --subscription "$(az account show --query id -o tsv)"
+```
+
+The execute path deletes only the four fixed lab resource groups and their
+AKS-discovered node groups after the supplied subscription matches the active
+Azure CLI subscription.
 
 ---
 
