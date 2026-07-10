@@ -7,8 +7,8 @@ but the Kubernetes surface is restricted by `ALLOWED_RANGE_MODES`.
 > **Reviewers / judges:** this file documents the author's live deployment and
 > hardcodes tenant-specific names. To stand the stack up in **your own Azure
 > subscription** from a clean checkout, follow **[JUDGE-DEPLOY.md](./JUDGE-DEPLOY.md)**
-> (Path B), which uses the `judge.bicepparam` / `judge-sim.bicepparam` templates
-> and `judge.env.example` instead of the author-specific values below.
+> (Path B), which uses the `judge.bicepparam` template and `judge.env.example`
+> instead of the author-specific values below.
 
 ## Boundary
 
@@ -61,7 +61,7 @@ The lab overlay is wired to the current red-plane deployment:
    - checks for `dah-sim-rg/dah-sim-aks`,
    - skips sim deployment when the sim AKS already exists, so SOC-owned sim
      deployments are not overwritten,
-   - deploys `bicep/sim.bicep` only when sim AKS is absent,
+   - deploys `bicep/planes/sim-aks.bicep` (RG-scope) only when sim AKS is absent,
    - passes `dah-sim-vnet` as `simVnetResourceId` into the red deployment when
      that VNet exists,
    - deploys red without sim peering if the sim VNet is absent.
