@@ -32,12 +32,16 @@ def test_deterministic_same_input_same_output():
 
 
 def test_contains_live_kpi_numbers():
+    from redteam_core.mapping import uav_coverage
     r = kpi.full_report()
     h = dashboard.render_html(r)
     blind = r["coverage_gap"]["blind_spot_ratio"]
     # 헤드라인 사각률이 실제 KPI 값과 일치해야 함.
     assert f"{100*blind:.1f}%" in h
-    assert str(r["mitre_coverage"]["total_techniques"]) in h
+    # MITRE 커버리지는 팀 UAV 매트릭스 기준(ICS/Ent 소스 분할 아님).
+    assert str(uav_coverage.summary()["total_techniques"]) in h
+    assert "UAV 매트릭스" in h
+    assert "Enterprise" not in h        # 소스 프레임워크 분할 아님
 
 
 def test_has_all_sections_and_charts():

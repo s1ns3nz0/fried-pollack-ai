@@ -13,6 +13,7 @@ import os
 from typing import Optional
 
 from . import full_report
+from ..mapping import uav_coverage as _uav
 
 # ── 검증된 팔레트 (dataviz reference instance) ──────────────────────────────
 STATUS = {"good": "#0ca30c", "warning": "#fab219", "serious": "#ec835a", "critical": "#d03b3b"}
@@ -120,7 +121,7 @@ def _headline(r) -> str:
     tiles = [
         _tile("탐지 커버리지", _pct(detectable / tot), f"{detectable}/{tot} 시나리오에 탐지 신호", STATUS["critical"]),
         _tile("사각(미탐지)", _pct(cg["blind_spot_ratio"]), f"{c.get('blind',0)}개 시나리오 blind", STATUS["critical"]),
-        _tile("MITRE 기법", str(mc["total_techniques"]), f"ICS {mc['by_framework']['ICS']} · Ent {mc['by_framework']['Enterprise']} · ATLAS {mc['by_framework']['ATLAS']}"),
+        _tile("UAV ATT&CK 커버리지", f"{_uav.summary()['coverage_pct']}%", f"RED {_uav.summary()['covered']}/{_uav.summary()['total_techniques']} 기법 · blue 탐지불가 {_uav.summary()['blind_total']}"),
         _tile("D3FEND 미커버", _pct(mc["d3fend_blind_ratio"]), f"{len(mc['d3fend_blind_actions'])}개 액션 대응책 없음", STATUS["serious"]),
     ]
     return f'<div class="tiles">{"".join(tiles)}</div>'
@@ -190,17 +191,27 @@ def _bda_section(r) -> str:
 
 
 def _mitre_section(r) -> str:
-    mc = r["mitre_coverage"]
-    fw = mc["by_framework"]
-    bars = [(k, fw[k], CAT[i]) for i, k in enumerate(["ICS", "Enterprise", "ATLAS"])]
-    blind = "".join(f'<code>{_esc(a)}</code>' for a in mc["d3fend_blind_actions"])
+    # 팀 UAV ATT&CK 매트릭스(15전술) 기준. ICS/Enterprise/ATLAS 소스 프레임워크 분할이
+    # 아니라 UAV 매트릭스 대비 per-tactic 커버리지를 보인다.
+    s = _uav.summary()
+    tacs = _uav.coverage_by_tactic()
+    maxt = max((t.total for t in tacs), default=1)
+    bars = [
+        (f"{t.tactic} ({t.covered}/{t.total})", t.covered,
+         STATUS["good"] if t.covered == t.total else STATUS["critical"])
+        for t in tacs
+    ]
+    gaps = [g for t in tacs for g in t.gaps]
+    gaps_html = ("".join(f'<code>{_esc(g)}</code>' for g in gaps)) if gaps else "<span class='sub'>없음</span>"
     body = (
-        f'<p class="sub">총 <b>{mc["total_techniques"]}</b> 기법 · 매핑 액션 <b>{mc["mapped_actions"]}</b></p>'
-        f'{_hbars(bars, width=520, fmt=lambda v: str(v))}'
-        f'<p class="sub">D3FEND 미커버 <b>{_pct(mc["d3fend_blind_ratio"])}</b> ({len(mc["d3fend_blind_actions"])}개 액션):</p>'
-        f'<div class="codes">{blind}</div>'
+        f'<p class="sub">UAV 매트릭스 <b>{s["total_techniques"]}</b>기법 · RED 커버 '
+        f'<b>{s["covered"]}</b> (<b>{s["coverage_pct"]}%</b>) · '
+        f'blue 탐지불가 <b>{s["blind_total"]}</b> · 히어로셋(탐지불가 공격) <b>{s["blind_covered"]}</b></p>'
+        f'{_hbars(bars, width=520, maxval=maxt, fmt=lambda v: str(v))}'
+        f'<p class="sub">미커버 기법(RED 갭): </p><div class="codes">{gaps_html}</div>'
     )
-    return _card("MITRE ATT&CK / D3FEND 커버리지", body)
+    return _card("UAV ATT&CK 매트릭스 커버리지 (팀 15전술 기준)", body,
+                 note="팀 UAV ATT&CK 매트릭스(15전술·116기법) 대비 RED 전술별 커버리지.")
 
 
 def _dwell_section(r) -> str:
