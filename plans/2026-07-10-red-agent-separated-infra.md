@@ -42,7 +42,7 @@ red, sim, soc를 별도 resource group과 AKS cluster로 분리한다.
 | Kubernetes namespace | `<plane>-<app>` or app name | `red-agent`, `argocd`, `kagent` |
 | Workload | `<app>-<component>` | `fried-pollack-toolserver` |
 | ArgoCD Application | `<plane>-<app>` | `red-fried-pollack-agent` |
-| Private DNS zone | `<scope>.dah.internal` | `sim.dah.internal` |
+| Private DNS zone | `<scope>.pollak.store` | `sim.pollak.store` |
 
 Recommended tags:
 
@@ -207,20 +207,20 @@ data:
     allowed_range_modes:
       - container
       - sitl
-    datalink_los_url: datalink-los.sim.dah.internal
-    datalink_satcom_url: datalink-satcom.sim.dah.internal
-    gcs_api_url: gcs.sim.dah.internal
-    oracle_readonly_url: oracle.sim.dah.internal
-    soc_ingest_url: soc-ingest.soc.dah.internal
+    datalink_los_url: datalink-los.sim.pollak.store
+    datalink_satcom_url: datalink-satcom.sim.pollak.store
+    gcs_api_url: gcs.sim.pollak.store
+    oracle_readonly_url: oracle.sim.pollak.store
+    soc_ingest_url: soc-ingest.soc.pollak.store
 ```
 
 DNS examples:
 
-- `datalink-los.sim.dah.internal`
-- `datalink-satcom.sim.dah.internal`
-- `gcs.sim.dah.internal`
-- `oracle.sim.dah.internal`
-- `soc-ingest.soc.dah.internal`
+- `datalink-los.sim.pollak.store`
+- `datalink-satcom.sim.pollak.store`
+- `gcs.sim.pollak.store`
+- `oracle.sim.pollak.store`
+- `soc-ingest.soc.pollak.store`
 
 ## Range Mode Policy
 

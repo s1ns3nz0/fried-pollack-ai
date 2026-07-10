@@ -3,7 +3,7 @@ param enableSoc bool
 param tags object
 
 resource simZone 'Microsoft.Network/privateDnsZones@2024-06-01' = {
-  name: 'sim.dah.internal'
+  name: 'sim.pollak.store'
   location: 'global'
   tags: tags
 }
@@ -23,7 +23,7 @@ resource simLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2024-06-
 // SOC DNS is only linked into the red plane when SOC ingest is enabled. It is
 // out of scope for this session and stays off by default.
 resource socZone 'Microsoft.Network/privateDnsZones@2024-06-01' = if (enableSoc) {
-  name: 'soc.dah.internal'
+  name: 'soc.pollak.store'
   location: 'global'
   tags: tags
 }

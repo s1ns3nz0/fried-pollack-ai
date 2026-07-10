@@ -9,20 +9,31 @@ KAGENT_IDENTITY_NAME="${KAGENT_IDENTITY_NAME:-dah-red-kagent-mi}"
 AZURE_OPENAI_RESOURCE_GROUP="${AZURE_OPENAI_RESOURCE_GROUP:-dah-soc-rg}"
 AZURE_OPENAI_ACCOUNT_NAME="${AZURE_OPENAI_ACCOUNT_NAME:-dah-aoai-REDACTED}"
 KAGENT_VERSION="${KAGENT_VERSION:-0.9.9}"
+BOOTSTRAP_APPLY_BICEP="${BOOTSTRAP_APPLY_BICEP:-true}"
 CLIENT_ID_PLACEHOLDER="00000000-0000-0000-0000-000000000000"
+
+# Path B (reviewer's own subscription): override these to target your resources.
+#   BICEP_PARAM_FILE  - judge param template (default: author's lab file)
+#   TOOLSERVER_IMAGE  - your ACR image ref, swapped into the rendered overlay so
+#                       the committed kustomization is not edited in place.
+BICEP_PARAM_FILE="${BICEP_PARAM_FILE:-infra/bicep/params/lab.bicepparam}"
+DEFAULT_TOOLSERVER_IMAGE="dahredacrr0710a.azurecr.io/fried-pollack-ai:9db7585"
+TOOLSERVER_IMAGE="${TOOLSERVER_IMAGE:-$DEFAULT_TOOLSERVER_IMAGE}"
 
 az aks get-credentials \
   --resource-group "$RED_RESOURCE_GROUP" \
   --name "$RED_AKS_NAME" \
   --overwrite-existing
 
-az deployment sub create \
-  --name red-plane-current \
-  --location koreacentral \
-  --template-file infra/bicep/main.bicep \
-  --parameters infra/bicep/params/lab.bicepparam \
-  --query '{state:properties.provisioningState,outputs:properties.outputs}' \
-  --output json
+if [ "$BOOTSTRAP_APPLY_BICEP" = "true" ]; then
+  az deployment sub create \
+    --name red-plane-current \
+    --location koreacentral \
+    --template-file infra/bicep/main.bicep \
+    --parameters "$BICEP_PARAM_FILE" \
+    --query '{state:properties.provisioningState,outputs:properties.outputs}' \
+    --output json
+fi
 
 AZURE_OPENAI_KEY="$(
   az cognitiveservices account keys list \
@@ -88,6 +99,7 @@ kubectl create secret generic kagent-azure-openai \
 
 kubectl kustomize deploy/overlays/aks \
   | sed "s/${CLIENT_ID_PLACEHOLDER}/${TOOLSERVER_CLIENT_ID}/g" \
+  | sed "s#${DEFAULT_TOOLSERVER_IMAGE}#${TOOLSERVER_IMAGE}#g" \
   | kubectl apply -f -
 kubectl -n fried-pollack rollout status deploy/fried-pollack-toolserver --timeout=180s
 kubectl -n fried-pollack get agent,remotemcpserver,modelconfig,pods

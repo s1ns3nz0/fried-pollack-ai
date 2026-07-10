@@ -4,6 +4,12 @@ This deployment keeps `fried-pollack-ai` as a deterministic, coarse-grained MCP
 ToolServer. kagent can trigger `run_engagement` and summarize the JSON report,
 but the Kubernetes surface is restricted by `ALLOWED_RANGE_MODES`.
 
+> **Reviewers / judges:** this file documents the author's live deployment and
+> hardcodes tenant-specific names. To stand the stack up in **your own Azure
+> subscription** from a clean checkout, follow **[JUDGE-DEPLOY.md](./JUDGE-DEPLOY.md)**
+> (Path B), which uses the `judge.bicepparam` / `judge-sim.bicepparam` templates
+> and `judge.env.example` instead of the author-specific values below.
+
 ## Boundary
 
 Red agent workloads must run in the red plane, not in the simulation target
@@ -37,7 +43,23 @@ The lab overlay is wired to the current red-plane deployment:
 
 ## Bootstrap
 
-1. Provision red Azure resources with Bicep.
+1. Provision sim, then red, with existing-sim skip semantics.
+
+   ```bash
+   scripts/deploy-red-with-sim.sh
+   ```
+
+   The script:
+
+   - checks for `dah-sim-rg/dah-sim-aks`,
+   - skips sim deployment when the sim AKS already exists, so SOC-owned sim
+     deployments are not overwritten,
+   - deploys `infra/bicep/sim.bicep` only when sim AKS is absent,
+   - passes `dah-sim-vnet` as `simVnetResourceId` into the red deployment when
+     that VNet exists,
+   - deploys red without sim peering if the sim VNet is absent.
+
+2. Provision red Azure resources with Bicep only.
 
    ```bash
    az deployment sub what-if \
@@ -51,7 +73,7 @@ The lab overlay is wired to the current red-plane deployment:
      --parameters infra/bicep/params/lab.bicepparam
    ```
 
-2. Bootstrap kagent and the red ToolServer.
+3. Bootstrap kagent and the red ToolServer.
 
    ```bash
    scripts/bootstrap-red-agent.sh
@@ -67,7 +89,7 @@ The lab overlay is wired to the current red-plane deployment:
    - installs `kagent-crds` and `kagent` Helm charts,
    - applies the red overlay.
 
-3. Create or select the role-separated red managed identities.
+4. Create or select the role-separated red managed identities.
 
    ```bash
    az identity show \
@@ -81,7 +103,7 @@ The lab overlay is wired to the current red-plane deployment:
      --query clientId -o tsv
    ```
 
-4. Workload Identity and role assignments are handled by Bicep.
+5. Workload Identity and role assignments are handled by Bicep.
 
    ```bash
    az deployment sub create \
@@ -91,7 +113,7 @@ The lab overlay is wired to the current red-plane deployment:
      --parameters infra/bicep/params/lab.bicepparam
    ```
 
-5. Grant identities only their role-specific permissions.
+6. Grant identities only their role-specific permissions.
 
    Bicep grants:
 
@@ -100,13 +122,13 @@ The lab overlay is wired to the current red-plane deployment:
    - kagent identity `Cognitive Services OpenAI User` on the Azure OpenAI account,
    - configured operators `Azure Kubernetes Service RBAC Cluster Admin` on red AKS.
 
-6. Configure GitHub Actions:
+7. Configure GitHub Actions:
 
    - Repository variables: `ACR_NAME`
    - Repository secrets: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`,
      `AZURE_SUBSCRIPTION_ID`
 
-7. Apply the red ArgoCD root app after installing ArgoCD.
+8. Apply the red ArgoCD root app after installing ArgoCD.
 
    ```bash
    kubectl apply -f deploy/argocd/root-app.yaml

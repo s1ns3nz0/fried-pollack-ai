@@ -95,16 +95,16 @@ range_name: dah-sim
 allowed_range_modes:
   - container
   - sitl
-datalink_los_url: datalink-los.sim.dah.internal
-datalink_satcom_url: datalink-satcom.sim.dah.internal
-gcs_api_url: gcs.sim.dah.internal
-oracle_readonly_url: oracle.sim.dah.internal
+datalink_los_url: datalink-los.sim.pollak.store
+datalink_satcom_url: datalink-satcom.sim.pollak.store
+gcs_api_url: gcs.sim.pollak.store
+oracle_readonly_url: oracle.sim.pollak.store
 ```
 
 검증:
 
 ```bash
-kubectl kustomize deploy/overlays/red-aks | rg 'target-profile|datalink-los.sim.dah.internal'
+kubectl kustomize deploy/overlays/red-aks | rg 'target-profile|datalink-los.sim.pollak.store'
 ```
 
 완료 조건:

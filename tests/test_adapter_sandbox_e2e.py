@@ -60,7 +60,7 @@ def test_pentest_public_in_scope_reaches_live(monkeypatch):
     monkeypatch.setenv("PENTEST_MCP_URL", f"http://{IN_SCOPE}:8000")
     monkeypatch.setattr(pentest_mcp, "post_json",
                         lambda url, body, headers=None: calls.append(url) or {"ok": True})
-    r = pentest_mcp.run_tool("nuclei", {"target": "gcs.sim.dah.internal"})
+    r = pentest_mcp.run_tool("nuclei", {"target": "gcs.sim.pollak.store"})
     assert r["mode"] == "real" and calls and r["response"]["ok"] is True
 
 
@@ -69,14 +69,14 @@ def test_pentest_public_out_of_scope_blocked(monkeypatch):
     monkeypatch.setenv("PENTEST_MCP_URL", f"http://{OUT_SCOPE}:8000")
     monkeypatch.setattr(pentest_mcp, "post_json",
                         lambda url, body, headers=None: calls.append(url) or {})
-    r = pentest_mcp.run_tool("nuclei", {"target": "gcs.sim.dah.internal"})
+    r = pentest_mcp.run_tool("nuclei", {"target": "gcs.sim.pollak.store"})
     assert r["mode"] == "blocked_by_sandbox" and calls == []
 
 
 def test_pentest_public_out_of_allowlist_rejected_before_guard(monkeypatch):
     """allowlist 밖 도구는 서버·스코프와 무관하게 거부(fail-closed, 가드 전 차단)."""
     monkeypatch.setenv("PENTEST_MCP_URL", f"http://{IN_SCOPE}:8000")
-    r = pentest_mcp.run_tool("hydra", {"target": "gcs.sim.dah.internal"})
+    r = pentest_mcp.run_tool("hydra", {"target": "gcs.sim.pollak.store"})
     assert r["mode"] == "rejected"
 
 

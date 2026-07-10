@@ -18,6 +18,11 @@ def test_deploy_layout_contains_argocd_and_kagent_resources():
         "deploy/argocd/root-app.yaml",
         "deploy/argocd/apps/kagent-platform.yaml",
         "deploy/argocd/apps/fried-pollack.yaml",
+        "infra/bicep/sim.bicep",
+        "infra/bicep/modules/network-sim.bicep",
+        "infra/bicep/modules/aks-sim.bicep",
+        "infra/bicep/params/lab-sim.bicepparam",
+        "scripts/deploy-red-with-sim.sh",
     ]
 
     for relpath in expected:
@@ -38,6 +43,14 @@ def test_workload_identity_client_id_is_injected_by_bootstrap():
 
     assert service_account["metadata"]["annotations"]["azure.workload.identity/client-id"] == CLIENT_ID_PLACEHOLDER
     assert overlay["patches"][0]["patch"].endswith(f"value: {CLIENT_ID_PLACEHOLDER}")
+
+
+def test_combined_red_sim_deploy_skips_existing_sim_and_peers_red():
+    script = (ROOT / "scripts/deploy-red-with-sim.sh").read_text()
+
+    assert "sim_aks_exists" in script
+    assert "skipping sim deployment" in script
+    assert "simVnetResourceId=\"$SIM_VNET_ID\"" in script
 
 
 def test_kagent_agent_and_toolserver_run_on_red_node_pool():

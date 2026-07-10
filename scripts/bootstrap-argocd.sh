@@ -50,6 +50,8 @@ kubectl -n argocd set image deployment/argocd-server \
 kubectl -n argocd set image statefulset/argocd-application-controller \
   "argocd-application-controller=${ACR_LOGIN_SERVER}/argoproj/argocd:${ARGOCD_VERSION}"
 
+kubectl -n argocd delete pod argocd-application-controller-0 --ignore-not-found
+
 kubectl -n argocd rollout status deploy/argocd-applicationset-controller --timeout=180s
 kubectl -n argocd rollout status deploy/argocd-dex-server --timeout=180s
 kubectl -n argocd rollout status deploy/argocd-notifications-controller --timeout=180s
