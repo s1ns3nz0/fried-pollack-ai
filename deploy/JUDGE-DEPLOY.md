@@ -8,7 +8,18 @@ architecture are optional and progressively heavier.
 |---|---|---|---|
 | **0 — Local contract** | attack scenarios → `UAV*_CL` telemetry → SOC Alert contract | Python only | ~0, minutes |
 | **1 — Live red plane** | the agentic red ToolServer + kagent running on a real AKS cluster | your Azure subscription + Azure OpenAI | a few USD/hr |
-| **Full 3-plane** | red attacks sim, SOC detects independently via Sentinel | 3 clusters + Sentinel | author-provided evidence only (see below) |
+| **Full 3-plane** | red attacks sim, SOC detects independently via Sentinel | 3 clusters + Sentinel | optional one-command live deployment; highest cost/time |
+
+### Which path should I choose?
+
+| Dimension | Tier 0 short demo | Full 3-plane launcher |
+|---|---|---|
+| Time / cost | Minutes / no Azure cost | Tens of minutes / billable Azure resources |
+| AI model | No hosted model or API key | kagent uses Azure OpenAI `gpt-4o-mini` via `gpt-4o-soc` |
+| Model authority | No LLM participates | Model assists interaction and summary; deterministic Gate, HITL, and ground truth retain authority |
+| SOC evidence | Local UAV*_CL and Alert contract emulator | Real Log Analytics and Sentinel resources |
+| Isolation evidence | Code, tests, and architecture | Separate live sim, SOC, and red AKS clusters |
+| Dashboards | Generated KPI HTML | KPI, kagent UI, optional ArgoCD, and Azure Portal links |
 
 ---
 
@@ -49,7 +60,7 @@ cat out/soc_alert.json | python -m json.tool
 Run the full test suite to confirm the build:
 
 ```bash
-pytest -q          # 616 tests
+pytest -q          # 624 tests
 ```
 
 ---
@@ -60,10 +71,10 @@ Stands up the red plane (`fried-pollack-ai` ToolServer + kagent, optional
 ArgoCD) in **your own Azure subscription**. Shows the agentic attack running on a
 real AKS cluster. The sim target and SOC are **not** required for this tier.
 
-Azure IaC lives in the sibling **pollak-infra** repo:
+Azure IaC lives in the sibling **pollack-infra** repo:
 
 ```bash
-git clone https://github.com/s1ns3nz0/pollak-infra.git ../pollak-infra
+git clone https://github.com/s1ns3nz0/pollack-infra.git ../pollack-infra
 ```
 
 ### 1.1 Prerequisites
@@ -105,7 +116,7 @@ curl -s ifconfig.me                             # your public IP
 az ad signed-in-user show --query id -o tsv     # your Entra object ID
 ```
 
-Edit `../pollak-infra/bicep/params/judge.bicepparam`, replacing every
+Edit `../pollack-infra/bicep/params/judge.bicepparam`, replacing every
 `REPLACE_*` token:
 
 | Token | Value |
@@ -129,7 +140,7 @@ set -a; . deploy/judge.env; set +a
 ### 1.4 Provision the red plane
 
 ```bash
-cd ../pollak-infra
+cd ../pollack-infra
 DEPLOY_SIM=false az deployment sub what-if \
   --location "$LOCATION" --template-file bicep/main.bicep --parameters "$RED_PARAM_FILE"
 DEPLOY_SIM=false scripts/deploy-red-with-sim.sh
@@ -183,7 +194,7 @@ Immutability is off by default, so resource groups delete cleanly.
 
 ---
 
-## Full 3-plane architecture — evidence only
+## Full 3-plane architecture — one-command author demo
 
 The complete design isolates three planes as **separate AKS clusters** (red /
 sim / soc), with red→sim over VNet peering + firewall egress allowlist, and
@@ -191,11 +202,31 @@ sim→SOC over a shared **Azure Sentinel** workspace (append-only ingestion, no
 direct sim↔soc network path) so the SOC detects the attack **independently** —
 red is not in the detection path.
 
-This tier is **not reproduced by reviewers.** Standing up three clusters plus a
-Sentinel workspace, behind an Azure OpenAI approval gate, is impractical for a
-time-boxed review and offers no more evidence than Tier 0 + author-provided
-screenshots/recording of the live SOC detection. See the architecture writeup
-and `pollak-infra/README.md` for the boundary design.
+For the author's prepared subscription—or a reviewer who explicitly accepts
+the time, cost, quota, and Azure OpenAI prerequisites—the complete environment
+and its local dashboard proxies can be prepared with one command:
+
+```bash
+git clone https://github.com/s1ns3nz0/pollack-infra.git
+git clone https://github.com/s1ns3nz0/fried-pollack-ai.git
+cd pollack-infra
+bash scripts/deploy-judge-demo.sh
+```
+
+The launcher deploys all planes, builds the ToolServer image when needed,
+bootstraps kagent, generates the KPI HTML, verifies the Agent and MCP tool, and
+prints kagent UI, KPI, optional ArgoCD, Sentinel, Log Analytics, AOAI, AKS, ACR,
+and Storage links. Local proxy state is stored under
+`/tmp/fried-pollack-judge-demo/` and can be stopped with:
+
+```bash
+bash scripts/stop-judge-demo.sh
+```
+
+Stopping proxies does **not** delete billable Azure resources. Tier 0 remains
+the recommended time-boxed reproduction. Tier 1 above remains the cheaper
+manual red-only alternative. The full launcher is for live control-plane and
+isolation evidence when those additional costs and prerequisites are acceptable.
 
 ---
 

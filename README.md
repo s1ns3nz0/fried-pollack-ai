@@ -8,7 +8,22 @@
 LLM(오라클 veto 하) + 메모리 기반 학습으로 구성.
 
 **규모**: Python 모듈 197 · 원자 액션 22 · 무기고 커버 **23/23=100%**(런타임검증 95.7%, AML.T0020
-스테이징) · 벤치 16 시나리오/**8 PoV 페어** · **616 tests green** · Tier-0(무의존 실행).
+스테이징) · 벤치 16 시나리오/**8 PoV 페어** · **624 tests green** · Tier-0(무의존 실행).
+
+## 심사위원이라면 / Reviewer Quick Start
+
+- **짧은 데모(권장 시작점):** `python demo.py` — Azure·API 키·호스팅 모델 없이
+  결정론 그래프, Gate, HITL, ground-truth 검증을 수분 안에 재현한다.
+- **Azure 풀 배포:** 형제 저장소
+  [`pollack-infra`](https://github.com/s1ns3nz0/pollack-infra)에서
+  `bash scripts/deploy-judge-demo.sh` — sim/SOC/red AKS, Sentinel, kagent UI,
+  KPI Dashboard와 Portal 링크를 한 번에 준비한다. kagent는 Azure OpenAI
+  `gpt-4o-mini`를 상호작용·요약에 사용하지만 실행 승인과 최종 판정 권한은 여전히
+  결정론 Gate·HITL·ground truth에 있다.
+
+짧은 데모의 `out/soc_alert.json`은 실제 Sentinel이 아니라 탐지 계약 에뮬레이션이다.
+두 경로의 시간·비용·증거 수준 비교와 수동 배포 절차는
+[deploy/JUDGE-DEPLOY.md](deploy/JUDGE-DEPLOY.md)를 참고한다.
 
 ## 📚 저장소 자립 문서 (클론 하나로 완결 — 외부 파일 의존 없음)
 
@@ -20,7 +35,7 @@ LLM(오라클 veto 하) + 메모리 기반 학습으로 구성.
 
 ## 관련 저장소
 
-- **[pollak-infra](https://github.com/s1ns3nz0/pollak-infra)** (private) — 이 레인지의
+- **[pollack-infra](https://github.com/s1ns3nz0/pollack-infra)** (private) — 이 레인지의
   Azure 인프라(bicep) + plane 사이 경계 리소스(peering·private DNS·공유 SIEM
   workspace·DCR). 클라우드 프로비저닝은 여기서, 이 repo는 앱 코드 + K8s 오버레이 담당.
   Path B(심사위원 자기 구독 배포)는 [deploy/JUDGE-DEPLOY.md](deploy/JUDGE-DEPLOY.md) 참고.
