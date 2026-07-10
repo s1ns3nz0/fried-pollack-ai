@@ -18,6 +18,13 @@ LLM(오라클 veto 하) + 메모리 기반 학습으로 구성.
   각 설계결정·코드 위치에 매핑 + 탐지 계약 요지.
 - [SETUP.md](SETUP.md) · [benchmarks/README.md](benchmarks/README.md)
 
+## 관련 저장소
+
+- **[pollak-infra](https://github.com/s1ns3nz0/pollak-infra)** (private) — 이 레인지의
+  Azure 인프라(bicep) + plane 사이 경계 리소스(peering·private DNS·공유 SIEM
+  workspace·DCR). 클라우드 프로비저닝은 여기서, 이 repo는 앱 코드 + K8s 오버레이 담당.
+  Path B(심사위원 자기 구독 배포)는 [deploy/JUDGE-DEPLOY.md](deploy/JUDGE-DEPLOY.md) 참고.
+
 > 과거 저장소 밖에 있던 설계원문·탐지계약(ATT&CK-ICS→UAV*_CL→D3FEND)은 **ARCHITECTURE.md §11·§15
 > 와 REFERENCES.md §3에 내장**돼, 이제 클론만으로 모든 `§`-참조가 해소된다.
 

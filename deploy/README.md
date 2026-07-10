@@ -44,7 +44,8 @@ The lab overlay is wired to the current red-plane deployment:
 ## Bootstrap
 
 > **Azure IaC moved.** All bicep and the `deploy-red-with-sim.sh` provisioning
-> script now live in the sibling **pollak-infra** repo. Steps 1–2 and 5 below run
+> script now live in the sibling **[pollak-infra](https://github.com/s1ns3nz0/pollak-infra)**
+> repo (private). Steps 1–2 and 5 below run
 > from a `../pollak-infra` checkout; the `bicep/*` paths are relative to that
 > repo. This app repo keeps only the on-cluster workload bootstrap (step 3) and
 > the kustomize overlays.

@@ -19,7 +19,7 @@ actions turned into defender-side `UAV*_CL` telemetry rows and a single SOC
 `Alert` (the one-way RedTeam→SOC contract). It runs entirely offline.
 
 ```bash
-git clone <fried-pollack-ai-url> && cd fried-pollack-ai
+git clone https://github.com/s1ns3nz0/fried-pollack-ai.git && cd fried-pollack-ai
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 
@@ -63,7 +63,7 @@ real AKS cluster. The sim target and SOC are **not** required for this tier.
 Azure IaC lives in the sibling **pollak-infra** repo:
 
 ```bash
-git clone <pollak-infra-url> ../pollak-infra
+git clone https://github.com/s1ns3nz0/pollak-infra.git ../pollak-infra
 ```
 
 ### 1.1 Prerequisites
