@@ -34,6 +34,8 @@ def main() -> None:
                     help="container|sitl|hil|live (미지정 시 프로파일 값)")
     ap.add_argument("--hardened", action="store_true", help="하드닝 인스턴스(PoV 페어)")
     ap.add_argument("--emit-soc", action="store_true", help="③ 브릿지 산출(UAV*_CL + Alert)")
+    ap.add_argument("--kpi-dashboard", action="store_true",
+                    help="방어 태세 KPI 정적 대시보드 생성(out/kpi-dashboard.html)")
     ap.add_argument("--apply-egress", action="store_true", help="OS 방화벽에 egress 규칙 설치(root)")
     ap.add_argument("--out", default=os.path.join(os.path.dirname(__file__), "out"))
     ap.add_argument("--persist-learning", nargs="?", const=DEFAULT_LEARNING_DIR, default=None,
@@ -54,6 +56,14 @@ def main() -> None:
 
     if args.emit_soc:
         _emit_soc(state, args.out)
+
+    if args.kpi_dashboard:
+        from redteam_core.kpi.dashboard import render_html
+        os.makedirs(args.out, exist_ok=True)
+        path = os.path.join(args.out, "kpi-dashboard.html")
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write(render_html())
+        print(f"[KPI 대시보드] {path}")
 
 
 def _print_summary(state, report) -> None:
