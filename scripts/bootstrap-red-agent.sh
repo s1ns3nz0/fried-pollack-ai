@@ -33,6 +33,7 @@ az aks get-credentials \
   --resource-group "$RED_RESOURCE_GROUP" \
   --name "$RED_AKS_NAME" \
   --overwrite-existing
+kubelogin convert-kubeconfig --login azurecli
 
 if [ "$BOOTSTRAP_APPLY_BICEP" = "true" ]; then
   az deployment sub create \

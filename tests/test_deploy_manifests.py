@@ -42,6 +42,17 @@ def test_workload_identity_client_id_is_injected_by_bootstrap():
     assert overlay["patches"][0]["patch"].endswith(f"value: {CLIENT_ID_PLACEHOLDER}")
 
 
+def test_bootstrap_uses_existing_azure_cli_login_for_kubectl():
+    bootstrap = (ROOT / "scripts/bootstrap-red-agent.sh").read_text()
+
+    credentials_index = bootstrap.index("az aks get-credentials")
+    kubelogin_index = bootstrap.index("kubelogin convert-kubeconfig")
+    first_kubectl_index = bootstrap.index("kubectl create namespace")
+
+    assert credentials_index < kubelogin_index < first_kubectl_index
+    assert "--login azurecli" in bootstrap[kubelogin_index:first_kubectl_index]
+
+
 def test_kagent_agent_and_toolserver_run_on_red_node_pool():
     rendered = list(yaml.safe_load_all((ROOT / "deploy/base/kagent-agent.yaml").read_text()))
     agent = rendered[0]
