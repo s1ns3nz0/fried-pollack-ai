@@ -43,10 +43,16 @@ The lab overlay is wired to the current red-plane deployment:
 
 ## Bootstrap
 
-1. Provision sim, then red, with existing-sim skip semantics.
+> **Azure IaC moved.** All bicep and the `deploy-red-with-sim.sh` provisioning
+> script now live in the sibling **pollak-infra** repo. Steps 1–2 and 5 below run
+> from a `../pollak-infra` checkout; the `bicep/*` paths are relative to that
+> repo. This app repo keeps only the on-cluster workload bootstrap (step 3) and
+> the kustomize overlays.
+
+1. Provision sim, then red, with existing-sim skip semantics (from `../pollak-infra`).
 
    ```bash
-   scripts/deploy-red-with-sim.sh
+   cd ../pollak-infra && scripts/deploy-red-with-sim.sh && cd -
    ```
 
    The script:
@@ -54,7 +60,7 @@ The lab overlay is wired to the current red-plane deployment:
    - checks for `dah-sim-rg/dah-sim-aks`,
    - skips sim deployment when the sim AKS already exists, so SOC-owned sim
      deployments are not overwritten,
-   - deploys `infra/bicep/sim.bicep` only when sim AKS is absent,
+   - deploys `bicep/sim.bicep` only when sim AKS is absent,
    - passes `dah-sim-vnet` as `simVnetResourceId` into the red deployment when
      that VNet exists,
    - deploys red without sim peering if the sim VNet is absent.
@@ -64,13 +70,13 @@ The lab overlay is wired to the current red-plane deployment:
    ```bash
    az deployment sub what-if \
      --location koreacentral \
-     --template-file infra/bicep/main.bicep \
-     --parameters infra/bicep/params/lab.bicepparam
+     --template-file bicep/main.bicep \
+     --parameters bicep/params/lab.bicepparam
 
    az deployment sub create \
      --location koreacentral \
-     --template-file infra/bicep/main.bicep \
-     --parameters infra/bicep/params/lab.bicepparam
+     --template-file bicep/main.bicep \
+     --parameters bicep/params/lab.bicepparam
    ```
 
 3. Bootstrap kagent and the red ToolServer.
@@ -79,9 +85,9 @@ The lab overlay is wired to the current red-plane deployment:
    scripts/bootstrap-red-agent.sh
    ```
 
-   The script:
+   The script (Azure infra assumed already provisioned from pollak-infra;
+   `BOOTSTRAP_APPLY_BICEP=true` re-applies it against a `../pollak-infra` checkout):
 
-   - reapplies the Bicep deployment,
    - imports the private ACR mirror image required by the bundled Postgres chart,
    - injects the recreated ToolServer managed identity client ID into the
      rendered Kubernetes ServiceAccount,
@@ -109,8 +115,8 @@ The lab overlay is wired to the current red-plane deployment:
    az deployment sub create \
      --name red-plane-current \
      --location koreacentral \
-     --template-file infra/bicep/main.bicep \
-     --parameters infra/bicep/params/lab.bicepparam
+     --template-file bicep/main.bicep \
+     --parameters bicep/params/lab.bicepparam
    ```
 
 6. Grant identities only their role-specific permissions.

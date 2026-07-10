@@ -76,7 +76,14 @@ curl -s ifconfig.me                                   # your public IP
 az ad signed-in-user show --query id -o tsv           # your Entra object ID
 ```
 
-Edit `infra/bicep/params/judge.bicepparam` and replace every `REPLACE_*` token:
+Azure infrastructure-as-code lives in the sibling **pollak-infra** repo. Clone
+it next to this checkout:
+
+```bash
+git clone <pollak-infra-url> ../pollak-infra
+```
+
+Edit `../pollak-infra/bicep/params/judge.bicepparam` and replace every `REPLACE_*` token:
 
 | Token | Value |
 |---|---|
@@ -89,7 +96,7 @@ Edit `infra/bicep/params/judge.bicepparam` and replace every `REPLACE_*` token:
 | `azureOpenAIDeploymentName` | `gpt-4o` |
 
 If you also want the sim target, apply the **same** `uniqueSuffix` region and
-your IP to `infra/bicep/params/judge-sim.bicepparam`.
+your IP to `../pollak-infra/bicep/params/judge-sim.bicepparam`.
 
 Then set your shell environment (used by the bootstrap scripts):
 
@@ -101,18 +108,22 @@ set -a; . deploy/judge.env; set +a
 
 ## 4. Deploy the Azure infrastructure
 
-Preview, then create. `deploy-red-with-sim.sh` provisions the sim plane (if
-absent) and the red plane, wiring VNet peering automatically.
+Run from the **pollak-infra** checkout. `deploy-red-with-sim.sh` provisions the
+sim plane (if absent) and the red plane, wiring VNet peering automatically.
 
 ```bash
+cd ../pollak-infra
+
 # Dry run of the red plane
 az deployment sub what-if \
   --location "$LOCATION" \
-  --template-file infra/bicep/main.bicep \
+  --template-file bicep/main.bicep \
   --parameters "$RED_PARAM_FILE"
 
 # Provision sim (optional) + red
 scripts/deploy-red-with-sim.sh
+
+cd -   # back to the app repo for the remaining steps
 ```
 
 To skip the sim target entirely: `DEPLOY_SIM=false scripts/deploy-red-with-sim.sh`.

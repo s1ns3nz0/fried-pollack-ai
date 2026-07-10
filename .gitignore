@@ -12,4 +12,5 @@ out/
 .env
 out/
 # Bicep 컴파일 산출물(az bicep build) — 소스 아님
-infra/bicep/*.json
+
+.claude/

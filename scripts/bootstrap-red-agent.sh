@@ -9,14 +9,19 @@ KAGENT_IDENTITY_NAME="${KAGENT_IDENTITY_NAME:-dah-red-kagent-mi}"
 AZURE_OPENAI_RESOURCE_GROUP="${AZURE_OPENAI_RESOURCE_GROUP:-dah-soc-rg}"
 AZURE_OPENAI_ACCOUNT_NAME="${AZURE_OPENAI_ACCOUNT_NAME:-dah-aoai-REDACTED}"
 KAGENT_VERSION="${KAGENT_VERSION:-0.9.9}"
-BOOTSTRAP_APPLY_BICEP="${BOOTSTRAP_APPLY_BICEP:-true}"
+# Azure infra (bicep) now lives in the pollak-infra repo. This app-repo script
+# only installs the red workloads (kagent + ToolServer) onto an already-
+# provisioned cluster. Re-applying bicep is off by default; provision from
+# pollak-infra first. To re-apply from here, set BOOTSTRAP_APPLY_BICEP=true and
+# point BICEP_TEMPLATE / BICEP_PARAM_FILE at a local pollak-infra checkout.
+BOOTSTRAP_APPLY_BICEP="${BOOTSTRAP_APPLY_BICEP:-false}"
 CLIENT_ID_PLACEHOLDER="00000000-0000-0000-0000-000000000000"
 
-# Path B (reviewer's own subscription): override these to target your resources.
-#   BICEP_PARAM_FILE  - judge param template (default: author's lab file)
+# Path B (reviewer's own subscription): override to target your resources.
 #   TOOLSERVER_IMAGE  - your ACR image ref, swapped into the rendered overlay so
 #                       the committed kustomization is not edited in place.
-BICEP_PARAM_FILE="${BICEP_PARAM_FILE:-infra/bicep/params/lab.bicepparam}"
+BICEP_TEMPLATE="${BICEP_TEMPLATE:-../pollak-infra/bicep/main.bicep}"
+BICEP_PARAM_FILE="${BICEP_PARAM_FILE:-../pollak-infra/bicep/params/lab.bicepparam}"
 DEFAULT_TOOLSERVER_IMAGE="dahredacrr0710a.azurecr.io/fried-pollack-ai:9db7585"
 TOOLSERVER_IMAGE="${TOOLSERVER_IMAGE:-$DEFAULT_TOOLSERVER_IMAGE}"
 
@@ -29,7 +34,7 @@ if [ "$BOOTSTRAP_APPLY_BICEP" = "true" ]; then
   az deployment sub create \
     --name red-plane-current \
     --location koreacentral \
-    --template-file infra/bicep/main.bicep \
+    --template-file "$BICEP_TEMPLATE" \
     --parameters "$BICEP_PARAM_FILE" \
     --query '{state:properties.provisioningState,outputs:properties.outputs}' \
     --output json
