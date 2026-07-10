@@ -28,6 +28,10 @@ spec:
               apiKeySecretKey: AZUREOPENAI_API_KEY
               config:
                 apiVersion: "2024-10-21"
+                # Placeholder — real account not committed. GitOps cannot inject at
+                # apply time, so override in the live app (not in git), e.g.:
+                #   argocd app set kagent-platform --helm-set \
+                #     'providers.azureOpenAI.config.azureEndpoint=https://<acct>.openai.azure.com/'
                 azureEndpoint: https://dah-aoai-REDACTED.openai.azure.com/
                 azureDeployment: gpt-4o-soc
           database:

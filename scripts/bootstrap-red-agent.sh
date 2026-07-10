@@ -7,7 +7,11 @@ RED_ACR_NAME="${RED_ACR_NAME:-dahredacrr0710a}"
 TOOLSERVER_IDENTITY_NAME="${TOOLSERVER_IDENTITY_NAME:-dah-red-toolserver-mi}"
 KAGENT_IDENTITY_NAME="${KAGENT_IDENTITY_NAME:-dah-red-kagent-mi}"
 AZURE_OPENAI_RESOURCE_GROUP="${AZURE_OPENAI_RESOURCE_GROUP:-dah-soc-rg}"
+# The real Azure OpenAI account name is intentionally NOT committed (scrubbed to a
+# placeholder in the public repo). Supply it at deploy time; it is injected into
+# the kagent values + ModelConfig endpoint below, replacing AOAI_PLACEHOLDER.
 AZURE_OPENAI_ACCOUNT_NAME="${AZURE_OPENAI_ACCOUNT_NAME:-dah-aoai-REDACTED}"
+AOAI_PLACEHOLDER="dah-aoai-REDACTED"
 KAGENT_VERSION="${KAGENT_VERSION:-0.9.9}"
 # Azure infra (bicep) now lives in the pollak-infra repo. This app-repo script
 # only installs the red workloads (kagent + ToolServer) onto an already-
@@ -88,11 +92,18 @@ helm upgrade --install kagent-crds \
   --wait \
   --timeout 10m
 
+# Inject the real Azure OpenAI account into the kagent values (public copy holds
+# only the placeholder). Rendered to a temp file so the committed file stays clean.
+KAGENT_VALUES_RENDERED="$(mktemp)"
+trap 'rm -f "$KAGENT_VALUES_RENDERED"' EXIT
+sed "s/${AOAI_PLACEHOLDER}/${AZURE_OPENAI_ACCOUNT_NAME}/g" \
+  deploy/kagent-values.yaml > "$KAGENT_VALUES_RENDERED"
+
 helm upgrade --install kagent \
   oci://ghcr.io/kagent-dev/kagent/helm/kagent \
   --version "$KAGENT_VERSION" \
   --namespace kagent \
-  --values deploy/kagent-values.yaml \
+  --values "$KAGENT_VALUES_RENDERED" \
   --wait \
   --timeout 15m
 
@@ -105,6 +116,7 @@ kubectl create secret generic kagent-azure-openai \
 kubectl kustomize deploy/overlays/aks \
   | sed "s/${CLIENT_ID_PLACEHOLDER}/${TOOLSERVER_CLIENT_ID}/g" \
   | sed "s#${DEFAULT_TOOLSERVER_IMAGE}#${TOOLSERVER_IMAGE}#g" \
+  | sed "s/${AOAI_PLACEHOLDER}/${AZURE_OPENAI_ACCOUNT_NAME}/g" \
   | kubectl apply -f -
 kubectl -n fried-pollack rollout status deploy/fried-pollack-toolserver --timeout=180s
 kubectl -n fried-pollack get agent,remotemcpserver,modelconfig,pods

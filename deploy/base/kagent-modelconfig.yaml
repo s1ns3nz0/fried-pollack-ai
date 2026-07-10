@@ -9,6 +9,8 @@ spec:
   apiKeySecret: kagent-azure-openai
   apiKeySecretKey: AZUREOPENAI_API_KEY
   azureOpenAI:
+    # Placeholder — real account not committed; bootstrap-red-agent.sh injects
+    # $AZURE_OPENAI_ACCOUNT_NAME for `dah-aoai-REDACTED` when applying the overlay.
     azureEndpoint: https://dah-aoai-REDACTED.openai.azure.com/
     azureDeployment: gpt-4o-soc
     apiVersion: "2024-10-21"
