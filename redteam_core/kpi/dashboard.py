@@ -103,9 +103,10 @@ def _tile(label, value, sub, status=None) -> str:
     )
 
 
-def _card(title, body, note="") -> str:
+def _card(title, body, note="", full=False) -> str:
     n = f'<p class="card-note">{note}</p>' if note else ""
-    return f'<section class="card"><h2>{_esc(title)}</h2>{n}{body}</section>'
+    cls = "card span-all" if full else "card"
+    return f'<section class="{cls}"><h2>{_esc(title)}</h2>{n}{body}</section>'
 
 
 # ── 섹션 빌더 ────────────────────────────────────────────────────────────────
@@ -138,7 +139,7 @@ def _coverage_section(r) -> str:
     )
     body = f'<div class="bar-wrap">{_stacked_bar(segs, width=760)}</div><div class="legend">{legend}</div>'
     return _card("탐지 커버리지 분해 (blue S1~S7 실 룰 기준)", body,
-                 note="시나리오를 blue 탐지룰로 평가한 분류. 사각=탐지 신호 없음.")
+                 note="시나리오를 blue 탐지룰로 평가한 분류. 사각=탐지 신호 없음.", full=True)
 
 
 def _moe_section(r) -> str:
@@ -249,7 +250,12 @@ _CSS = """
 :root[data-theme=dark]{--bg:#0d0d0d;--surface:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--grid:#2c2c2a;--ring:rgba(255,255,255,.10);--track:#2c2c2a;}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);
 font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5;}
-.wrap{max-width:960px;margin:0 auto;padding:32px 20px 64px;}
+.wrap{max-width:1440px;margin:0 auto;padding:32px 28px 64px;}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+gap:16px;align-items:stretch;margin-top:16px;}
+.cards .card{margin:0;height:100%;}
+.card.span-all{grid-column:1/-1;}
+@media (max-width:860px){.cards{grid-template-columns:1fr;}}
 header h1{font-size:24px;margin:0 0 4px}header .lede{color:var(--ink2);margin:0 0 4px;font-size:15px}
 header .meta{color:var(--muted);font-size:13px;margin:0}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:24px 0}
@@ -290,7 +296,9 @@ def _inner(r: dict, stamp: str) -> str:
 <p class="meta">source: <code>redteam_core.kpi.full_report()</code> · 무의존·결정론{stamp}</p>
 </header>
 {_headline(r)}
+<div class="cards">
 {sections}
+</div>
 <footer>
 결정론 스냅샷 — 동일 입력 → 동일 출력. 재생성:
 <code>python -m redteam_core.kpi.dashboard</code> → <code>out/kpi-dashboard.html</code>.

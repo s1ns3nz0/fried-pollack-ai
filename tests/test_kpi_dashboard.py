@@ -42,7 +42,7 @@ def test_contains_live_kpi_numbers():
 
 def test_has_all_sections_and_charts():
     h = _html()
-    assert h.count('<section class="card">') == 7      # 6 측정 + 1 처방
+    assert h.count('<section class="card') == 7         # 6 측정 + 1 처방 (일부 span-all)
     assert h.count('<div class="tile">') == 4           # 헤드라인 히어로 타일
     assert h.count("<svg ") >= 6                          # 섹션별 SVG 차트
     assert "우선 메울 갭" in h                             # 처방 섹션
